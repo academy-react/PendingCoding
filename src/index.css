@@ -2,9 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Shabnam";
+  src: url("./assets/fonts/shabnam-font-v5.0.1/Shabnam.ttf");
+}
+
 html,
 body,
 :root,
 #root {
   height: 100%;
+  direction: rtl;
+  font-family: "Shabnam";
 }

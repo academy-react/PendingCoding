@@ -1,5 +1,7 @@
+import { RouteProvider } from "./components/router";
+
 function App() {
-  return <main className="text-3xl text-emerald-700">start project!</main>;
+  return <RouteProvider />;
 }
 
 export default App;
