@@ -1,8 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
-import { routes } from "../../components/routes";
 import { Dot, ShoppingCart, X } from "lucide-react";
 
-export const NavbarMobile = ({ isOpen, onClose, count }) => {
+import { useModal } from "../../hooks/use-modal-store";
+
+import { routes } from "../../components/routes/routes";
+
+export const NavbarMobile = (count) => {
+  const { isOpen, onClose } = useModal();
+
   return isOpen ? (
     <div className="fixed inset-0 bg-gray-200 z-10" onClick={onClose}>
       <div

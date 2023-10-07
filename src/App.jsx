@@ -1,4 +1,4 @@
-import { RouteProvider } from "./components/router";
+import { RouteProvider } from "./components/routes/router";
 
 function App() {
   return <RouteProvider />;

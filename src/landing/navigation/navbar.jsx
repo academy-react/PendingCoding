@@ -1,7 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import { Dot, Menu, ShoppingCart } from "lucide-react";
 
-import { routes } from "../../components/routes";
+import { routes } from "../../components/routes/routes";
 
 import logo from "../../assets/logo.svg";
 import { useState } from "react";
@@ -10,7 +10,7 @@ import { useModal } from "../../hooks/use-modal-store";
 
 const Navbar = () => {
   const [count] = useState(1);
-  const { isOpen, onOpen, onClose } = useModal();
+  const { onOpen } = useModal();
 
   const onClick = () => {
     onOpen();
@@ -60,7 +60,7 @@ const Navbar = () => {
           onClick={onClick}
           className="h-8 w-8 cursor-pointer hover:text-black/60 transition"
         />
-        <NavbarMobile isOpen={isOpen} onClose={onClose} count={count} />
+        <NavbarMobile count={count} />
       </div>
     </nav>
   );
