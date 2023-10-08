@@ -51,13 +51,13 @@ const courses = [
 
 export const Courses = () => {
   return (
-    <>
+    <div>
       <Heading
         title="آخرین دوره های مجموعه"
         description="برترین دوره های آموزشی با بروز ترین و مدرن ترین روش آموزش"
         to="/courses"
       />
-      <div className="py-10 grid sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-y-12">
+      <div className="py-10 grid sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-y-12 gap-x-32">
         {courses.map((course, index) => (
           <CourseCard
             key={course.id}
@@ -73,6 +73,6 @@ export const Courses = () => {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
