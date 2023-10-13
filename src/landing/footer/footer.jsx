@@ -88,7 +88,7 @@ export const Footer = () => {
       </div>
 
       {/* bottom div */}
-      <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-y-20">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-y-20">
         <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-32 lg:gap-x-20">
           <div className="flex flex-col items-start gap-y-5">
             <h1 className="text-white text-2xl">آدرس مجموعه</h1>

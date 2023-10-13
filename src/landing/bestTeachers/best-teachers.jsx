@@ -2,7 +2,7 @@ import { MoveDown, MoveUp } from "lucide-react";
 
 export const BestTeachers = ({ teachers }) => {
   return (
-    <div className="hidden lg:flex flex-1 flex-row-reverse items-center justify-evenly bg-white h-16 rounded-full my-64">
+    <div className="hidden lg:flex flex-row-reverse items-center justify-evenly bg-white h-16 rounded-full my-64 gap-x-44">
       {teachers.map((teacher, index) => {
         return index % 2 === 0 ? (
           <div

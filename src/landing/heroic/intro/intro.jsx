@@ -1,31 +1,9 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
-import qs from "query-string";
-
-import { useDebounce } from "../../../hooks/use-debounce";
+import { SearchInput } from "../../../components/search";
 
 import wavy from "../../../assets/wavy.svg";
 import mirror from "../../../assets/mirror.svg";
 
 export const Intro = () => {
-  const [value, setValue] = useState("");
-  const navigate = useNavigate();
-  const debouncedValue = useDebounce(value);
-  const pathname = window.location.pathname;
-
-  useEffect(() => {
-    const url = qs.stringifyUrl(
-      {
-        url: pathname,
-        query: {
-          value: debouncedValue,
-        },
-      },
-      { skipEmptyString: true, skipNull: true }
-    );
-    navigate(url);
-  }, [debouncedValue, navigate, pathname]);
   return (
     <div className="flex flex-1 flex-col lg:flex-row-reverse items-center justify-center gap-y-20 p-20 md:gap-x-10 lg:gap-x-12 xl:gap-x-40">
       {/* Text and Description div */}
@@ -47,12 +25,9 @@ export const Intro = () => {
           کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد
         </h4>
         <div className="w-80 relative order-2 md:order-1">
-          <Search className="h-6 w-6 absolute top-3 left-3 text-slate-500/90" />
-          <input
-            value={value}
-            className="disabled:cursor-not-allowed outline-none w-80 bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-full px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
-            onChange={(e) => setValue(e.target.value)}
-            type="text"
+          <SearchInput
+            queryName="value"
+            className="w-80 px-6 pl-12 py-3"
             placeholder="جستجو ..."
           />
         </div>
