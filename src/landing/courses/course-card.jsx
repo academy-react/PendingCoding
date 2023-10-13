@@ -26,11 +26,11 @@ export const CourseCard = ({
         </div>
         <div className="w-full px-5 flex justify-between items-center">
           <span className="text-gray-500 text-sm flex items-center justify-center gap-x-1">
-            <User2 className="h-4 w-4" />
+            <User2 className="h-4 w-4 text-primary" />
             {getPersianNumbers(students)}
           </span>
           <span className="text-gray-500 text-sm flex items-center justify-center gap-x-1">
-            <Clock className="h-4 w-4" />
+            <Clock className="h-4 w-4 text-primary" />
             {getPersianNumbers(time)} ساعت
           </span>
           <span className="flex flex-row-reverse items-center justify-center gap-x-1">
@@ -53,9 +53,10 @@ export const CourseCard = ({
         <div className="w-5/6 border border-gray-300" />
         <div className="w-full flex justify-between items-center px-4 pt-2 pb-7">
           <span>
-            <h5 className="text-gray-600">{`قیمت : ${getPersianNumbers(
-              price
-            )} تومان`}</h5>
+            <h5 className="text-gray-600 flex justify-center items-center gap-x-1">
+              قیمت : <p className="text-primary">{getPersianNumbers(price)}</p>
+              تومان
+            </h5>
           </span>
           <Link
             to={`/courses/${id}`}

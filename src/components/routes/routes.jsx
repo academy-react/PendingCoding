@@ -10,6 +10,7 @@ const routes = [
     label: "دوره‌ها",
   },
   {
+    id: "blogs",
     path: "/blogs",
     label: "بلاگ‌",
   },

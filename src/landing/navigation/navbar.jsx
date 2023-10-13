@@ -12,13 +12,9 @@ const Navbar = () => {
   const [count] = useState(1);
   const { onOpen } = useModal();
 
-  const onClick = () => {
-    onOpen();
-  };
-
   return (
-    <nav className="flex flex-1 items-center justify-between">
-      <div className="w-[1800px] flex items-center justify-between mx-auto">
+    <nav className="w-[1800px] flex items-center justify-between">
+      <div className="flex w-full items-center justify-between mx-auto">
         <div className="flex justify-center items-center gap-x-2 lg:gap-x-6">
           <img className="h-12 w-12" src={logo} alt="logo" />
           {routes.map((route) => (
@@ -58,7 +54,7 @@ const Navbar = () => {
         </div>
         <div className="md:hidden">
           <Menu
-            onClick={onClick}
+            onClick={() => onOpen("navDialog")}
             className="h-8 w-8 cursor-pointer hover:text-black/60 transition"
           />
           <NavbarMobile count={count} />

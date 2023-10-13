@@ -2,11 +2,13 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { LayoutPage } from "../../landing/layout";
 import { LandingPage } from "../../landing/landing";
+import { Courses } from "../../courses/courses";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <LayoutPage />,
+
     children: [
       {
         path: "/",
@@ -14,7 +16,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/courses",
-        element: null,
+        element: <Courses />,
       },
       {
         path: "/blogs",

@@ -1,15 +1,9 @@
 import { create } from "zustand";
 
-// import { Course } from "../types";
 
-// export type ModalType = "createCourse" | "deleteCourse" | "updateCourse";
-// export
+export type ModalType = "navDialog" | "filterDialog";
 
-// type ModalData = {
-//   course?: Course;
-// };
-
-// type ModalStore = {
+// export type ModalStore = {
 //   type: ModalType | null;
 //   data: ModalData;
 //   isOpen: boolean;
@@ -17,11 +11,17 @@ import { create } from "zustand";
 //   onClose: () => void;
 // };
 
+type ModalStore = {
+  type: ModalType | null;
+  isOpen: boolean;
+  onOpen: (type: ModalType) => void;
+  onClose: () => void;
+};
+
 // export const useModal = create<ModalStore>((set) => ({
-export const useModal = create((set) => ({
+export const useModal = create<ModalStore>((set) => ({
   type: null,
-  data: {},
   isOpen: false,
-  onOpen: (data = {}) => set({ isOpen: true, data }),
+  onOpen: (type: ModalType) => set({ type, isOpen: true }),
   onClose: () => set({ type: null, isOpen: false }),
 }));
