@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {  useState } from "react";
 import ReactPaginate from "react-paginate";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -15,7 +15,7 @@ const filters = [
   { id: 3, label: 18, value: 18 },
 ];
 
-export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
+export const BlogCards = ({ courses, itemsPerPage, isVertical }) => {
   const [itemOffset, setItemOffset] = useState(0);
   const endOffset = itemOffset + itemsPerPage;
   const currentItems = courses?.slice(itemOffset, endOffset);
@@ -34,8 +34,8 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
           !isVertical && "hidden"
         )}
       >
-        {currentItems?.map((course) => (
-          <VerticalCard key={course.id} course={course} />
+        {currentItems?.map((blog) => (
+          <VerticalCard key={blog.id} blog={blog} />
         ))}
       </div>
       <div
@@ -44,8 +44,8 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
           isVertical && "hidden"
         )}
       >
-        {currentItems?.map((course) => (
-          <HorizontalCard key={course.id} course={course} />
+        {currentItems?.map((blog) => (
+          <HorizontalCard key={blog.id} blog={blog} />
         ))}
       </div>
       <div className="flex flex-col lg:flex-row items-center justify-between gap-y-5 mt-10">

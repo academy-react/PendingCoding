@@ -4,6 +4,8 @@ import { LayoutPage } from "../../landing/layout";
 import { LandingPage } from "../../landing/landing";
 import { Courses } from "../../courses/courses";
 import { CourseInfo } from "../../courses/[courseId]/course-info";
+import { Blogs } from "../../blogs/blogs";
+import { BlogInfo } from "../../blogs/[blogId]/blog-info";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +27,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/blogs",
-        element: null,
+        element: <Blogs />,
+      },
+      {
+        path: "/blogs/:id",
+        element: <BlogInfo />,
       },
       {
         path: "/teachers",

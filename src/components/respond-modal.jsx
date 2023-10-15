@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 
-import { useModal } from "../../hooks/use-modal-store";
+import { useModal } from "../hooks/use-modal-store";
 
 const backdrop = {
   hidden: {
@@ -24,21 +24,16 @@ const backdrop = {
 };
 
 const formSchema = z.object({
-  email: z
-    .string()
-    .email({ message: "ایمیل نامعتبر" })
-    .min(1, { message: "ایمیل خود را وارد کنید" }),
   message: z.string().min(1, { message: "پیام خود را وارد کنید" }),
 });
 
-export const SendMessageModal = () => {
+export const RespondModal = () => {
   const { isOpen, onClose, type } = useModal();
 
-  const isModalOpen = isOpen && type === "sendMessageModal";
+  const isModalOpen = isOpen && type === "sendRespond";
 
   const form = useForm({
     defaultValues: {
-      email: "",
       message: "",
     },
     resolver: zodResolver(formSchema),
@@ -77,16 +72,6 @@ export const SendMessageModal = () => {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col items-center justify-center gap-y-3"
               >
-                <input
-                  className="disabled:cursor-not-allowed outline-none w-80 bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-full px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                  placeholder="پست الکترونیکی"
-                  {...form.register("email")}
-                />
-                {form.formState.errors.email && (
-                  <p className="text-rose-600/90 mr-5 text-base">
-                    {form.formState.errors.email.message}
-                  </p>
-                )}
                 <textarea
                   className="resize-none h-40 disabled:cursor-not-allowed outline-none w-80 bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
                   placeholder="متن پیام"

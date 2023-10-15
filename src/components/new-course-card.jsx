@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { getPersianNumbers } from "../../../libs/get-persian-numbers"
+import { getPersianNumbers } from "../../libs/get-persian-numbers"
 
 export const NewCourseCard = ({id,title,price,teacher,image}) => {
   return (

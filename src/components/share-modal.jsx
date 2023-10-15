@@ -1,5 +1,5 @@
 import { Copy, CopyCheck, X } from "lucide-react";
-import { useModal } from "../../hooks/use-modal-store";
+import { useModal } from "../hooks/use-modal-store";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { TooTip } from "./tool-tip";
