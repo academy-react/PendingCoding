@@ -7,8 +7,7 @@ import { StarRate } from "../components/starRate";
 
 export const VerticalCard = ({ course }) => {
   return (
-    <div>
-      <div className="w-[350px] mx-auto flex flex-col items-center justify-center gap-y-5 bg-white rounded-t-3xl rounded-b-lg overflow-hidden">
+      <div className="w-[350px] mx-auto flex flex-col items-center justify-center gap-y-5 bg-white rounded-t-3xl rounded-b-lg s  overflow-hidden">
         <img
           loading="lazy"
           src={course.image}
@@ -21,11 +20,11 @@ export const VerticalCard = ({ course }) => {
         <div className="w-full px-5 flex justify-between items-center">
           <span className="text-gray-500 text-sm flex items-center justify-center gap-x-1">
             <User2 className="h-4 w-4 text-primary" />
-            {getPersianNumbers(course.students)}
+            {getPersianNumbers(course.students,false)}
           </span>
           <span className="text-gray-500 text-sm flex items-center justify-center gap-x-1">
             <Clock className="h-4 w-4 text-primary" />
-            {getPersianNumbers(course.time)} ساعت
+            {getPersianNumbers(course.time,false)} ساعت
           </span>
           <span className="flex flex-row-reverse items-center justify-center gap-x-1">
             <StarRate course={course} />
@@ -50,7 +49,7 @@ export const VerticalCard = ({ course }) => {
           <span>
             <h5 className="text-gray-600 flex justify-center items-center gap-x-1">
               قیمت :
-              <p className="text-primary">{getPersianNumbers(course.price)}</p>
+              <p className="text-primary">{getPersianNumbers(course.price,false)}</p>
               تومان
             </h5>
           </span>
@@ -73,6 +72,5 @@ export const VerticalCard = ({ course }) => {
           )}
         </div>
       </div>
-    </div>
   );
 };

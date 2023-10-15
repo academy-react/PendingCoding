@@ -112,9 +112,13 @@ export const MobileFilter = ({ values, setValues }) => {
           exit="exit"
           onClick={onClose}
         >
-          <div
+          <motion.div
             onClick={(e) => e.stopPropagation()}
             className="h-full fixed top-0 right-0 z-20 flex flex-col items-center justify-start gap-y-5 bg-gray-50 border-r border-gray-200 shadow-md p-5"
+            variants={backdrop}
+            animate="visible"
+            initial="hidden"
+            exit="exit"
           >
             <X
               className="self-start justify-self-start text-rose-700 cursor-pointer"
@@ -183,7 +187,7 @@ export const MobileFilter = ({ values, setValues }) => {
                 />
               </div>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
       </AnimatePresence>
     )

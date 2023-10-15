@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import { BookX, Grid2x2, Loader2, Menu, Rows, ServerCrash } from "lucide-react";
+import { BookX, Grid2x2, Menu, Rows } from "lucide-react";
 import { useQuery } from "react-query";
 import { useSearchParams } from "react-router-dom";
 
@@ -15,6 +15,8 @@ import { Banner } from "../components/banner";
 import { CourseCards } from "./course-cards";
 import { cn } from "../../libs/utils";
 import { useModal } from "../hooks/use-modal-store";
+import { Loading } from "../components/loading";
+import { Error } from "../components/error";
 
 const orderBy = [
   {
@@ -63,25 +65,9 @@ export const Courses = () => {
 
   if (!isMounted) return null;
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col gap-3 items-center justify-center my-52 dark:bg-[#1E1F22]">
-        <Loader2 className="w-12 h-12 text-gray-600/90 dark:text-gray-300 animate-spin" />
-        <p className="text-zinc dark:text-gray-300 text-xl">لطفاٌ صبر کنید</p>
-      </div>
-    );
-  }
+  if (isLoading) return <Loading />;
 
-  if (isError) {
-    return (
-      <div className="flex flex-col gap-3 items-center justify-center my-52 dark:bg-[#1E1F22]">
-        <ServerCrash className="w-12 h-12 text-danger/80 text-rose-600" />
-        <p className="text-rose-600/80 text-xl">
-          مشکلی پیش آمده بعداٌ تلاش کنید
-        </p>
-      </div>
-    );
-  }
+  if (isError) return <Error />;
 
   const course_name = searchParams.get("course_name");
   const courseFilterBy = searchParams.get("courseFilterBy");

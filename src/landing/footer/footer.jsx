@@ -1,12 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { Link } from "react-router-dom";
+import { Instagram, Linkedin, Twitter } from "lucide-react";
 
 import map from "../../assets/map.svg";
 import mail from "../../assets/mail.svg";
 import check from "../../assets/check.svg";
-import { Link } from "react-router-dom";
-import { Instagram, Linkedin, Twitter } from "lucide-react";
 
 const formSchema = z.object({
   email: z
