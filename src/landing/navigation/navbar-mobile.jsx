@@ -37,7 +37,11 @@ export const NavbarMobile = (count) => {
         exit="exit"
         onClick={onClose}
       >
-        <div
+        <motion.div
+          variants={backdrop}
+          animate="visible"
+          initial="hidden"
+          exit="exit"
           onClick={(e) => e.stopPropagation()}
           className="h-full fixed top-0 left-0 z-20 flex flex-col items-center justify-start gap-y-5 bg-gray-50 border-r border-gray-200 shadow-md p-5"
         >
@@ -78,7 +82,7 @@ export const NavbarMobile = (count) => {
               <Dot className="h-14 w-14 absolute -inset-6 z-10 text-primary group-hover:text-primary/60 transition" />
             )}
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </AnimatePresence>
   ) : null;

@@ -1,5 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, FreeMode } from "swiper/modules";
+import { Link } from "react-router-dom";
 
 import { cn } from "../../../../libs/utils";
 
@@ -11,7 +12,6 @@ import wavy from "../../../assets/nick-design-3fyrp9e0XSY-unsplash.jpg";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/autoplay";
-import { Link } from "react-router-dom";
 
 const photos = [
   {
