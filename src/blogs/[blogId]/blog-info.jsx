@@ -1,11 +1,10 @@
 import { useLayoutEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { Bookmark, Clock, Tags, User2, Users2 } from "lucide-react";
+import { Bookmark} from "lucide-react";
 
 
 import { apiCall } from "../../../libs/api-call";
-import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import { useModal } from "../../hooks/use-modal-store";
 import {getCourses} from "../../../libs/get-courses"
 
@@ -16,20 +15,21 @@ import { Header } from "./header";
 import { Description } from "./description";
 import { Banner } from "../../components/banner";
 import { NewCourseCard } from "../../components/new-course-card";
+import { NewBlogCard } from "../../components/new-blog-card";
 import { Slider } from "./slider";
 
 function getCourseById(id) {
   return apiCall.get(`/items/${id}`);
 }
 
-export const CourseInfo = () => {
-  const { data:course, isLoading:courseLoading, isError:courseError, refetch:refetchCourse } = useQuery({
+export const BlogInfo = () => {
+  const { data:blog, isLoading:blogLoading, isError:blogError, refetch:refetchBlog } = useQuery({
     queryKey: ["courseId"],
     queryFn: async () => getCourseById(id),
     enabled: false,
   });
 
-  const { data:courses, isLoading:coursesLoading, isError:coursesError, refetch:refetchCourses } = useQuery({
+  const { data:blogs, isLoading:blogsLoading, isError:blogsError, refetch:refetchBlogs } = useQuery({
     queryKey: ["courses"],
     queryFn: async () => getCourses("/items"),
     staleTime: 5000,
@@ -48,51 +48,6 @@ export const CourseInfo = () => {
     },
     {
       id: 2,
-      label: "نقشه راه",
-      seasons: [
-        {
-          id: 1,
-          value: "فصل یکم : لورم ایپسوم",
-        },
-        {
-          id: 2,
-          value: "فصل دوم : لورم ایپسوم",
-        },
-        {
-          id: 3,
-          value: "فصل سوم : لورم ایپسوم",
-        },
-        {
-          id: 4,
-          value: "فصل چهارم : لورم ایپسوم",
-        },
-        {
-          id: 5,
-          value: "فصل پنجم : لورم ایپسوم",
-        },
-        {
-          id: 6,
-          value: "فصل ششم : لورم ایپسوم",
-        },
-      ],
-    },
-    {
-      id: 3,
-      label: "درباره استاد",
-      value: `لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون 
-      .و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد
-      کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای
-      .طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد
-      در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروف چینی
-      .دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد`,
-      teacher: {
-        id: course?.data.teacherId,
-        name: course?.data.teacher,
-        image: course?.data.teacherAvatar,
-      },
-    },
-    {
-      id: 4,
       label: "نظرات",
       comments: [
         {
@@ -103,25 +58,25 @@ export const CourseInfo = () => {
           برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام
           و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی
            .سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد`,
-          createdAt: course?.data.createdAt,
+          createdAt: blog?.data.createdAt,
           user: {
-            name: course?.data.studentName,
-            image: course?.data?.studentImage,
+            name: blog?.data.studentName,
+            image: blog?.data?.studentImage,
           },
           responds: [
             {
-              id: course?.data.teacherId,
-              name: course?.data.teacher,
-              image: course?.data?.teacherAvatar,
+              id: blog?.data.teacherId,
+              name: blog?.data.teacher,
+              image: blog?.data?.teacherAvatar,
               respond: `.لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
               چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد
               .نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد`,
               role: "admin",
             },
             {
-              id: course?.data.studentId || 1234,
-              name: course?.data.studentName,
-              image: course?.data?.studentImage,
+              id: blog?.data.studentId || 1234,
+              name: blog?.data.studentName,
+              image: blog?.data?.studentImage,
               respond: `.لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
               چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد
               .نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد`,
@@ -140,21 +95,21 @@ export const CourseInfo = () => {
   useLayoutEffect(() => {
     if (!isMounted) {
       setIsMounted(true);
-      refetchCourse();
-      refetchCourses()
+      refetchBlog();
+      refetchBlogs()
     }
-  }, [isMounted, refetchCourse,refetchCourses]);
+  }, [isMounted, refetchBlog,refetchBlogs]);
 
   if (!isMounted) return null;
 
-  if (courseLoading&&coursesLoading) return <Loading />;
-  if (courseError&&
-    coursesError) return <Error />;
+  if (blogLoading&&blogsLoading) return <Loading />;
+  if (blogsError&&
+    blogError) return <Error />;
 
-  const startDate = new Date(course?.data.startDate).toLocaleDateString("fa-IR-u-nu-latn").split("/")
-  const endDate = new Date(course?.data.endDate).toLocaleDateString("fa-IR-u-nu-latn").split("/")
+  const startDate = new Date(blog?.data.startDate).toLocaleDateString("fa-IR-u-nu-latn").split("/")
+  const endDate = new Date(blog?.data.endDate).toLocaleDateString("fa-IR-u-nu-latn").split("/")
   const months = ["فروردين", "ارديبهشت", "خرداد", "تير", "مرداد", "شهريور", "مهر", "آبان", "آذر", "دي", "بهمن", "اسفند"]
-  const registered = course?.data.capacity - course?.data.students
+  const registered = blog?.data.capacity - blog?.data.students
 
   return (
     <div className="flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5">
@@ -167,18 +122,18 @@ export const CourseInfo = () => {
           <Bookmark onClick={() => {}} className="h-9 w-9 text-primary" />
           <span className="flex flex-col justify-center items-start gap-y-2">
             <h5 className="text-sm text-gray-400">دسته بندی</h5>
-            <h5 className="text-sm text-gray-600/80">{course?.data.category}</h5>
+            <h5 className="text-sm text-gray-600/80">{blog?.data.category}</h5>
           </span>
         </div>
         <div className="flex justify-center items-center gap-x-2">
           <img
-            src={course?.data.teacherAvatar}
+            src={blog?.data.teacherAvatar}
             alt="teacherAvatar"
             className="h-10 w-10 rounded-full"
           />
           <span className="flex flex-col justify-center items-start gap-y-2">
             <h5 className="text-sm text-gray-400">استاد :</h5>
-            <h5 className="text-sm text-gray-600/80">{course?.data.teacher}</h5>
+            <h5 className="text-sm text-gray-600/80">{blog?.data.teacher}</h5>
           </span>
         </div>
       </div>
@@ -187,7 +142,7 @@ export const CourseInfo = () => {
       <div className="w-full flex flex-col md:flex-row justify-between items-center gap-y-10 px-10">
         {/* Title Div */}
         <div>
-          <h1 className="text-3xl text-gray-700">{course?.data.title}</h1>
+          <h1 className="text-3xl text-gray-700">{blog?.data.title}</h1>
         </div>
         {/* Add Div */}
         <div className=" flex flex-col items-center justify-center gap-y-3">
@@ -213,10 +168,10 @@ export const CourseInfo = () => {
         <div className="w-full flex flex-col items-start justify-center gap-y-5">
           <img
             className="rounded-xl w-full h-[475px] object-fill"
-            src={course?.data.image}
-            alt="courseImage"
+            src={blog?.data.image}
+            alt="blogImage"
           />
-          <div className="w-full flex justify-between items-center gap-x-10">
+          <div className="flex justify-cneter items-center gap-x-20">
             {details?.map((datail) => (
               <Header
                 key={datail.id}
@@ -237,71 +192,41 @@ export const CourseInfo = () => {
           </div>
         </div>
 
-        {/* Course Infos */}
+        {/* blog Infos */}
         <div className="w-full xl:w-1/4 flex flex-col items-center xl:items-start justify-center gap-y-10">
-          <Banner title="مشخصات دوره" className="text-xl" height="h-9" />
+          <Banner title="جدید ترین بلاگ ها" className="text-xl" height="h-9" />
           <div className="flex flex-col items-start justify-center gap-y-5">
-              <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <User2 className="text-primary h-6 w-6" />
-                ظرفیت:
-                <h5 className="text-gray-600">
-                  {getPersianNumbers(course?.data?.capacity,false)}
-                </h5>
-              </span>
-              <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <Clock className="text-primary h-6 w-6" />
-                تاریخ شروع:
-                <h5 className="text-gray-600">
-                {`تاریخ شروع : ${getPersianNumbers(startDate[2],true)} ${months[startDate[1]]} ${getPersianNumbers(startDate[0],true)}`}
-                </h5>
-              </span>
-              <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <Clock className="text-primary h-6 w-6" />
-                تاریخ پایان:
-                <h5 className="text-gray-600">
-                {`تاریخ پایان : ${getPersianNumbers(endDate[2])} ${months[endDate[1]]} ${getPersianNumbers(endDate[0],true)}`}
-                </h5>
-              </span>
-              <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <Tags className="text-primary h-6 w-6" />
-                قیمت:
-                <h5 className="text-gray-600">
-                  {`${getPersianNumbers(course?.data.price, false)} تومان`}
-                </h5>
-              </span>
-              <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <Users2 className="text-primary h-6 w-6" />
-                ظرفیت پر شده:
-                <h5 className="text-gray-600">
-                  {getPersianNumbers(registered, false)}
-                </h5>
-              </span>
-              <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <Users2 className="text-primary h-6 w-6" />
-                تعداد فصول:
-                <h5 className="text-gray-600">
-                  {getPersianNumbers(details[1].seasons.length, false)}
-                </h5>
-              </span>
+          <div className="flex flex-col justify-center items-start">
+                {blogs?.data.slice(0,3).map((blog) => (
+                  <NewBlogCard 
+                    key={blog.id}
+                    id={blog.id}
+                    title={blog.title}
+                    price={blog.price}
+                    teacher={blog.teacher}
+                    image={blog.image}
+                  />
+                ))}
+              </div>
           </div>
-          <Banner title="جدید ترین دوره ها" className="text-xl" height="h-9" />
+          <Banner title="جدیدترین دوره ها" className="text-xl" height="h-9" />
               <div className="flex flex-col justify-center items-start">
-                {courses?.data.slice(0,3).map((course) => (
+                {blogs?.data.slice(0,3).map((blog) => (
                   <NewCourseCard 
-                    key={course.id}
-                    id={course.id}
-                    title={course.title}
-                    price={course.price}
-                    teacher={course.teacher}
-                    image={course.image}
+                    key={blog.id}
+                    id={blog.id}
+                    title={blog.title}
+                    price={blog.price}
+                    teacher={blog.teacher}
+                    image={blog.image}
                   />
                 ))}
               </div>
         </div>
       </div>
       <div className="w-full flex flex-col items-start justify-center gap-y-10 2xl">
-        <Banner title="دوره های مشابه"/>
-        <Slider courses={courses?.data} />
+        <Banner title="اخرین خبر ها"/>
+        <Slider blogs={blogs?.data} />
       <div>
       </div>
       </div>

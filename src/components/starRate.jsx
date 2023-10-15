@@ -6,12 +6,12 @@ import { useQuery } from "react-query";
 import { apiCall } from "../../libs/api-call";
 import { getCourses } from "../../libs/get-courses";
 
-export const StarRate = ({ course }) => {
-  const [rating, setRating] = useState(course?.stars | null);
+export const StarRate = ({ data,queryKey }) => {
+  const [rating, setRating] = useState(data?.stars | null);
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { refetch } = useQuery({
-    queryKey: ["courses"],
+    queryKey: [queryKey],
   });
 
   const onClick = async (currentRate) => {
@@ -31,8 +31,8 @@ export const StarRate = ({ course }) => {
     try {
       setIsLoading(true);
       await apiCall
-        .put(`/items/${course.id}`, {
-          ...course,
+        .put(`/items/${data.id}`, {
+          ...data,
           stars: currentRate,
         })
         .then(() => {

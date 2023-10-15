@@ -27,7 +27,7 @@ export const VerticalCard = ({ course }) => {
             {getPersianNumbers(course.time,false)} ساعت
           </span>
           <span className="flex flex-row-reverse items-center justify-center gap-x-1">
-            <StarRate course={course} />
+            <StarRate data={course} queryKey="courses" />
           </span>
         </div>
         <div className="flex justify-start w-full items-center px-3 py-2">

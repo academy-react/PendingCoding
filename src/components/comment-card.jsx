@@ -1,5 +1,6 @@
 import { Mail } from "lucide-react";
-import { useModal } from "../../hooks/use-modal-store";
+
+import { useModal } from "../hooks/use-modal-store";
 
 export const CommentCard = ({ image, name, createdAt, comment, responds }) => {
   const { onOpen } = useModal();
