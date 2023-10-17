@@ -157,7 +157,7 @@ export const CourseInfo = () => {
   const registered = course?.data.capacity - course?.data.students
 
   return (
-    <div className="flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5">
+    <div className="max-w-[1900px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5">
       <div className="flex mx-auto md:mx-0 justify-center items-center">
         <NavigatorTracer />
       </div>
@@ -252,14 +252,14 @@ export const CourseInfo = () => {
                 <Clock className="text-primary h-6 w-6" />
                 تاریخ شروع:
                 <h5 className="text-gray-600">
-                {`تاریخ شروع : ${getPersianNumbers(startDate[2],true)} ${months[startDate[1]]} ${getPersianNumbers(startDate[0],true)}`}
+                {`تاریخ شروع : ${getPersianNumbers(startDate?.[2],true)} ${months[startDate?.[1]]} ${getPersianNumbers(startDate?.[0],true)}`}
                 </h5>
               </span>
               <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
                 <Clock className="text-primary h-6 w-6" />
                 تاریخ پایان:
                 <h5 className="text-gray-600">
-                {`تاریخ پایان : ${getPersianNumbers(endDate[2])} ${months[endDate[1]]} ${getPersianNumbers(endDate[0],true)}`}
+                {`تاریخ پایان : ${getPersianNumbers(endDate?.[2])} ${months[endDate?.[1]]} ${getPersianNumbers(endDate?.[0],true)}`}
                 </h5>
               </span>
               <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">

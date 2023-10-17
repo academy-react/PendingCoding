@@ -106,13 +106,8 @@ export const BlogInfo = () => {
   if (blogsError&&
     blogError) return <Error />;
 
-  const startDate = new Date(blog?.data.startDate).toLocaleDateString("fa-IR-u-nu-latn").split("/")
-  const endDate = new Date(blog?.data.endDate).toLocaleDateString("fa-IR-u-nu-latn").split("/")
-  const months = ["فروردين", "ارديبهشت", "خرداد", "تير", "مرداد", "شهريور", "مهر", "آبان", "آذر", "دي", "بهمن", "اسفند"]
-  const registered = blog?.data.capacity - blog?.data.students
-
   return (
-    <div className="flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5">
+    <div className="max-w-[1900px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5">
       <div className="flex mx-auto md:mx-0 justify-center items-center">
         <NavigatorTracer />
       </div>
