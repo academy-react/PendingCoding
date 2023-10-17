@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { Bookmark, Clock, Tags, User2, Users2 } from "lucide-react";
+import { Book, Bookmark, Clock, Tags, User2, Users2 } from "lucide-react";
 
 
 import { apiCall } from "../../../libs/api-call";
@@ -192,7 +192,7 @@ export const CourseInfo = () => {
         {/* Add Div */}
         <div className=" flex flex-col items-center justify-center gap-y-3">
           <button
-            onClick={() => {}}
+            onClick={() => onOpen("confirmModal")}
             className="w-full px-20 py-2 bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/80 disabled:cursor-not-allowed transition rounded-full "
           >
             افزودن به سبد خرید
@@ -277,7 +277,7 @@ export const CourseInfo = () => {
                 </h5>
               </span>
               <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <Users2 className="text-primary h-6 w-6" />
+                <Book className="text-primary h-6 w-6" />
                 تعداد فصول:
                 <h5 className="text-gray-600">
                   {getPersianNumbers(details[1].seasons.length, false)}

@@ -1,15 +1,18 @@
+import { useMemo, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Dot, Menu, ShoppingCart } from "lucide-react";
 
+import { useModal } from "../../hooks/use-modal-store";
+import {useUser} from "../../components/providers/user-provider"
+
 import { routes } from "../../components/routes/routes";
+import { NavbarMobile } from "./navbar-mobile";
 
 import logo from "../../assets/logo.svg";
-import { useState } from "react";
-import { NavbarMobile } from "./navbar-mobile";
-import { useModal } from "../../hooks/use-modal-store";
 
 const Navbar = () => {
-  const [count] = useState(1);
+  const {userData} = useUser()
+  const count = useMemo(() => userData?.cart.length,[userData]);
   const { onOpen } = useModal();
 
   return (
@@ -45,7 +48,7 @@ const Navbar = () => {
           >
             ثبت نام
           </Link>
-          <div className="group relative cursor-pointer ">
+          <div onClick={() => onOpen("cartModal")} className="group relative cursor-pointer">
             <ShoppingCart className="h-6 w-6 group-hover:text-black/60 transition" />
             {count > 0 && (
               <Dot className="h-14 w-14 absolute -inset-6 z-10 text-primary group-hover:text-primary/60 transition" />
