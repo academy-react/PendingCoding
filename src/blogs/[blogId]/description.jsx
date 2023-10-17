@@ -40,7 +40,7 @@ export const Description = ({ details, selected }) => {
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values) => {
-    console.log(values);
+    console.log(values)
   };
 
   if (selected === details.label && details.label === "توضیحات") {
