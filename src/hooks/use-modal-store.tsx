@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 
-export type ModalType = "navDialog" | "filterDialog" | "shareModal" | "sendRespond";
+export type ModalType = "navDialog" | "filterDialog" | "confirmModal" | "cartModal" | "shareModal" | "sendRespond";
 
 type ModalData = {
   user?: {

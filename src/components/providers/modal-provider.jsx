@@ -4,6 +4,8 @@ import { MobileFilter } from "../../courses/mobile-filter";
 import { ShareModal } from "../share-modal";
 import { SendMessageModal } from "../send-message-modal";
 import { RespondModal } from "../respond-modal";
+import { ConfirmModal } from "../confirm-modal";
+import { CartModal } from "../../landing/navigation/cart-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -23,6 +25,8 @@ export const ModalProvider = () => {
       <ShareModal />
       <SendMessageModal />
       <RespondModal />
+      <ConfirmModal />
+      <CartModal />
     </>
   );
 };
