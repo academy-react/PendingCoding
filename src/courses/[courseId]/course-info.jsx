@@ -1,13 +1,12 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Book, Bookmark, Clock, Tags, User2, Users2 } from "lucide-react";
 
-
 import { apiCall } from "../../../libs/api-call";
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import { useModal } from "../../hooks/use-modal-store";
-import {getCourses} from "../../../libs/get-courses"
+import { getCourses } from "../../../libs/get-courses";
 
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
@@ -17,22 +16,32 @@ import { Description } from "./description";
 import { Banner } from "../../components/banner";
 import { NewCourseCard } from "../../components/new-course-card";
 import { Slider } from "./slider";
+import { useUser } from "../../components/providers/user-provider";
 
 function getCourseById(id) {
   return apiCall.get(`/items/${id}`);
 }
 
 export const CourseInfo = () => {
-  const { data:course, isLoading:courseLoading, isError:courseError, refetch:refetchCourse } = useQuery({
+  const {
+    data: course,
+    isLoading: courseLoading,
+    isError: courseError,
+    refetch: refetchCourse,
+  } = useQuery({
     queryKey: ["courseId"],
     queryFn: async () => getCourseById(id),
     enabled: false,
   });
 
-  const { data:courses, isLoading:coursesLoading, isError:coursesError, refetch:refetchCourses } = useQuery({
+  const {
+    data: courses,
+    isLoading: coursesLoading,
+    isError: coursesError,
+    refetch: refetchCourses,
+  } = useQuery({
     queryKey: ["courses"],
     queryFn: async () => getCourses("/items"),
-    staleTime: 5000,
     enabled: false,
   });
   const details = [
@@ -136,25 +145,47 @@ export const CourseInfo = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [selected, setSelected] = useState(details[0].label);
   const { isOpen, onOpen } = useModal();
+  const { userData, addToFavorites, removeFromFavorites } = useUser();
+  const [isBookMarked, setIsBookMarked] = useState(false);
+
+  useEffect(() => {
+    setIsBookMarked(userData.favorites.some((c) => c.id === course?.data.id));
+  }, [course?.data.id, userData.favorites]);
 
   useLayoutEffect(() => {
     if (!isMounted) {
       setIsMounted(true);
       refetchCourse();
-      refetchCourses()
+      refetchCourses();
     }
-  }, [isMounted, refetchCourse,refetchCourses]);
+  }, [isMounted, refetchCourse, refetchCourses]);
 
   if (!isMounted) return null;
 
-  if (courseLoading&&coursesLoading) return <Loading />;
-  if (courseError&&
-    coursesError) return <Error />;
+  if (courseLoading && coursesLoading) return <Loading />;
+  if (courseError && coursesError) return <Error />;
 
-  const startDate = new Date(course?.data.startDate).toLocaleDateString("fa-IR-u-nu-latn").split("/")
-  const endDate = new Date(course?.data.endDate).toLocaleDateString("fa-IR-u-nu-latn").split("/")
-  const months = ["فروردين", "ارديبهشت", "خرداد", "تير", "مرداد", "شهريور", "مهر", "آبان", "آذر", "دي", "بهمن", "اسفند"]
-  const registered = course?.data.capacity - course?.data.students
+  const startDate = new Date(course?.data.startDate)
+    .toLocaleDateString("fa-IR-u-nu-latn")
+    .split("/");
+  const endDate = new Date(course?.data.endDate)
+    .toLocaleDateString("fa-IR-u-nu-latn")
+    .split("/");
+  const months = [
+    "فروردين",
+    "ارديبهشت",
+    "خرداد",
+    "تير",
+    "مرداد",
+    "شهريور",
+    "مهر",
+    "آبان",
+    "آذر",
+    "دي",
+    "بهمن",
+    "اسفند",
+  ];
+  const registered = course?.data.capacity - course?.data.students;
 
   return (
     <div className="max-w-[1900px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5">
@@ -164,10 +195,29 @@ export const CourseInfo = () => {
       {/* BookMark and Teacher Pic */}
       <div className="w-full flex justify-start items-center gap-x-10 mt-5 mb-10">
         <div className="flex justify-center items-center gap-x-2">
-          <Bookmark onClick={() => {}} className="h-9 w-9 text-primary" />
+          {isBookMarked ? (
+            <Bookmark
+              onClick={() => {
+                removeFromFavorites(course?.data);
+                setIsBookMarked(false);
+              }}
+              className="h-9 w-9 text-primary cursor-pointer"
+              fill="#5c55c9"
+            />
+          ) : (
+            <Bookmark
+              onClick={() => {
+                addToFavorites(course?.data);
+                setIsBookMarked(true);
+              }}
+              className="h-9 w-9 text-primary hover:text-primary/80 transition cursor-pointer"
+            />
+          )}
           <span className="flex flex-col justify-center items-start gap-y-2">
             <h5 className="text-sm text-gray-400">دسته بندی</h5>
-            <h5 className="text-sm text-gray-600/80">{course?.data.category}</h5>
+            <h5 className="text-sm text-gray-600/80">
+              {course?.data.category}
+            </h5>
           </span>
         </div>
         <div className="flex justify-center items-center gap-x-2">
@@ -241,69 +291,72 @@ export const CourseInfo = () => {
         <div className="w-full xl:w-1/4 flex flex-col items-center xl:items-start justify-center gap-y-10">
           <Banner title="مشخصات دوره" className="text-xl" height="h-9" />
           <div className="flex flex-col items-start justify-center gap-y-5">
-              <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <User2 className="text-primary h-6 w-6" />
-                ظرفیت:
-                <h5 className="text-gray-600">
-                  {getPersianNumbers(course?.data?.capacity,false)}
-                </h5>
-              </span>
-              <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <Clock className="text-primary h-6 w-6" />
-                تاریخ شروع:
-                <h5 className="text-gray-600">
-                {`تاریخ شروع : ${getPersianNumbers(startDate?.[2],true)} ${months[startDate?.[1]]} ${getPersianNumbers(startDate?.[0],true)}`}
-                </h5>
-              </span>
-              <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <Clock className="text-primary h-6 w-6" />
-                تاریخ پایان:
-                <h5 className="text-gray-600">
-                {`تاریخ پایان : ${getPersianNumbers(endDate?.[2])} ${months[endDate?.[1]]} ${getPersianNumbers(endDate?.[0],true)}`}
-                </h5>
-              </span>
-              <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <Tags className="text-primary h-6 w-6" />
-                قیمت:
-                <h5 className="text-gray-600">
-                  {`${getPersianNumbers(course?.data.price, false)} تومان`}
-                </h5>
-              </span>
-              <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <Users2 className="text-primary h-6 w-6" />
-                ظرفیت پر شده:
-                <h5 className="text-gray-600">
-                  {getPersianNumbers(registered, false)}
-                </h5>
-              </span>
-              <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-                <Book className="text-primary h-6 w-6" />
-                تعداد فصول:
-                <h5 className="text-gray-600">
-                  {getPersianNumbers(details[1].seasons.length, false)}
-                </h5>
-              </span>
+            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
+              <User2 className="text-primary h-6 w-6" />
+              ظرفیت:
+              <h5 className="text-gray-600">
+                {getPersianNumbers(course?.data.capacity, false)}
+              </h5>
+            </span>
+            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
+              <Clock className="text-primary h-6 w-6" />
+              تاریخ شروع:
+              <h5 className="text-gray-600">
+                {`تاریخ شروع : ${getPersianNumbers(startDate?.[2], true)} ${
+                  months[startDate?.[1]]
+                } ${getPersianNumbers(startDate?.[0], true)}`}
+              </h5>
+            </span>
+            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
+              <Clock className="text-primary h-6 w-6" />
+              تاریخ پایان:
+              <h5 className="text-gray-600">
+                {`تاریخ پایان : ${getPersianNumbers(endDate?.[2])} ${
+                  months[endDate?.[1]]
+                } ${getPersianNumbers(endDate?.[0], true)}`}
+              </h5>
+            </span>
+            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
+              <Tags className="text-primary h-6 w-6" />
+              قیمت:
+              <h5 className="text-gray-600">
+                {`${getPersianNumbers(course?.data.price, false)} تومان`}
+              </h5>
+            </span>
+            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
+              <Users2 className="text-primary h-6 w-6" />
+              ظرفیت پر شده:
+              <h5 className="text-gray-600">
+                {getPersianNumbers(registered, false)}
+              </h5>
+            </span>
+            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
+              <Book className="text-primary h-6 w-6" />
+              تعداد فصول:
+              <h5 className="text-gray-600">
+                {getPersianNumbers(details?.[1].seasons.length, false)}
+              </h5>
+            </span>
           </div>
           <Banner title="جدید ترین دوره ها" className="text-xl" height="h-9" />
-              <div className="flex flex-col justify-center items-start">
-                {courses?.data.slice(0,3).map((course) => (
-                  <NewCourseCard 
-                    key={course.id}
-                    id={course.id}
-                    title={course.title}
-                    price={course.price}
-                    teacher={course.teacher}
-                    image={course.image}
-                  />
-                ))}
-              </div>
+          <div className="flex flex-col justify-center items-start">
+            {courses?.data.slice(0, 3).map((course) => (
+              <NewCourseCard
+                key={course.id}
+                id={course.id}
+                title={course.title}
+                price={course.price}
+                teacher={course.teacher}
+                image={course.image}
+              />
+            ))}
+          </div>
         </div>
       </div>
       <div className="w-full flex flex-col items-start justify-center gap-y-10 2xl">
-        <Banner title="دوره های مشابه"/>
+        <Banner title="دوره های مشابه" />
         <Slider courses={courses?.data} />
-      <div>
-      </div>
+        <div></div>
       </div>
     </div>
   );
