@@ -31,7 +31,6 @@ export const ConfirmModal = () => {
   });
 
   const isModalOpen = isOpen && type === "confirmModal";
-  console.log(userData)
 
   return (
     isModalOpen && (
