@@ -29,7 +29,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-[700px] h-[700px] bg-[#EEEEEE] rounded-[100%] border-[15px] border-solid border-[#505050] flex justify-center items-center relative z-10">
+    <div className="w-[700px] h-[700px] bg-[#EEEEEE] rounded-[100%] border-[15px] border-solid border-[#505050] flex justify-center items-center relative">
       <div className="w-[350px] height-[460px] flex justify-center items-center flex-col flex-wrap select-none">
         <h1 className="text-[#505050] text-[28px] mb-[50px]">
           {" "}
