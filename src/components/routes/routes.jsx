@@ -78,6 +78,10 @@ const routers = [
         path: "contact-us",
         element: null,
       },
+      {
+        path: "/sign-in",
+        element: <Holder />,
+      },
     ],
   },
   {
@@ -101,10 +105,6 @@ const routers = [
         element: null,
       },
     ],
-  },
-  {
-    path: "/sign-in",
-    element: <Holder />,
   },
   {
     path: "*",
