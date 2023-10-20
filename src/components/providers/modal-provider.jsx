@@ -6,6 +6,7 @@ import { SendMessageModal } from "../send-message-modal";
 import { RespondModal } from "../respond-modal";
 import { ConfirmModal } from "../confirm-modal";
 import { CartModal } from "../../landing/navigation/cart-modal";
+import { ConfirmDeleteModal } from "../confirm-delete-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -26,6 +27,7 @@ export const ModalProvider = () => {
       <SendMessageModal />
       <RespondModal />
       <ConfirmModal />
+      <ConfirmDeleteModal />
       <CartModal />
     </>
   );

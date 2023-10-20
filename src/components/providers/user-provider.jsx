@@ -18,18 +18,15 @@ function UserProvider({ children }) {
     user: userInfo?.user || "",
     cart: userInfo?.cart || [],
     favorites: userInfo?.favorites || [],
+    myCourses: userInfo?.myCourses || [],
   });
 
   const addToCart = (course) => {
     const newObj = {
       ...userData,
       cart: userData.cart.find((cartItem) => cartItem.id === course.id)
-        ? userData.cart.map((cartItem) =>
-            cartItem.id === course.id
-              ? { ...cartItem, count: cartItem.count + 1 }
-              : cartItem
-          )
-        : [...userData.cart, { ...course, count: 1 }],
+        ? [...userData.cart]
+        : [...userData.cart, { ...course }],
     };
     setUserData(newObj);
     localStorage.setItem("user", JSON.stringify(newObj));
@@ -45,34 +42,45 @@ function UserProvider({ children }) {
     setUserData(newObj);
     userData.cart.length === 1 && onClose();
     localStorage.setItem("user", JSON.stringify(newObj));
-    toast.success("دوره با موفقیت حذف شد");
   };
 
-  const increase = (id) => {
+  const checkout = (course) => {
     const newObj = {
       ...userData,
-      cart: userData.cart.map((cartItem) =>
-        cartItem.id === id
-          ? { ...cartItem, count: cartItem.count + 1 }
-          : cartItem
-      ),
+      cart: userData.cart.filter((c) => c.id !== course.id),
+      myCourses: userData.myCourses.find((mc) => mc.id === course.id)
+        ? [...userData.myCourses]
+        : [...userData.myCourses, { ...course }],
     };
     setUserData(newObj);
     localStorage.setItem("user", JSON.stringify(newObj));
   };
 
-  const decrease = (id) => {
-    const newObj = {
-      ...userData,
-      cart: userData.cart.map((cartItem) =>
-        cartItem.id === id
-          ? { ...cartItem, count: cartItem.count > 1 ? cartItem.count - 1 : 1 }
-          : cartItem
-      ),
-    };
-    setUserData(newObj);
-    localStorage.setItem("user", JSON.stringify(newObj));
-  };
+  // const increase = (id) => {
+  //   const newObj = {
+  //     ...userData,
+  //     cart: userData.cart.map((cartItem) =>
+  //       cartItem.id === id
+  //         ? { ...cartItem, count: cartItem.count + 1 }
+  //         : cartItem
+  //     ),
+  //   };
+  //   setUserData(newObj);
+  //   localStorage.setItem("user", JSON.stringify(newObj));
+  // };
+
+  // const decrease = (id) => {
+  //   const newObj = {
+  //     ...userData,
+  //     cart: userData.cart.map((cartItem) =>
+  //       cartItem.id === id
+  //         ? { ...cartItem, count: cartItem.count > 1 ? cartItem.count - 1 : 1 }
+  //         : cartItem
+  //     ),
+  //   };
+  //   setUserData(newObj);
+  //   localStorage.setItem("user", JSON.stringify(newObj));
+  // };
 
   const addToFavorites = (course) => {
     const newObj = {
@@ -100,9 +108,8 @@ function UserProvider({ children }) {
       value={{
         userData,
         addToCart,
-        increase,
-        decrease,
         removeFromCart,
+        checkout,
         addToFavorites,
         removeFromFavorites,
       }}
