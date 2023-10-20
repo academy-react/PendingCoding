@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { useModal } from "../hooks/use-modal-store";
 import { useUser } from "./providers/user-provider";
 import { useQuery } from "react-query";
+import toast from "react-hot-toast";
 
 const backdrop = {
   hidden: {
@@ -22,15 +23,21 @@ const backdrop = {
   },
 };
 
-export const ConfirmModal = () => {
+export const ConfirmDeleteModal = () => {
   const { isOpen, onClose, type } = useModal();
-  const { addToCart } = useUser();
+  const { removeFromCart } = useUser();
   const { data } = useQuery({
     queryKey: ["courseId"],
     enabled: false,
   });
 
-  const isModalOpen = isOpen && type === "confirmModal";
+  const isModalOpen = isOpen && type === "confirmDeleteModal";
+
+  const handleDelete = () => {
+    removeFromCart(data?.data.id);
+    toast.success("دوره با موفقیت حذف شد");
+    onClose();
+  };
 
   return (
     isModalOpen && (
@@ -57,11 +64,11 @@ export const ConfirmModal = () => {
             />
             <div className="flex flex-col justify-center items-center gap-y-10 my-5">
               <h1 className="text-xl text-gray-700">
-                آیا از خرید این دوره مطمئنید؟
+                آیا از حذف این دوره مطمئنید؟
               </h1>
               <div className="w-full flex items-center justify-start gap-x-3 px-5 py-2">
                 <button
-                  onClick={() => addToCart(data?.data)}
+                  onClick={handleDelete}
                   className="px-5 py-2 text-lg bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/90 rounded-xl"
                 >
                   تائید

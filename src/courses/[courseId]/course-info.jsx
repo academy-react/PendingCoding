@@ -147,6 +147,14 @@ export const CourseInfo = () => {
   const { isOpen, onOpen } = useModal();
   const { userData, addToFavorites, removeFromFavorites } = useUser();
   const [isBookMarked, setIsBookMarked] = useState(false);
+  const isInCart = useMemo(
+    () => userData.cart.some((c) => c.id === id),
+    [userData.cart, id]
+  );
+  const isPurchased = useMemo(
+    () => userData.myCourses.some((c) => c.id === id),
+    [userData.myCourses, id]
+  );
 
   useEffect(() => {
     setIsBookMarked(userData.favorites.some((c) => c.id === course?.data.id));
@@ -241,12 +249,25 @@ export const CourseInfo = () => {
         </div>
         {/* Add Div */}
         <div className=" flex flex-col items-center justify-center gap-y-3">
-          <button
-            onClick={() => onOpen("confirmModal")}
-            className="w-full px-20 py-2 bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/80 disabled:cursor-not-allowed transition rounded-full "
-          >
-            افزودن به سبد خرید
-          </button>
+          {isInCart ? (
+            <button
+              onClick={() => onOpen("confirmDeleteModal")}
+              className="w-full px-20 py-2 bg-destructive hover:bg-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/80 disabled:cursor-not-allowed transition rounded-full "
+            >
+              حذف از سبد خرید
+            </button>
+          ) : isPurchased ? (
+            <p className="w-full px-20 py-2 bg-emerald-500 hover:bg-emerald-500/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-emerald-500/80 disabled:cursor-not-allowed transition rounded-full">
+              شما این دوره را خریده‌اید
+            </p>
+          ) : (
+            <button
+              onClick={() => onOpen("confirmModal")}
+              className="w-full px-20 py-2 bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/80 disabled:cursor-not-allowed transition rounded-full "
+            >
+              افزودن به سبد خرید
+            </button>
+          )}
           <button
             onClick={() => onOpen("shareModal")}
             disabled={isOpen}
@@ -303,7 +324,7 @@ export const CourseInfo = () => {
               تاریخ شروع:
               <h5 className="text-gray-600">
                 {`تاریخ شروع : ${getPersianNumbers(startDate?.[2], true)} ${
-                  months[startDate?.[1]]
+                  months[startDate?.[1] - 1]
                 } ${getPersianNumbers(startDate?.[0], true)}`}
               </h5>
             </span>
@@ -312,7 +333,7 @@ export const CourseInfo = () => {
               تاریخ پایان:
               <h5 className="text-gray-600">
                 {`تاریخ پایان : ${getPersianNumbers(endDate?.[2])} ${
-                  months[endDate?.[1]]
+                  months[endDate?.[1] - 1]
                 } ${getPersianNumbers(endDate?.[0], true)}`}
               </h5>
             </span>

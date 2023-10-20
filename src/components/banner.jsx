@@ -2,7 +2,7 @@ import {cn} from "../../libs/utils"
 
 export const Banner = ({ title,className,height }) => {
   return (
-    <div className="flex flex-1 items-center justify-start mt-10">
+    <div className="flex flex-1 items-center justify-start">
       <div className={cn(
         "relative flex h-16 justify-center items-center",
         height

@@ -5,6 +5,7 @@ import { useModal } from "../../hooks/use-modal-store";
 import { useUser } from "../../components/providers/user-provider";
 import { CartItem } from "./cart-item";
 import { cn } from "../../../libs/utils";
+import { useMemo } from "react";
 
 const backdrop = {
   hidden: {
@@ -26,6 +27,7 @@ const backdrop = {
 export const CartModal = () => {
   const { isOpen, onClose, type } = useModal();
   const { userData } = useUser();
+  const cart = useMemo(() => userData.cart, [userData.cart]);
   const isModalOpen = isOpen && type === "cartModal";
 
   return (
@@ -45,28 +47,43 @@ export const CartModal = () => {
             initial="hidden"
             exit="exit"
             onClick={(e) => e.stopPropagation()}
-            className={cn(
-              "fixed inset-0 w-fit h-[450px] m-auto bg-white rounded-xl p-3 z-50",
-              userData.cart.length>1 && "overflow-y-auto"
-            )}
+            className="overflow-hidden fixed inset-0 w-fit h-[450px] m-auto bg-white rounded-xl px-2 pb-10 pt-1 z-50"
           >
             <X
-              className="self-start justify-self-start text-rose-700 cursor-pointer"
+              className=" self-start justify-self-start text-rose-700 cursor-pointer"
               onClick={onClose}
             />
-            <div className="my-5 px-5 flex flex-col justify-center items-center gap-y-10">
-              {userData.cart.length > 0 ? (
-                userData?.cart.map((course) => (
-                  <CartItem key={course.id} course={course} />
-                ))
-              ) : (
-                <div className="flex items-center justify-center">
-                  <h1 className="text-xl text-gray-700">
-                    سبد خرید شما خالی است!
-                  </h1>
-                </div>
+
+            <motion.div
+              variants={backdrop}
+              animate="visible"
+              initial="hidden"
+              exit="exit"
+              onClick={(e) => e.stopPropagation()}
+              className={cn(
+                "w-full h-full m-auto bg-white rounded-xl px-3 z-50",
+                cart.length > 1 && "overflow-y-auto"
               )}
-            </div>
+            >
+              <div
+                className={cn(
+                  "my-5 px-5 flex flex-col justify-center items-center gap-y-10",
+                  cart.length > 1 && "overflow-y-auto"
+                )}
+              >
+                {cart.length > 0 ? (
+                  cart.map((course) => (
+                    <CartItem key={course.id} course={course} />
+                  ))
+                ) : (
+                  <div className="flex items-center justify-center">
+                    <h1 className="text-xl text-gray-700">
+                      سبد خرید شما خالی است!
+                    </h1>
+                  </div>
+                )}
+              </div>
+            </motion.div>
           </motion.div>
         </motion.div>
       </AnimatePresence>

@@ -5,7 +5,10 @@ export default {
     extend: {
       colors: {
         primary: "#5c55c9",
-        destructive:"#dd3359"
+        destructive: "#dd3359",
+      },
+      transitionProperty: {
+        width: "width",
       },
     },
   },

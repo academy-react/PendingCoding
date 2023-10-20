@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Clock,
   Eye,
@@ -11,10 +12,35 @@ import {
 import { Link } from "react-router-dom";
 
 import { getPersianNumbers } from "../../libs/get-persian-numbers";
+import { useUser } from "../components/providers/user-provider";
 
 export const HorizontalCard = ({ course }) => {
-  const [year, month, day] = new Date(course.startDate).toLocaleDateString("fa-IR-u-nu-latn").split("/")
-  const months = ["فروردين", "ارديبهشت", "خرداد", "تير", "مرداد", "شهريور", "مهر", "آبان", "آذر", "دي", "بهمن", "اسفند"]
+  const { userData } = useUser();
+
+  const isPurchased = useMemo(
+    () =>
+      userData?.cart?.some((c) => c.id === course.id) ||
+      userData?.myCourses.some((c) => c.id === course.id),
+    [userData, course.id]
+  );
+
+  const [year, month, day] = new Date(course.startDate)
+    .toLocaleDateString("fa-IR-u-nu-latn")
+    .split("/");
+  const months = [
+    "فروردين",
+    "ارديبهشت",
+    "خرداد",
+    "تير",
+    "مرداد",
+    "شهريور",
+    "مهر",
+    "آبان",
+    "آذر",
+    "دي",
+    "بهمن",
+    "اسفند",
+  ];
 
   return (
     <div className="w-full flex flex-col xl:flex-row items-center justify-center bg-white rounded-lg shadow-lg xl:px-10 py-5">
@@ -39,25 +65,27 @@ export const HorizontalCard = ({ course }) => {
           </span>
           <span className="text-gray-500 text-sm flex items-center justify-center gap-x-1">
             <Clock className="h-5 w-5 text-primary" />
-            {`تاریخ شروع : ${getPersianNumbers(day)} ${months[month]} ${getPersianNumbers(year,true)}`}
+            {`تاریخ شروع : ${getPersianNumbers(day)} ${
+              months[month - 1]
+            } ${getPersianNumbers(year, true)}`}
           </span>
           <span className="flex items-center justify-center gap-x-1">
             <MessagesSquare className="h-5 w-5 text-primary" />
-            {getPersianNumbers(course.comments,false)}
+            {getPersianNumbers(course.comments, false)}
           </span>
           <span className="flex items-center justify-center gap-x-1">
             <ThumbsUp className="h-5 w-5 text-primary" />
-            {getPersianNumbers(course.likes,false)}
+            {getPersianNumbers(course.likes, false)}
           </span>
           <span className="flex items-center justify-center gap-x-1">
             <ThumbsDown className="h-5 w-5 text-primary" />
-            {getPersianNumbers(course.dislikes,false)}
+            {getPersianNumbers(course.dislikes, false)}
           </span>
         </div>
         <span className="w-full">
-        <p className="text-gray-500 text-right line-clamp-2">
-          {course.description}
-        </p>
+          <p className="text-gray-500 text-right line-clamp-2">
+            {course.description}
+          </p>
         </span>
         <div className="flex flex-col md:flex-row justify-start w-full items-center px-3 py-2">
           <img
@@ -75,12 +103,16 @@ export const HorizontalCard = ({ course }) => {
         </div>
         <div className="w-full border border-gray-300" />
         <div className="w-full flex flex-col md:flex-row justify-between items-center gap-y-5">
-          <span >
+          <span>
             <h5 className="text-gray-600 flex justify-center items-center gap-x-1">
-              قیمت : <p className="text-primary">{getPersianNumbers(course.price,false)}</p> تومان
+              قیمت :{" "}
+              <p className="text-primary">
+                {getPersianNumbers(course.price, false)}
+              </p>{" "}
+              تومان
             </h5>
           </span>
-          {course.isPurchased ? (
+          {isPurchased ? (
             <Link
               to={`/courses/${course.id}`}
               className="flex justify-center items-center gap-x-1 text-gray-500 hover:text-gray-800 transition"

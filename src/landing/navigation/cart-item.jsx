@@ -4,11 +4,7 @@ import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import { useUser } from "../../components/providers/user-provider";
 
 export const CartItem = ({ course }) => {
-  const { userData, decrease, removeFromCart, increase } = useUser();
-
-  const totalCartAmount = userData?.cart
-    .reduce((total, book) => (total = total + book.price * book.count), 0)
-    .toFixed(2);
+  const { removeFromCart } = useUser();
 
   const startDate = (course) =>
     new Date(course.startDate).toLocaleDateString("fa-IR-u-nu-latn").split("/");
@@ -71,7 +67,7 @@ export const CartItem = ({ course }) => {
               {`تاریخ شروع : ${getPersianNumbers(
                 startDate(course)?.[2],
                 true
-              )} ${months[startDate(course)?.[1]]} ${getPersianNumbers(
+              )} ${months[startDate(course)?.[1] - 1]} ${getPersianNumbers(
                 startDate(course)?.[0],
                 true
               )}`}
@@ -82,7 +78,7 @@ export const CartItem = ({ course }) => {
             <Clock className="text-primary h-6 w-6" />
             <h1 className="text-gray-700 text-lg">
               {`تاریخ پایان : ${getPersianNumbers(endDate(course)?.[2])} ${
-                months[endDate(course)?.[1]]
+                months[endDate(course)?.[1] - 1]
               } ${getPersianNumbers(endDate(course)?.[0], true)}`}
             </h1>
           </span>
@@ -95,32 +91,14 @@ export const CartItem = ({ course }) => {
         </div>
       </div>
       <div className="w-full flex justify-between items-center px-5">
-        <div className="flex justify-center items-center gap-x-2">
+        <div className="w-full flex items-center justify-end gap-x-5">
           <button
-            onClick={() => increase(course.id)}
-            className="py-1 px-4 text-xl bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/90 rounded-xl"
+            onClick={() => removeFromCart(course.id)}
+            className="px-5 py-2 text-lg bg-destructive hover:bg-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/90 transition rounded-xl"
           >
-            +
-          </button>
-          <button
-            onClick={() => decrease(course.id)}
-            disabled={course.count === 1}
-            className="py-1 px-5 text-xl bg-yellow-400 hover:bg-yellow-400/60 text-white hover:text-white/60 disabled:text-white/60 disabled:bg-yellow-400/60 transition rounded-xl"
-          >
-            -
+            حذف
           </button>
         </div>
-       <div className="flex items-center justify-center gap-x-5">
-       <button
-          onClick={() => removeFromCart(course.id)}
-          className="px-5 py-2 text-lg bg-destructive hover:bg-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/90 transition rounded-xl"
-        >
-          حذف
-        </button>
-        <p className="text-gray-500">
-            {getPersianNumbers(course.count)}
-        </p>
-       </div>
       </div>
     </div>
   );
