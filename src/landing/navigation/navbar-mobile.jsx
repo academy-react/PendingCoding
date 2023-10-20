@@ -66,7 +66,7 @@ export const NavbarMobile = (count) => {
           ))}
           <Link
             className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
-            to="/sing-in"
+            to="/sign-in"
           >
             ورود
           </Link>

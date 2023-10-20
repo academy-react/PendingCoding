@@ -6,6 +6,7 @@ import { Blogs } from "../../blogs/blogs";
 import { BlogInfo } from "../../blogs/[blogId]/blog-info";
 import { Dashboard } from "../../dashboard/dashboard";
 import { Home } from "../../dashboard/home/home";
+import { Holder } from "../Lgin&Register/holder";
 
 const routes = [
   {
@@ -100,6 +101,10 @@ const routers = [
         element: null,
       },
     ],
+  },
+  {
+    path: "/sign-in",
+    element: <Holder />,
   },
   {
     path: "*",
