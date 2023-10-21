@@ -2,6 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import { Link } from "react-router-dom";
+
 const formSchema = z.object({
   email: z
     .string()
@@ -68,29 +70,29 @@ const Login = () => {
           <div className="flex gap-[10px] m-[40px_0] items-center justify-between">
             <input
               type="checkbox"
-              name="term"
-              id="term"
+              name="remember"
+              id="remember"
               className="absolute invisible peer"
             />
 
             <label
-              htmlFor="term"
-              className="w-[24px] h-[24px] bg-white shadow-[0_1px_10px_rgba(0,0,0,0.25)] rounded-[7px] peer-checked:shadow-[0_1px_10px_rgba(92,85,201,0.25)] peer-checked:bg-[url('../../assets/circle.svg')] bg-no-repeat bg-[length:80%] bg-[50%] cursor-pointer"
+              htmlFor="remember"
+              className="w-[24px] h-[24px] bg-white shadow-[0_1px_10px_rgba(0,0,0,0.25)] rounded-[7px] peer-checked:shadow-[0_1px_10px_rgba(92,85,201,0.25)] peer-checked:bg-[url('../../public/img/check.svg')] bg-no-repeat bg-[length:75%] bg-[50%] cursor-pointer"
             >
               {" "}
             </label>
 
             <label
-              htmlFor="term"
+              htmlFor="remember"
               className="text-[12px] text-[#969696] pl-[75px] cursor-pointer"
             >
               مرا به خاطر بسپار
             </label>
 
-            <a className="text-[12px] text-[#969696] cursor-pointer">
+            <Link className="text-[12px] text-[#969696] cursor-pointer">
               {" "}
               رمز عبور را فراموش کرده ام{" "}
-            </a>
+            </Link>
           </div>
 
           <button

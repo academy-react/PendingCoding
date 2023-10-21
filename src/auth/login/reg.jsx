@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Reg = () => {
   return (
     <div className="w-[700px] h-[700px] rounded-[100%] bg-[#505050] flex float-left mt-[-700px] justify-end items-center  text-white text-center max-[1110px]:mt-[-200px] max-[1110px]:justify-center">
@@ -17,7 +19,7 @@ const Reg = () => {
         {/* {style.p} */}
         <p className="text-[14px] w-[320px]">
           لطفا برای ثبت نام ابتدا{" "}
-          <a className="cursor-pointer text-[#00FFF6]">قوانین و مقررات </a>
+          <Link className="cursor-pointer text-[#00FFF6]">قوانین و مقررات </Link>
           آکادمی پندینگ کدینگ را مطالعه وسپس برای ثبت نام اقدام فرمایید
         </p>{" "}
         {/* {style.p} */}

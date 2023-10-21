@@ -2,6 +2,8 @@ import {useForm} from 'react-hook-form'
 import * as z from 'zod'
 import {zodResolver} from '@hookform/resolvers/zod'
 
+import { Link } from "react-router-dom";
+
 const Register = () => {
 
     const formSchema = z.object({
@@ -92,7 +94,7 @@ const Register = () => {
                         <label
                          htmlFor="term" 
                          className="text-[12px] text-[#969696] cursor-pointer"
-                        > با <a className="text-[#02B2B8]">قوانین و مقررات </a>درج شده در آکادمی موافقم. </label>
+                        > با <Link className="text-[#02B2B8]">قوانین و مقررات </Link>درج شده در آکادمی موافقم. </label>
     
                     </div>
                 
