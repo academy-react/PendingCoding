@@ -6,6 +6,8 @@ import { Courses } from "../../courses/courses";
 import { CourseInfo } from "../../courses/[courseId]/course-info";
 import { Blogs } from "../../blogs/blogs";
 import { BlogInfo } from "../../blogs/[blogId]/blog-info";
+import { Holder } from "../../auth/login/holder";
+import { RegHolder } from "../../auth/register/regHolder";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +46,14 @@ const router = createBrowserRouter([
       {
         path: "contact-us",
         element: null,
+      },
+      {
+        path: "/sign-in",
+        element: <Holder/> ,
+      },
+      {
+        path: "/sign-up",
+        element: <RegHolder /> ,
       },
     ],
   },
