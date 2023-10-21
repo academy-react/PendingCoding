@@ -4,22 +4,28 @@ import {zodResolver} from '@hookform/resolvers/zod'
 
 import { Link } from "react-router-dom";
 
+
+const formSchema = z.object({
+    email : z
+        .string()
+        .email({ message: "ایمیل نامعتبر" })
+        .min(1 , {message: "ایمیل خود را وارد کنید"}),
+    password : z
+        .string()
+        .min(4 , {message: "رمز عبور حداقل 4 کاراکتر دارد"})
+        .max(15 , {message: "رمز عبور حداکثر 15 کاراکتر دارد"}),
+    confirmPassword : z
+        .string()
+        .min(4 , {message: "رمز عبور حداقل 4 کاراکتر دارد"})
+        .max(15 ,{message: "رمز عبور حداکثر 15 کاراکتر دارد"} )
+})
+.refine((data) => data.password === data.confirmPassword, {
+    message: "باید با رمز عبور یکسان باشد",
+    path: ["confirmPassword"], 
+});
+
 const Register = () => {
 
-    const formSchema = z.object({
-        email : z
-            .string()
-            .email()
-            .min(1 , {message: ""}),
-        password : z
-            .string()
-            .min(4 , {message: ""})
-            .max(15 , {message: ""}),
-        confirmPassword : z
-            .string()
-            .min(4 , {message: ""})
-            .max(15 ,{message: ""} )
-    })
 
     const {register , handleSubmit , formState:{errors}} = useForm({
         resolver : zodResolver(formSchema)
