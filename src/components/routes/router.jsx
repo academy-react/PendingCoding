@@ -8,6 +8,7 @@ import { Blogs } from "../../blogs/blogs";
 import { BlogInfo } from "../../blogs/[blogId]/blog-info";
 import { Holder } from "../../auth/login/holder";
 import { RegHolder } from "../../auth/register/regHolder";
+import { NotFound } from "../../404_notFound/404";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
       {
         path: "/sign-up",
         element: <RegHolder /> ,
+      },
+      {
+        path: "/404",
+        element: <NotFound /> ,
       },
     ],
   },
