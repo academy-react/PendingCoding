@@ -9,6 +9,7 @@ export default {
       },
       transitionProperty: {
         width: "width",
+        border: "border,border-radius,box-shadow,background-color",
       },
     },
   },

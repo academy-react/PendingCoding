@@ -9,7 +9,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 export const InCartCourses = () => {
   const { userData, removeFromCart, checkout } = useUser();
   const [isLoading, setIsLoading] = useState(false);
-  const [filteredCart, setFilteredCart] = useState(userData?.cart);
+  const [filteredCart, setFilteredCart] = useState([]);
   const [isAsc, setIsAsc] = useState(false);
 
   useMemo(() => {

@@ -16,7 +16,6 @@ export const PageCard = ({ page }) => {
         isActive && "text-gray-800 bg-gray-100"
       )}
     >
-      
       {page.label}
       <div
         className={cn(

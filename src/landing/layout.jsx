@@ -6,8 +6,8 @@ import { ModalProvider } from "../components/providers/modal-provider";
 
 export const LayoutPage = () => {
   return (
-    <div className="h-full w-full bg-[#EEEEEE]">
-      <div className="flex justify-center items-center px-6 py-3 border-b border-gray-200 shadow-md">
+    <div className="w-full h-full bg-[#EEEEEE]">
+      <div className="flex justify-center items-center px-6 py-3 shadow-md">
         <Navbar />
       </div>
       <main className="bg-[#EEEEEE]">

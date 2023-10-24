@@ -60,7 +60,7 @@ export const Footer = () => {
                   {...form.register("email")}
                 />
                 {form.formState.errors.email && (
-                  <p className="text-rose-600/90 mr-5 text-base">
+                  <p className="text-destructive/90 mr-5 text-base">
                     {form.formState.errors.email.message}
                   </p>
                 )}
@@ -70,7 +70,7 @@ export const Footer = () => {
                   {...form.register("message")}
                 />
                 {form.formState.errors.message && (
-                  <p className="text-rose-600/90 mr-5 text-base">
+                  <p className="text-destructive/90 mr-5 text-base">
                     {form.formState.errors.message.message}
                   </p>
                 )}

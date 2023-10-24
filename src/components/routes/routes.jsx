@@ -7,6 +7,9 @@ import { BlogInfo } from "../../blogs/[blogId]/blog-info";
 import { Dashboard } from "../../dashboard/dashboard";
 import { Home } from "../../dashboard/home/home";
 import { Holder } from "../../Lgin&Register/holder";
+import { MyCourses } from "../../dashboard/my-courses/my-courses";
+import { Favorites } from "../../dashboard/favorites/favorites";
+import { EditProfile } from "../../dashboard/edit/edit-profile";
 
 const routes = [
   {
@@ -94,15 +97,15 @@ const routers = [
       },
       {
         path: "/dashboard/my-courses",
-        element: null,
+        element: <MyCourses />,
       },
       {
         path: "/dashboard/favorites",
-        element: null,
+        element: <Favorites />,
       },
       {
         path: "/dashboard/edit-profile",
-        element: null,
+        element: <EditProfile />,
       },
     ],
   },

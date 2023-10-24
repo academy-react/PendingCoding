@@ -1,22 +1,32 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Dot, Menu, ShoppingCart } from "lucide-react";
 
 import { useModal } from "../../hooks/use-modal-store";
 import { useUser } from "../../components/providers/user-provider";
+import { useScrollTop } from "../../hooks/use-scroll-top";
 
 import { routes } from "../../components/routes/routes";
 import { NavbarMobile } from "./navbar-mobile";
 
 import logo from "../../assets/logo.svg";
+import { cn } from "../../../libs/utils";
 
 const Navbar = () => {
   const { userData } = useUser();
-  const count = useMemo(() => userData?.cart?.length, [userData?.cart?.length]);
   const { onOpen } = useModal();
 
+  const count = useMemo(() => userData?.cart?.length, [userData?.cart?.length]);
+  const scrolled = useScrollTop();
+
   return (
-    <nav className="w-[1800px] flex items-center justify-between">
+    <nav
+      className={cn(
+        "w-full flex items-center justify-between px-0 lg:px-16 xl:px-28 2xl:px-32 py-2 fixed top-0 z-20",
+        scrolled &&
+          "w-full px-20 bg-[#EEEEEE] border-b border-gray-200 shadow-md"
+      )}
+    >
       <div className="flex w-full items-center justify-between mx-auto">
         <div className="flex justify-center items-center gap-x-2 lg:gap-x-6">
           <img className="h-12 w-12" src={logo} alt="logo" />
