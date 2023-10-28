@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+// eslint-disable-next-line react/prop-types
 const Proposal = ({to , title}) => {
   return (
     <div className="relative h-[87px] w-[clamp(100px,95%,489px)] border-solid border-[1px] border-[#A4A4A4] rounded-[200px] overflow-hidden mb-[30px]">

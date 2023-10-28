@@ -9,6 +9,7 @@ import { BlogInfo } from "../../blogs/[blogId]/blog-info";
 import { Holder } from "../../auth/login/holder";
 import { RegHolder } from "../../auth/register/regHolder";
 import { NotFound } from "../../404_notFound/404";
+import { ContactUs } from "../../contact_us/contact_us";
 
 const router = createBrowserRouter([
   {
@@ -46,7 +47,7 @@ const router = createBrowserRouter([
       },
       {
         path: "contact-us",
-        element: null,
+        element: <ContactUs />,
       },
       {
         path: "/sign-in",
