@@ -10,6 +10,7 @@ import { Holder } from "../../auth/login/holder";
 import { RegHolder } from "../../auth/register/regHolder";
 import { NotFound } from "../../404_notFound/404";
 import { ContactUs } from "../../contact_us/contact_us";
+import { About } from "../../about/about";
 
 const router = createBrowserRouter([
   {
@@ -43,7 +44,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/about",
-        element: null,
+        element: <About />,
       },
       {
         path: "contact-us",
@@ -57,15 +58,15 @@ const router = createBrowserRouter([
         path: "/sign-up",
         element: <RegHolder /> ,
       },
-      {
-        path: "/404",
-        element: <NotFound /> ,
-      },
+      // {
+      //   path: "/404",
+      //   element: <NotFound /> ,
+      // },
     ],
   },
   {
     path: "*",
-    element: null,
+    element: <NotFound />,
   },
 ]);
 

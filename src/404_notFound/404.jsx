@@ -24,7 +24,7 @@ const NotFound = () => {
       <Proposal to={"/courses"} title={"دوره ها"} />
       <Proposal to={"/blogs"} title={"بلاگ"} />
       <Proposal to={"/teachers"} title={"اساتید"} />
-      <Proposal to={"/"} title={"خانه"} />
+      <Proposal to={"/contact-us"} title={"ارتباط با ما"} />
 
     </div>
   );
