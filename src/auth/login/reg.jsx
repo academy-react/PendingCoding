@@ -30,12 +30,13 @@ const Reg = () => {
           آکادمی پندینگ کدینگ را مطالعه وسپس برای ثبت نام اقدام فرمایید
         </p>{" "}
         {/* {style.p} */}
-        <button className="text-[#505050] bg-[#EEEEEE] cursor-pointer rounded-[50px] text-[18px] p-[10px_0] w-[300px] m-[20px_0]
+        <button className="text-[#505050] bg-[#EEEEEE] rounded-[50px] text-[18px] p-[10px_0] w-[300px] m-[20px_0] hover:bg-[#DDDDDD]
         
-        max-[700px]:p-[7px_0] max-[700px]:w-[270px]">
+        max-[700px]:p-[7px_0] max-[700px]:w-[270px] overflow-hidden relative">
+          <Link to="/sign-up" className="w-full h-full absolute cursor-pointer top-0 left-0"></Link>
           ثبت نام
         </button>{" "}
-        {/* {style.but} */}
+        
       </div>
     </div>
   );
