@@ -15,6 +15,7 @@ import face from '../assets/contact_us_items/face.svg'
 import x from '../assets/contact_us_items/x.svg'
 
 import member from '../assets/contact_us_items/member.svg'
+import { getPersianNumbers } from '../../libs/get-persian-numbers';
 
 
 const formSchema = z.object({
@@ -60,7 +61,7 @@ const ContactUs = () => {
 
           <div className="flex flex-row">
             <div className="w-[clamp(50px,100%,285px)]">
-              <ContactItems src={phone} title="شماره تلفن :" desc="+98 0902 536 3002" />
+              <ContactItems src={phone} title="شماره تلفن :" desc={`${getPersianNumbers(989117828923 , true)}+`} />
               <ContactItems src={instagram} title="اینستاگرام :" desc="__arman__rv" />
               <ContactItems src={face} title="فیس بوک :" desc="نِدارمی" />
             </div>
