@@ -1,22 +1,21 @@
-import { useLayoutEffect, useState } from "react";
-import { BookX, CopySlash, Grid2x2, Menu, Rows } from "lucide-react";
-import { useQuery } from "react-query";
+import { useState, useLayoutEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-
-import { getCourses } from "../../libs/get-courses";
+import { useQuery } from "react-query";
+import { BookX, Grid2x2, Menu, Rows } from "lucide-react";
 
 import NavigatorTracer from "../components/navigator-tracer";
+import { Banner } from "../components/banner";
 import { Seperator } from "../components/seperator";
 import { SearchInput } from "../components/search";
 import { Select } from "../components/select";
-import { MobileFilter } from "./mobile-filter";
-import { Filter } from "./filter";
-import { Banner } from "../components/banner";
-import { CourseCards } from "./course-cards";
-import { cn } from "../../libs/utils";
-import { useModal } from "../hooks/use-modal-store";
 import { Loading } from "../components/loading";
 import { Error } from "../components/error";
+import { TeacherCards } from "./teacher-cards";
+
+import { useModal } from "../hooks/use-modal-store";
+
+import { cn } from "../../libs/utils";
+import { getCourses } from "../../libs/get-courses";
 
 const orderBy = [
   {
@@ -26,13 +25,13 @@ const orderBy = [
   },
   {
     id: 20,
-    label: "گران ترین",
-    value: "expensive",
+    label: "با سابقه ترین",
+    value: "professional",
   },
   {
     id: 21,
-    label: "ارزان ترین",
-    value: "cheapest",
+    label: "جوان ترین",
+    value: "youngest",
   },
   {
     id: 22,
@@ -41,8 +40,7 @@ const orderBy = [
   },
 ];
 
-export const Courses = () => {
-  const [values, setValues] = useState([20, 450000]);
+export const Teachers = () => {
   const [isVertical, setIsVertical] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
   const { onOpen } = useModal();
@@ -69,46 +67,30 @@ export const Courses = () => {
 
   if (isError) return <Error />;
 
-  const course_name = searchParams.get("course_name");
-  const courseFilterBy = searchParams.get("courseFilterBy");
-  const categoryId = searchParams.get("categoryId");
-  const isFinished = searchParams.get("isFinished");
   const teacher_name = searchParams.get("teacher_name");
+  const teacherFilterBy = searchParams.get("teacherFilterBy");
   const itemsPerPage = parseInt(searchParams.get("items-per-page"));
 
-  let filteredData = data?.data.filter((course) => {
-    if (!course_name && !categoryId && !isFinished && !teacher_name) {
-      if (course.price >= values[0] && course.price <= values[1]) return course;
-    } else if (
-      course?.title
-        .replace(/ /g, "")
-        .replace("آ", "ا")
-        .toLowerCase()
-        .includes(
-          course_name?.replace(/ /g, "").replace("آ", "ا").toLowerCase()
-        )
-    ) {
-      if (course.price >= values[0] && course.price <= values[1]) return course;
-    } else if (
-      course?.teacher
+  let filteredData = data?.data.filter((teacher) => {
+    if (!teacher_name && !teacher_name) return teacher;
+    else if (
+      teacher?.name ||
+      teacher.teacher
         .replace(/ /g, "")
         .replace("آ", "ا")
         .toLowerCase()
         .includes(
           teacher_name?.replace(/ /g, "").replace("آ", "ا").toLowerCase()
         )
-    ) {
-      if (course.price >= values[0] && course.price <= values[1]) return course;
-    }
+    )
+      return teacher;
   });
-
-  if (courseFilterBy) {
+  if (teacherFilterBy) {
     const newArray = [...filteredData];
-    if (courseFilterBy === "expensive")
-      newArray.sort((a, b) => b.price - a.price);
-    if (courseFilterBy === "cheapest")
-      newArray.sort((a, b) => a.price - b.price);
-    if (courseFilterBy === "popular")
+    if (teacherFilterBy === "professional")
+      newArray.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+    if (teacherFilterBy === "youngest") newArray.sort((a, b) => a.age - b.age);
+    if (teacherFilterBy === "popular")
       newArray.sort((a, b) => b.likes - a.likes);
 
     filteredData = newArray;
@@ -119,7 +101,7 @@ export const Courses = () => {
       <div className="flex justify-center items-center">
         <NavigatorTracer />
       </div>
-      <Banner title="لیست دوره ها" />
+      <Banner title="لیست اساتید" />
       <Seperator />
       <div
         className={cn(
@@ -127,11 +109,9 @@ export const Courses = () => {
         )}
       >
         {/* Filter div */}
-        <Filter values={values} setValues={setValues} />
-        <MobileFilter values={values} setValues={setValues} />
         <button
-          onClick={() => onOpen("filterDialog")}
-          className="text-gray-500 hover:text-gray-700 transition mt-0 mb-12 xl:hidden"
+          onClick={() => onOpen("filterTeacherDialog")}
+          className="text-gray-500 hover:text-gray-700 transition mt-1 xl:hidden"
         >
           <Menu className="h-10 w-10" />
         </button>
@@ -141,14 +121,14 @@ export const Courses = () => {
           <div className="hidden xl:flex justify-between items-center w-full">
             <div>
               <SearchInput
-                queryName="course_name"
+                queryName="teacher_name"
                 placeholder="جستجو کنید ..."
                 className="px-4 py-2"
               />
             </div>
             <div className="flex justify-center items-center gap-x-5">
               <Select
-                queryName="courseFilterBy"
+                queryName="teacherFilterBy"
                 placeholder="جستجو بر اساس"
                 filters={orderBy}
                 className="py-3 px-5"
@@ -167,9 +147,9 @@ export const Courses = () => {
           </div>
           {/* Grid Div */}
           {filteredData.length > 0 ? (
-            <div className="w-full">
-              <CourseCards
-                courses={filteredData}
+            <div className="w-full my-10">
+              <TeacherCards
+                teachers={filteredData}
                 itemsPerPage={itemsPerPage | 6}
                 isVertical={isVertical}
               />
@@ -178,7 +158,7 @@ export const Courses = () => {
             <div className="w-full flex flex-col gap-3 items-center justify-center my-52 dark:bg-[#1E1F22]">
               <BookX className="w-12 h-12 text-gray-600/90 dark:text-gray-300" />
               <p className="text-zinc dark:text-gray-300 text-xl">
-                درس مورد نظر پیدا نشد
+                استاد مورد نظر پیدا نشد
               </p>
             </div>
           )}

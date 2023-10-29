@@ -34,7 +34,7 @@ export const CartModal = () => {
     isModalOpen && (
       <AnimatePresence mode="wait">
         <motion.div
-          className="fixed inset-0 w-full h-full bg-gray-300/50 z-10"
+          className="fixed inset-0 w-full h-full bg-gray-300/50 z-40"
           variants={backdrop}
           animate="visible"
           initial="hidden"
@@ -47,7 +47,7 @@ export const CartModal = () => {
             initial="hidden"
             exit="exit"
             onClick={(e) => e.stopPropagation()}
-            className="overflow-hidden fixed inset-0 w-fit h-[450px] m-auto bg-white rounded-xl px-2 pb-10 pt-1 z-50"
+            className="overflow-hidden fixed inset-0 w-fit h-[450px] m-auto bg-white rounded-xl px-2 pb-10 pt-1 z-10"
           >
             <X
               className=" self-start justify-self-start text-rose-700 cursor-pointer"

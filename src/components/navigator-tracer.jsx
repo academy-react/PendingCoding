@@ -4,11 +4,10 @@ import { Link, useParams } from "react-router-dom";
 
 const NavigatorTracor = () => {
   const { id } = useParams();
-  const pathname = window.location.pathname;
-  let routes = useMemo(() => [], []);
+  const pathname = useMemo(() => window.location.pathname, []);
+  const routes = useMemo(() => [], []);
 
   useMemo(() => {
-    const pathname = window.location.pathname;
     const pathnames = window.location.pathname.split("/");
     for (let pathname of pathnames) {
       switch (pathname) {
@@ -68,12 +67,18 @@ const NavigatorTracor = () => {
         case `/teachers/${id}`:
           routes.push({
             id: `/teachers/${id}`,
-            label: "اساتید",
+            label: "نام استاد",
             to: `/teachers/${id}`,
           });
           break;
+        default:
+          routes.push({
+            id: `not-found`,
+            label: "صفحه مورد نظر یافت نشد",
+            to: `/`,
+          });
       }
-  }, [routes, id]);
+  }, []);
 
   return (
     <div className="flex justify-center items-center gap-x-2 text-gray-500">
@@ -85,7 +90,7 @@ const NavigatorTracor = () => {
         <div key={route.id}>
           {pathname === route.to ? (
             <div className="flex items-center justify-center">
-              <h1 className="text-gray-700 text-lg">{route.label}</h1>
+              <h1 className="text-gray-500 text-lg mt-[2px]">{route.label}</h1>
             </div>
           ) : (
             <Link

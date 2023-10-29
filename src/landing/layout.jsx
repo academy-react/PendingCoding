@@ -1,19 +1,56 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useEffect, useMemo } from "react";
 
 import Navbar from "./navigation/navbar";
 import { Footer } from "./footer/footer";
 import { ModalProvider } from "../components/providers/modal-provider";
+import { useModal } from "../hooks/use-modal-store";
+
+const backdrop = {
+  hidden: {
+    y: "-100px",
+    opacity: 0,
+  },
+  visible: {
+    y: "0px",
+    opacity: 1,
+    transition: { duration: 0.5 },
+  },
+  exit: {
+    y: "-100px",
+    opacity: 0,
+    transition: { duration: 0.5 },
+  },
+};
 
 export const LayoutPage = () => {
+  const { pathname } = useLocation();
+  const { onClose } = useModal();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    onClose();
+  }, [pathname, onClose]);
+
   return (
     <div className="w-full h-full bg-[#EEEEEE]">
-      <div className="flex justify-center items-center px-6 py-3 shadow-md">
+      <ModalProvider />
+      <div className="flex justify-center items-center px-6 py-3 shadow-md relative z-[2]">
         <Navbar />
       </div>
-      <main className="bg-[#EEEEEE]">
-        <ModalProvider />
+      <motion.main
+        variants={backdrop}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        className="bg-[#EEEEEE]"
+      >
         <Outlet />
-      </main>
+      </motion.main>
       <div className="flex justify-center items-center px-6 py-2 bg-[#464646]">
         <Footer />
       </div>

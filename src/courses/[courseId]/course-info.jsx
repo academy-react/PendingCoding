@@ -147,6 +147,7 @@ export const CourseInfo = () => {
   const { isOpen, onOpen } = useModal();
   const { userData, addToFavorites, removeFromFavorites } = useUser();
   const [isBookMarked, setIsBookMarked] = useState(false);
+
   const isInCart = useMemo(
     () => userData.cart.some((c) => c.id === id),
     [userData.cart, id]
@@ -196,7 +197,7 @@ export const CourseInfo = () => {
   const registered = course?.data.capacity - course?.data.students;
 
   return (
-    <div className="max-w-[1900px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5">
+    <div className="max-w-[1900px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5 pt-20">
       <div className="flex mx-auto md:mx-0 justify-center items-center">
         <NavigatorTracer />
       </div>
@@ -257,7 +258,7 @@ export const CourseInfo = () => {
               حذف از سبد خرید
             </button>
           ) : isPurchased ? (
-            <p className="w-full px-20 py-2 bg-emerald-500 hover:bg-emerald-500/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-emerald-500/80 disabled:cursor-not-allowed transition rounded-full">
+            <p className="w-full px-20 py-2 bg-emerald-500 cursor-default text-white rounded-full">
               شما این دوره را خریده‌اید
             </p>
           ) : (

@@ -1,4 +1,4 @@
-import { Menu, X } from "lucide-react";
+import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useModal } from "../hooks/use-modal-store";
@@ -105,7 +105,7 @@ export const MobileFilter = ({ values, setValues }) => {
     isDialogOpen && (
       <AnimatePresence mode="wait">
         <motion.div
-          className="fixed inset-0 w-full h-full bg-gray-300/50 z-10 xl:hidden"
+          className="fixed inset-0 w-full h-full bg-gray-300/50 xl:hidden z-10"
           variants={backdrop}
           animate="visible"
           initial="hidden"
@@ -114,7 +114,7 @@ export const MobileFilter = ({ values, setValues }) => {
         >
           <motion.div
             onClick={(e) => e.stopPropagation()}
-            className="h-full fixed top-0 right-0 z-20 flex flex-col items-center justify-start gap-y-5 bg-gray-50 border-r border-gray-200 shadow-md p-5"
+            className="h-full fixed top-0 right-0 flex flex-col items-center justify-start gap-y-5 bg-gray-50 border-r border-gray-200 shadow-md p-5 z-[99999]"
             variants={backdrop}
             animate="visible"
             initial="hidden"
@@ -165,7 +165,7 @@ export const MobileFilter = ({ values, setValues }) => {
                   <SearchInput
                     queryName="teacher_name"
                     className="w-full text-sm py-2 px-4"
-                    placeholder="جستجو بر اساس استاد مورد نظر. . ."
+                    placeholder="جستجو استاد مورد نظر. . ."
                   />
                 </div>
               </div>
