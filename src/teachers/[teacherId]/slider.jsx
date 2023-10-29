@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/autoplay";
 
-export const Slider = ({ blogs }) => {
+export const Slider = ({ teachers }) => {
   return (
     <div className="w-full">
       <Swiper
@@ -33,12 +33,15 @@ export const Slider = ({ blogs }) => {
         autoplay={{
           delay: 2500,
           disableOnInteraction: true,
-          pauseOnMouseEnter: true,
         }}
       >
-        {blogs?.map((blog) => (
-          <SwiperSlide key={blog.id}>
-            <VerticalCard blog={blog} />
+        {teachers?.map((teacher) => (
+          <SwiperSlide key={teacher.id}>
+            <VerticalCard
+              id={teacher.id}
+              name={teacher.teacher}
+              image={teacher.teacherAvatar}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

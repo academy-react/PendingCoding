@@ -3,6 +3,17 @@ import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
 
 export const PriceRange = ({ values, setValues }) => {
+  const handleMin = (event) => {
+    const newArray = [...values];
+    newArray[0] = Number(event.target.value);
+    setValues(newArray);
+  };
+  const handleMax = (event) => {
+    const newArray = [...values];
+    newArray[1] = Number(event.target.value);
+    setValues(newArray);
+  };
+
   return (
     <div className="w-full rounded-xl">
       <h3 className="text-sm text-[#3f4656] w-full">قیمت</h3>
@@ -24,9 +35,7 @@ export const PriceRange = ({ values, setValues }) => {
             <h4 className="text-sm text-gray-500">تومان</h4>
             <input
               value={values?.[0]}
-              onChange={(e) =>
-                setValues(([...values][0] = Number(e.target.value)))
-              }
+              onChange={handleMin}
               type="number"
               className="disabled:cursor-not-allowed w-20 text-left outline-none bg-[#EEEEEE] text-primary dark:text-gray-800 rounded-full duration-200"
             />
@@ -42,9 +51,7 @@ export const PriceRange = ({ values, setValues }) => {
             <h4 className="text-sm text-gray-500">تومان</h4>
             <input
               value={values?.[1]}
-              onChange={(e) =>
-                setValues(([...values][1] = Number(e.target.value)))
-              }
+              onChange={handleMax}
               type="number"
               className="disabled:cursor-not-allowed w-20 text-left outline-none bg-[#EEEEEE] text-primary dark:text-gray-800 rounded-full duration-200"
             />

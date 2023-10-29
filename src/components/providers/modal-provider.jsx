@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavbarMobile } from "../../landing/navigation/navbar-mobile";
 import { MobileFilter } from "../../courses/mobile-filter";
+import { MobileFilter as MobileTeacherFilter } from "../../teachers/mobile-filter";
 import { ShareModal } from "../share-modal";
 import { SendMessageModal } from "../send-message-modal";
 import { RespondModal } from "../respond-modal";
@@ -23,6 +24,7 @@ export const ModalProvider = () => {
     <>
       <NavbarMobile />
       <MobileFilter />
+      <MobileTeacherFilter />
       <ShareModal />
       <SendMessageModal />
       <RespondModal />

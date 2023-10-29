@@ -1,13 +1,20 @@
 import { create } from "zustand";
 
-
-export type ModalType = "navDialog" | "filterDialog" | "confirmModal" | "confirmDeleteModal" | "cartModal" | "shareModal" | "sendRespond";
+export type ModalType =
+  | "navDialog"
+  | "filterDialog"
+  | "filterTeacherDialog"
+  | "confirmModal"
+  | "confirmDeleteModal"
+  | "cartModal"
+  | "shareModal"
+  | "sendRespond";
 
 type ModalData = {
   user?: {
     id: string;
     name: string;
-    image: string
+    image: string;
   };
 };
 
@@ -26,4 +33,3 @@ export const useModal = create<ModalStore>((set) => ({
   onOpen: (type, data = {}) => set({ isOpen: true, type, data }),
   onClose: () => set({ type: null, isOpen: false }),
 }));
-

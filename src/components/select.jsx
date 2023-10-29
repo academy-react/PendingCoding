@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import qs from "query-string";
 
 import { cn } from "../../libs/utils";
+import { getPersianNumbers } from "../../libs/get-persian-numbers";
 
 export const Select = ({ queryName, filters, className, placeholder }) => {
   const [value, setValue] = useState("");
@@ -18,7 +19,6 @@ export const Select = ({ queryName, filters, className, placeholder }) => {
   const isFinished = searchParams.get("isFinished");
   const course_name = searchParams.get("course_name");
   const teacher_name = searchParams.get("teacher_name");
-  
 
   useEffect(() => {
     const url = qs.stringifyUrl(
@@ -58,7 +58,7 @@ export const Select = ({ queryName, filters, className, placeholder }) => {
     >
       {filters?.map((filter) => (
         <option key={filter.id} value={filter.value}>
-          {filter.label}
+          {getPersianNumbers(filter.label, false)}
         </option>
       ))}
     </select>

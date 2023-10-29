@@ -1,8 +1,11 @@
-import {  useState } from "react";
+import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { getPersianNumbers } from "../../libs/get-persian-numbers";
+import {
+  getPersianNumbers,
+  persianPagination,
+} from "../../libs/get-persian-numbers";
 
 import { VerticalCard } from "./vertical-card";
 import { Select } from "../components/select";
@@ -65,6 +68,7 @@ export const BlogCards = ({ courses, itemsPerPage, isVertical }) => {
           previousLinkClassName="border-2 border-gray-300 shadow-sm rounded-full w-10 h-10 flex items-center justify-center text-4xl text-gray-400/60 hover:text-gray-500/80 hover:border-gray-400 transition"
           activeLinkClassName="border-2 border-gray-300 shadow-sm rounded-full w-10 h-10 flex items-center justify-center text-4xl text-gray-400/60 bg-primary text-white hover:border-gray-300 hover:text-white"
           onPageChange={handlePageClick}
+          pageLabelBuilder={(page) => persianPagination(page)}
           pageRangeDisplayed={2}
           pageCount={pageCount}
           previousLabel={<ChevronRight />}

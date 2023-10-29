@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { LogOut, UserCog } from "lucide-react";
 
 import { useUser } from "../components/providers/user-provider";
@@ -6,15 +6,14 @@ import { useUser } from "../components/providers/user-provider";
 import { PageCard } from "./page-card";
 import { pages } from "./pages";
 
-import defaultProfile from "../assets/my-profile.jpg";
-import { useMemo } from "react";
 import { cn } from "../../libs/utils";
+
+import defaultProfile from "../assets/my-profile.jpg";
 
 export const SidebarMenu = () => {
   const { userData } = useUser();
 
-  const pathname = useMemo(() => window.location.pathname, []);
-
+  const { pathname } = useLocation();
   return (
     <div className="w-[250px] h-full bg-white border-l-2 border-l-gray-100 shadow-lg py-10">
       <div className="flex flex-col justify-center items-center gap-y-10 my-5">

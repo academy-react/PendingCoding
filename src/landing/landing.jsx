@@ -9,7 +9,7 @@ import { Services } from "./services/services";
 export const LandingPage = () => {
   return (
     <div>
-      <div className="flex items-center justify-center xl:px-12 py-10">
+      <div className="flex items-center justify-center px-0 xl:px-12 py-10">
         <Intro />
       </div>
       <div className="flex flex-col lg:flex-row items-center justify-center px-20 2xl:px-32 py-10 gap-y-5">
