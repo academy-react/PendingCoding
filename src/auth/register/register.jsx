@@ -64,7 +64,7 @@ const Register = () => {
               `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
                  
               max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
-              errors.email && `border-[#ff3b3b]`
+              errors.email && `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434]`
             )}
             {...register("email")}
           />
@@ -85,7 +85,7 @@ const Register = () => {
               `focus:outline-none focus:border-[#989898]  block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
                  
               max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
-              errors.password && `border-[#ff3b3b]`
+              errors.password && `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434]`
             )}
             {...register("password")}
           />
@@ -104,7 +104,7 @@ const Register = () => {
               `focus:outline-none focus:border-[#989898]  block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
                    
               max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
-              errors.confirmPassword && `border-[#ff3b3b]`
+              errors.confirmPassword && `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434]`
             )}
             {...register("confirmPassword")}
           />
