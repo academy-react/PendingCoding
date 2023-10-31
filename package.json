@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hassanmojab/react-modern-calendar-datepicker": "^3.1.7",
+    "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.3.1",
     "axios": "^1.5.1",
     "clsx": "^2.0.0",

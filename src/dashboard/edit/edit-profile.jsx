@@ -1,13 +1,15 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ImagePlus, X } from "lucide-react";
+import { Loader, Loader2, X } from "lucide-react";
 import { toast } from "react-hot-toast";
 import DatePicker from "@hassanmojab/react-modern-calendar-datepicker";
 
-import { uploadApi } from "../../../libs/uploadApi";
 import { useUser } from "../../components/providers/user-provider";
+import { ImageUpload } from "../../components/image-upload";
+
+import { uploadApi } from "../../../libs/uploadApi";
 
 import defaultProfile from "../../assets/my-profile.jpg";
 
@@ -18,7 +20,11 @@ import "@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css";
 
 const formSchema = z.object({
   name: z.string().trim().min(1, { message: "نام الزامیست" }),
-  birthDate: z.date(),
+  birthDate: z
+    .string()
+    .refine((date) => new Date(date).toString() !== "Invalid Date", {
+      message: "تاریخ تولد معتبر نمی‌باشد",
+    }),
   nationalId: z
     .number({
       required_error: "کد ملی الزامیست",
@@ -34,7 +40,7 @@ const formSchema = z.object({
 
 export const EditProfile = () => {
   const [selectedDay, setSelectedDay] = useState(null);
-  const inputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [year, month, day] = new Date()
     .toLocaleDateString("fa-IR-u-nu-latn")
@@ -53,19 +59,16 @@ export const EditProfile = () => {
       image: user?.image || defaultProfile,
     },
   });
-  const [file, setFile] = useState();
-  const [url, setUrl] = useState(user?.image || defaultProfile);
+  const [url, setUrl] = useState(user?.image || "");
 
   const { isSubmitting, isValid } = form.formState;
-
-  console.log(isValid);
 
   const onSubmit = async (values) => {
     try {
       let image = "";
       if (url === "") {
         const data = new FormData();
-        data.append("file", file ?? "");
+        data.append("file", url ?? "");
         data.append("upload_preset", "kjuq7set");
         await uploadApi
           .post("", data)
@@ -87,12 +90,17 @@ export const EditProfile = () => {
     }
   };
 
-  const handleClick = () => {
-    inputRef.current.click();
+  const handleRemove = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      form.setValue("image", {});
+      setUrl("");
+      setIsLoading(false);
+    }, 500);
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center">
+    <div className="max-w-5xl mx-auto h-full flex items-center justify-center">
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full flex flex-col justify-center items-center gap-y-10 border-2 border-gray-200 rounded-xl shadow-sm py-5"
@@ -138,46 +146,28 @@ export const EditProfile = () => {
             )}
           </div>
           <div className="flex flex-col justify-center items-center gap-y-10">
-            {url ? (
-              <div className="relative flex flex-col justify-self-center">
-                <X
-                  onClick={() => {
-                    form.setValue("image", {});
-                    setUrl("");
-                  }}
-                  className="w-6 h-6 text-destructive/80 hover:text-destructive transition cursor-pointer"
-                />
-                <img
-                  src={url}
-                  alt="Image"
-                  className="w-32 h-32 rounded-xl object-cover aspect-square"
-                />
-              </div>
+            {isLoading ? (
+              <Loader2 size={40} className="text-gray-500 animate-spin" />
             ) : (
               <>
-                <label
-                  htmlFor="image"
-                  id="image"
-                  className="group flex flex-col justify-center items-center gap-y-2 cursor-pointer"
-                  onClick={handleClick}
-                >
-                  <ImagePlus className="w-16 h-16 text-primary/80 group-hover:text-primary transition" />
-                  <p className="text-gray-600 group-hover:text-gray-800 transition">
-                    اضافه کردن تصویر
-                  </p>
-                </label>
-                <input
-                  id="image"
-                  name="image"
-                  ref={inputRef}
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => setFile(e.target.value)}
-                />
-                {form.formState.errors.image && (
-                  <p className="text-destructive">
-                    {form.formState.errors.image}
-                  </p>
+                {url ? (
+                  <div className="relative flex flex-col justify-self-center">
+                    <X
+                      onClick={handleRemove}
+                      className="w-6 h-6 text-destructive/80 hover:text-destructive transition cursor-pointer"
+                    />
+                    <img
+                      src={url}
+                      alt="Image"
+                      className="w-36 h-36 rounded-3xl object-fill aspect-square"
+                    />
+                  </div>
+                ) : (
+                  <ImageUpload
+                    setIsLoading={setIsLoading}
+                    errors={form.formState.errors}
+                    setUrl={setUrl}
+                  />
                 )}
               </>
             )}

@@ -5,6 +5,7 @@ import { useUser } from "../../components/providers/user-provider";
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import { DropDownMenu } from "../../components/drop-down-menu";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const InCartCourses = () => {
   const { userData, removeFromCart, checkout } = useUser();
@@ -207,9 +208,7 @@ export const InCartCourses = () => {
                 )}
               </div>
             </th>
-            <th scope="col" className="px-6 py-3">
-              عملیات
-            </th>
+            <th scope="col" className="px-6 py-3" />
           </tr>
         </thead>
         <tbody>
@@ -232,7 +231,12 @@ export const InCartCourses = () => {
                 scope="row"
                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                {course.title}
+                <Link
+                  to={`/courses/${course.id}`}
+                  className="text-gray-500 hover:text-gray-800 transition"
+                >
+                  {course.title}
+                </Link>
               </th>
               <td className="px-6 py-4">{course.teacher}</td>
               <td className="px-6 py-4">{`${getPersianNumbers(
@@ -251,23 +255,21 @@ export const InCartCourses = () => {
               <td className="px-6 py-4">
                 {getPersianNumbers(course.price, false)}
               </td>
-              <td className="relative px-6 py-4 text-right">
-                <DropDownMenu>
-                  <button
-                    onClick={() => handleCheckout(course)}
-                    disabled={isLoading}
-                    className="bg-primary hover:bg-primary/80 disabled:bg-primary/70 text-white hover:text-white/80 disabled:text-white/80 px-5 py-2 rounded-xl"
-                  >
-                    تسویه
-                  </button>
-                  <button
-                    onClick={() => handleDelete(course.id)}
-                    disabled={isLoading}
-                    className="bg-destructive hover:bg-destructive/80 disabled:bg-destructive/70 text-white hover:text-white/80 disabled:text-white/80 px-5 py-2 rounded-xl"
-                  >
-                    حذف
-                  </button>
-                </DropDownMenu>
+              <td className="max-w-[80px] flex items-center justify-center gap-x-5 px-6 py-4">
+                <button
+                  onClick={() => handleCheckout(course)}
+                  disabled={isLoading}
+                  className="bg-primary hover:bg-primary/80 disabled:bg-primary/70 text-white hover:text-white/80 disabled:text-white/80 px-5 py-2 rounded-xl"
+                >
+                  تسویه
+                </button>
+                <button
+                  onClick={() => handleDelete(course.id)}
+                  disabled={isLoading}
+                  className="bg-destructive hover:bg-destructive/80 disabled:bg-destructive/70 text-white hover:text-white/80 disabled:text-white/80 px-5 py-2 rounded-xl"
+                >
+                  حذف
+                </button>
               </td>
             </tr>
           ))}

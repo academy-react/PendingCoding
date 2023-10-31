@@ -1,13 +1,11 @@
 import { useMemo, useState } from "react";
-import toast from "react-hot-toast";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { useUser } from "../../components/providers/user-provider";
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 
 export const BoughtCourses = () => {
-  const { userData, removeFromCart, checkout } = useUser();
-  const [isLoading, setIsLoading] = useState(false);
+  const { userData } = useUser();
   const [filteredCart, setFilteredCart] = useState([]);
   const [isAsc, setIsAsc] = useState(false);
 
@@ -34,18 +32,6 @@ export const BoughtCourses = () => {
     "اسفند",
   ];
 
-  const handleDelete = (id) => {
-    try {
-      setIsLoading(true);
-      removeFromCart(id);
-      toast.success("دوره با موفقیت حذف شد");
-    } catch (error) {
-      toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
-      console.log(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
   const handleFilter = (event) => {
     let newItems = [...filteredCart];
     const input = event.target.innerHTML;
@@ -200,9 +186,6 @@ export const BoughtCourses = () => {
                   )}
                 </div>
               </th>
-              <th scope="col" className="px-6 py-3">
-                عملیات
-              </th>
             </tr>
           </thead>
           <tbody>
@@ -243,15 +226,6 @@ export const BoughtCourses = () => {
                 )}`}</td>
                 <td className="px-6 py-4">
                   {getPersianNumbers(course.price, false)}
-                </td>
-                <td className="relative px-6 py-4 text-right">
-                  <button
-                    onClick={() => handleDelete(course.id)}
-                    disabled={isLoading}
-                    className="bg-destructive hover:bg-destructive/80 disabled:bg-destructive/70 text-white hover:text-white/80 disabled:text-white/80 px-4 py-2 rounded-xl"
-                  >
-                    حذف
-                  </button>
                 </td>
               </tr>
             ))}
