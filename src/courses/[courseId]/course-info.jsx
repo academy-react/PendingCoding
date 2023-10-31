@@ -197,7 +197,7 @@ export const CourseInfo = () => {
   const registered = course?.data.capacity - course?.data.students;
 
   const handleBookmark = () => {
-    if (userData.user !== "") {
+    if (userData.user) {
       addToFavorites(course?.data);
       setIsBookMarked(true);
     } else onOpen("unauthorizedModal");

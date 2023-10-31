@@ -190,7 +190,7 @@ const Register = () => {
                 >
                   {" "}
                   با{" "}
-                  <Link to="/Terms_and_Conditions" className="text-[#02B2B8]">
+                  <Link to="/terms-and-conditions" className="text-[#02B2B8]">
                     قوانین و مقررات{" "}
                   </Link>
                   درج شده در آکادمی موافقم.{" "}
