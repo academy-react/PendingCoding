@@ -26,7 +26,7 @@ const Reg = () => {
         {/* {style.p} */}
         <p className="text-[14px] w-[320px]">
           لطفا برای ثبت نام ابتدا{" "}
-          <Link className="cursor-pointer text-[#00FFF6]">قوانین و مقررات </Link>
+          <Link to="/Terms_and_Conditions" className="cursor-pointer text-[#00FFF6]">قوانین و مقررات </Link>
           آکادمی پندینگ کدینگ را مطالعه وسپس برای ثبت نام اقدام فرمایید
         </p>{" "}
         {/* {style.p} */}

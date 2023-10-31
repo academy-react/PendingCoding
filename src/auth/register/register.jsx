@@ -4,6 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "../../../libs/utils";
 import { useState } from "react";
 
+import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
+
 const Register = () => {
   const formSchema = z
     .object({
@@ -43,9 +46,7 @@ const Register = () => {
 
   const onSubmit = (values) => {
     console.log("form updated...!!!", values);
-    // return(
-    //   <div className="text-[18px] text-[#505050] p-[10px_20px] border-[1px] border-green-600 border-solid">ثبت نام موفقیت امیز بود</div>
-    // )
+    toast.success("ثبت نام موفقیت آمیز بود");
   };
 
   // steps function
@@ -169,7 +170,7 @@ const Register = () => {
                 className="text-[12px] text-[#969696] cursor-pointer"
               >
                 {" "}
-                با <a className="text-[#02B2B8]">قوانین و مقررات </a>درج شده در
+                با <Link to="/Terms_and_Conditions" className="text-[#02B2B8]">قوانین و مقررات </Link>درج شده در
                 آکادمی موافقم.{" "}
               </label>
             </div>

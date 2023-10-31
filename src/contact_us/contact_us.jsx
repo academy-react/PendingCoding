@@ -43,15 +43,19 @@ const ContactUs = () => {
   };
 
   return ( 
-    <div className="w-[clamp(100px,100%,1536px)] m-[0_auto] flex flex-col p-[0_20px_150px] ">
+    <div className="w-[clamp(100px,100%,1536px)] m-[0_auto] flex flex-col p-[0_50px_150px]">
 
       <Banner title="ارتباط با ما" />
 
-      <div className="flex m-[80px_0]">
+      <div className="flex m-[80px_0]
+      
+      max-[1500px]:flex-col max-[1500px]:items-center max-[1500px]:gap-[60px]">
 
         <div className="w-[clamp(100px,100%,550px)] h-[426px]">
 
-          <div className="h-[44px] flex mb-[80px]">
+          <div className="h-[44px] flex mb-[80px]
+          
+          max-[1500px]:justify-center max-[1500px]:pl-[60px]">
             <img src={loc} />
             <div className="flex flex-col m-[0_10px_0_0]">
               <p className="text-[#505050] text-[15px]"> آدرس پزوهشگاه : </p>
@@ -59,16 +63,18 @@ const ContactUs = () => {
             </div>
           </div>
 
-          <div className="flex flex-row">
+          <div className="flex flex-row
+          
+          max-[1500px]:justify-center">
             <div className="w-[clamp(50px,100%,285px)]">
               <ContactItems src={phone} title="شماره تلفن :" desc={`${getPersianNumbers(989117828923 , true)}+`} />
               <ContactItems src={instagram} title="اینستاگرام :" desc="__arman__rv" />
-              <ContactItems src={face} title="فیس بوک :" desc="نِدارمی" />
+              <ContactItems src={face} title="فیس بوک :" desc="نتیجه ای یافت نشد!" />
             </div>
             <div className="w-[clamp(50px,100%,255px)]"> 
               <ContactItems src={email} title="پست الکترونیکی :" desc="pendingcoding@gmail.com" />
-              <ContactItems src={telegram} title="تلگرام :" desc="@arman_rv" />
-              <ContactItems src={x} title="توییتر" desc="نِدارمی" />
+              <ContactItems src={telegram} title="تلگرام :" desc="arman_rv@" />
+              <ContactItems src={x} title="توییتر" desc="نتیجه ای یافت نشد!" />
             </div>
           </div>
 
@@ -81,15 +87,22 @@ const ContactUs = () => {
       </div>
 
 
-      <div className="flex gap-[150px]">
+      <div className="flex gap-[150px]
+      
+      max-[1100px]:gap-[10px]
+      max-[960px]:flex-col max-[960px]:gap-[30px] max-[960px]:items-center max-[960px]:px-[50px]">
 
-        <div className="w-[clamp(100px,90%,704px)]">
+        <div className="w-[clamp(100px,90%,704px)] flex flex-col
+        
+        max-[960px]:w-[100%]">
 
           <Banner title="با ما در تماس باشید "/>
 
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col items-start justify-start gap-y-2 mt-[45px]"
+            className="flex flex-col items-start justify-start gap-y-2 mt-[45px]
+            
+            max-[960px]:w-full max-[960px]:items-center"
           >
             <input
               className="disabled:cursor-not-allowed outline-none w-[clamp(100px,90%,704px)] bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-full px-6 pl-12 py-4 duration-200 border-gray-300 focus:border-gray-400 mb-[15px]"
@@ -122,7 +135,9 @@ const ContactUs = () => {
 
         </div>
 
-        <div className="flex flex-col gap-[45px]">
+        <div className="flex flex-col gap-[45px]
+        
+        max-[960px]:w-[100%]">
           <Banner title="مخاطب شما " />
 
           <div className="flex flex-col gap-[80px]">

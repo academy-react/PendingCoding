@@ -11,6 +11,7 @@ import { RegHolder } from "../../auth/register/regHolder";
 import { NotFound } from "../../404_notFound/404";
 import { ContactUs } from "../../contact_us/contact_us";
 import { About } from "../../about/about";
+import { Terms } from "../../auth/terms_and_conditions";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,11 @@ const router = createBrowserRouter([
         path: "/sign-up",
         element: <RegHolder /> ,
       },
+      {
+        path: "/Terms_and_Conditions",
+        element: <Terms /> ,
+      },
+
       // {
       //   path: "/404",
       //   element: <NotFound /> ,
