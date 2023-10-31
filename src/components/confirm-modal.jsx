@@ -56,7 +56,7 @@ export const ConfirmModal = () => {
               className="self-start justify-self-start text-rose-700 cursor-pointer"
               onClick={onClose}
             />
-            {!userData?.user ? (
+            {userData?.user ? (
               <div className="flex flex-col justify-center items-center gap-y-10 my-5">
                 <h1 className="text-xl text-gray-700">
                   آیا از خرید این دوره مطمئنید؟
