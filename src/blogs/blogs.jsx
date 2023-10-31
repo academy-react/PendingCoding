@@ -16,27 +16,27 @@ import { Error } from "../components/error";
 import { BlogCards } from "./blog-cards";
 
 const orderBy = [
-    {
-      id: 19,
-      label: "مرتب سازی بر اساس",
-      value: "",
-    },
-    {
-      id: 20,
-      label: "طولانی ترین",
-      value: "longest",
-    },
-    {
-      id: 21,
-      label: "قدیمی ترین",
-      value: "oldest",
-    },
-    {
-      id: 22,
-      label: "محبوب ترین",
-      value: "popular",
-    },
-  ];
+  {
+    id: 19,
+    label: "مرتب سازی بر اساس",
+    value: "",
+  },
+  {
+    id: 20,
+    label: "طولانی ترین",
+    value: "longest",
+  },
+  {
+    id: 21,
+    label: "قدیمی ترین",
+    value: "oldest",
+  },
+  {
+    id: 22,
+    label: "محبوب ترین",
+    value: "popular",
+  },
+];
 
 export const Blogs = () => {
   const [isVertical, setIsVertical] = useState(true);
@@ -68,33 +68,27 @@ export const Blogs = () => {
   const blogFilterBy = searchParams.get("blogFilterBy");
   const itemsPerPage = parseInt(searchParams.get("items-per-page"));
 
-  const filteredData = data?.data.filter((blog) => {
-    if (
-      !blog_name &&
-      !blogFilterBy
-    )
-      return blog;
+  let filteredData = data?.data.filter((blog) => {
+    if (!blog_name) return blog;
     else if (
       blog?.title
         .replace(/ /g, "")
         .replace("آ", "ا")
         .toLowerCase()
-        .includes(
-            blog_name?.replace(/ /g, "").replace("آ", "ا").toLowerCase()
-        )
-    )
-      return blog;
-    else if (
-      blog?.teacher
-        .replace(/ /g, "")
-        .replace("آ", "ا")
-        .toLowerCase()
-        .includes(
-            blogFilterBy?.replace(/ /g, "").replace("آ", "ا").toLowerCase()
-        )
+        .includes(blog_name?.replace(/ /g, "").replace("آ", "ا").toLowerCase())
     )
       return blog;
   });
+
+  if (blogFilterBy) {
+    const newArray = [...filteredData];
+    if (blogFilterBy === "longest")
+      newArray.sort((a, b) => a.description.length - b.description.length);
+    if (blogFilterBy === "oldest") newArray.sort((a, b) => a.age - b.age);
+    if (blogFilterBy === "popular") newArray.sort((a, b) => b.likes - a.likes);
+
+    filteredData = newArray;
+  }
 
   return (
     <div className="max-w-[1900px] mx-auto flex flex-col items-start justify-center gap-y-10 p-20">

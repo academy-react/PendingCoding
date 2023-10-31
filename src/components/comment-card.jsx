@@ -39,7 +39,7 @@ export const CommentCard = ({ image, name, createdAt, comment, responds }) => {
       {responds.map((item) => (
         <div
           key={item.id}
-          className="border-2 border-gray-300 rounded-xl w-3/4 mx-auto flex flex-col lg:flex-row justify-center items-center px-5 py-2 gap-x-10"
+          className="my-1 border-2 border-gray-300 rounded-xl w-3/4 mx-auto flex flex-col lg:flex-row justify-center items-center px-5 py-2 gap-x-10"
         >
           <div className="w-full lg:w-1/6 flex flex-col justify-center items-center gap-y-3 pb-5 lg:pl-5 lg:border-l border-b lg:border-b-0 border-gray-300">
             <img

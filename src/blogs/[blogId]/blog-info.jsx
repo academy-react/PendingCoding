@@ -122,6 +122,13 @@ export const BlogInfo = () => {
   if (blogLoading && blogsLoading) return <Loading />;
   if (blogsError && blogError) return <Error />;
 
+  const handleBookmark = () => {
+    if (userData.user !== "") {
+      addToFavorites(blog?.data);
+      setIsBookMarked(true);
+    } else onOpen("unauthorizedModal");
+  };
+
   return (
     <div className="max-w-[1900px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5">
       <div className="flex mx-auto md:mx-0 justify-center items-center">
@@ -141,10 +148,7 @@ export const BlogInfo = () => {
             />
           ) : (
             <Bookmark
-              onClick={() => {
-                addToFavorites(blog?.data);
-                setIsBookMarked(true);
-              }}
+              onClick={handleBookmark}
               className="h-9 w-9 text-primary hover:text-primary/80 transition cursor-pointer"
             />
           )}

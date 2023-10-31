@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { CommentCard } from "../../components/comment-card"
-import {Banner} from "../../components/banner"
+import { CommentCard } from "../../components/comment-card";
+import { Banner } from "../../components/banner";
 
 const backdrop = {
   hidden: {
@@ -40,7 +40,7 @@ export const Description = ({ details, selected }) => {
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values) => {
-    console.log(values)
+    console.log(values);
   };
 
   if (selected === details.label && details.label === "توضیحات") {
@@ -75,8 +75,12 @@ export const Description = ({ details, selected }) => {
             />
           ))}
         </div>
-        <div className="w-full flex flex-col justify-center items-start gap-y-7">
-          <Banner title="دیدگاه خود را با ما به اشتراک بگذارید" height="h-8" className="text-lg" />
+        <div className="w-full flex flex-col justify-center mt-8 mb-5 items-start gap-y-7">
+          <Banner
+            title="دیدگاه خود را با ما به اشتراک بگذارید"
+            height="h-8"
+            className="text-lg"
+          />
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="w-full flex flex-col items-center justify-center gap-y-3"
@@ -102,15 +106,7 @@ export const Description = ({ details, selected }) => {
         </div>
       </motion.div>
     );
-  }     
+  }
 
-  return (
-    <div
-      className={
-        selected !== details.label && "hidden"
-      }
-    >
-        {Info}
-    </div>
-  );
+  return <div className={selected !== details.label && "hidden"}>{Info}</div>;
 };

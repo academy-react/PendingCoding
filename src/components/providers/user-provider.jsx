@@ -15,7 +15,7 @@ function UserProvider({ children }) {
   const userInfo = JSON.parse(localStorage.getItem("user"));
 
   const [userData, setUserData] = useState({
-    user: userInfo?.user || "",
+    user: userInfo?.user || null,
     cart: userInfo?.cart || [],
     favorites: userInfo?.favorites || [],
     myCourses: userInfo?.myCourses || [],

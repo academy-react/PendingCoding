@@ -8,10 +8,15 @@ import { Blogs } from "../../blogs/blogs";
 import { BlogInfo } from "../../blogs/[blogId]/blog-info";
 import { Dashboard } from "../../dashboard/dashboard";
 import { Home } from "../../dashboard/home/home";
-// import { Holder } from "../../Lgin&Register/holder";
 import { MyCourses } from "../../dashboard/my-courses/my-courses";
 import { Favorites } from "../../dashboard/favorites/favorites";
 import { EditProfile } from "../../dashboard/edit/edit-profile";
+import { Holder } from "../../auth/login/holder";
+import { RegHolder } from "../../auth/register/regHolder";
+import { NotFound } from "../../404_notFound/404";
+import { ContactUs } from "../../contact_us/contact_us";
+import { About } from "../../about/about";
+import { Terms } from "../../auth/terms_and_conditions";
 
 const routes = [
   {
@@ -81,15 +86,23 @@ const routers = [
       },
       {
         path: "/about",
-        element: null,
+        element: <About />,
       },
       {
         path: "contact-us",
-        element: null,
+        element: <ContactUs />,
       },
       {
         path: "/sign-in",
-        element: null,
+        element: <Holder />,
+      },
+      {
+        path: "/sign-up",
+        element: <RegHolder />,
+      },
+      {
+        path: "/terms-and-conditions",
+        element: <Terms />,
       },
     ],
   },
@@ -117,7 +130,7 @@ const routers = [
   },
   {
     path: "*",
-    element: null,
+    element: <NotFound />,
   },
 ];
 

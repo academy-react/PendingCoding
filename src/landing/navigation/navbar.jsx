@@ -11,6 +11,7 @@ import { NavbarMobile } from "./navbar-mobile";
 
 import logo from "../../assets/logo.svg";
 import { cn } from "../../../libs/utils";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { userData } = useUser();
@@ -18,6 +19,18 @@ const Navbar = () => {
 
   const count = useMemo(() => userData?.cart?.length, [userData?.cart?.length]);
   const scrolled = useScrollTop();
+
+  const handleLogout = () => {
+    const newObj = {
+      ...userData,
+      user: null,
+    };
+
+    localStorage.setItem("user", JSON.stringify(newObj));
+    toast.success("با موفقیت خارج شدید");
+  };
+
+  const isSignIn = useMemo(() => userData.user, [userData]);
 
   return (
     <nav
@@ -45,18 +58,37 @@ const Navbar = () => {
           ))}
         </div>
         <div className="hidden md:flex items-center justify-center gap-x-1 lg:gap-x-6">
-          <Link
-            className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
-            to="/sign-in"
-          >
-            ورود
-          </Link>
-          <Link
-            className="border-[3px] border-primary px-10 py-1 rounded-full bg-primary hover:bg-primary/90 text-white hover:text-white/90 transition font-semibold text-[16px]"
-            to="/sign-up"
-          >
-            ثبت نام
-          </Link>
+          {isSignIn ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
+              >
+                داشبورد
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
+              >
+                خروج
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
+                to="/sign-in"
+              >
+                ورود
+              </Link>
+              <Link
+                className="border-[3px] border-primary px-10 py-1 rounded-full bg-primary hover:bg-primary/90 text-white hover:text-white/90 transition font-semibold text-[16px]"
+                to="/sign-up"
+              >
+                ثبت نام
+              </Link>
+            </>
+          )}
           <div
             onClick={() => onOpen("cartModal")}
             className="group relative cursor-pointer"

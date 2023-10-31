@@ -1,7 +1,7 @@
 import { useState, useLayoutEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import { BookX, Grid2x2, Menu, Rows } from "lucide-react";
+import { BookX, Menu } from "lucide-react";
 
 import NavigatorTracer from "../components/navigator-tracer";
 import { Banner } from "../components/banner";
@@ -72,7 +72,7 @@ export const Teachers = () => {
   const itemsPerPage = parseInt(searchParams.get("items-per-page"));
 
   let filteredData = data?.data.filter((teacher) => {
-    if (!teacher_name && !teacher_name) return teacher;
+    if (!teacher_name) return teacher;
     else if (
       teacher?.name ||
       teacher.teacher
@@ -133,7 +133,7 @@ export const Teachers = () => {
                 filters={orderBy}
                 className="py-3 px-5"
               />
-              <div
+              {/* <div
                 onClick={() => setIsVertical((c) => !c)}
                 className="text-gray-500 hover:text-gray-600 transition cursor-pointer"
               >
@@ -142,7 +142,7 @@ export const Teachers = () => {
                 ) : (
                   <Rows className="h-7 w-7" />
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
           {/* Grid Div */}
