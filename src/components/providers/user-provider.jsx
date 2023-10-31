@@ -15,10 +15,10 @@ function UserProvider({ children }) {
   const userInfo = JSON.parse(localStorage.getItem("user"));
 
   const [userData, setUserData] = useState({
-    user: userInfo?.user || "",
-    cart: userInfo?.cart || [],
-    favorites: userInfo?.favorites || [],
-    myCourses: userInfo?.myCourses || [],
+    user: userInfo.user || "",
+    cart: userInfo.cart || [],
+    favorites: userInfo.favorites || [],
+    myCourses: userInfo.myCourses || [],
   });
 
   const addToCart = (course) => {
@@ -85,7 +85,7 @@ function UserProvider({ children }) {
   const addToFavorites = (course) => {
     const newObj = {
       ...userData,
-      favorites: [...(userInfo?.favorites || []), course],
+      favorites: [...userInfo.favorites, { ...course }],
     };
     localStorage.setItem("user", JSON.stringify(newObj));
     toast.success("به علاقه مندی اضافه شد");
@@ -98,7 +98,6 @@ function UserProvider({ children }) {
       ...userData,
       favorites,
     };
-
     localStorage.setItem("user", JSON.stringify(newObj));
     toast.success("از لیست علاقه مندی ها حذف شد");
   };

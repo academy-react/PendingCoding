@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -6,13 +6,13 @@ import { useUser } from "../../components/providers/user-provider";
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 
 export const FavoriteCourses = () => {
-  const { userData, removeFromCart, checkout } = useUser();
+  const { userData, removeFromFavorites } = useUser();
   const [isLoading, setIsLoading] = useState(false);
-  const [filteredCart, setFilteredCart] = useState([]);
+  const [filteredFavorites, setFilteredFavorites] = useState([]);
   const [isAsc, setIsAsc] = useState(false);
 
   useMemo(() => {
-    setFilteredCart(userData?.favorites);
+    setFilteredFavorites(userData?.favorites);
   }, [userData]);
 
   const startDate = (course) =>
@@ -34,11 +34,13 @@ export const FavoriteCourses = () => {
     "اسفند",
   ];
 
-  const handleDelete = (id) => {
+  const handleDelete = (course) => {
     try {
       setIsLoading(true);
-      removeFromCart(id);
-      toast.success("دوره با موفقیت حذف شد");
+      let filteredArray = [...filteredFavorites];
+      filteredArray = filteredArray.filter((item) => item.id !== course.id);
+      setFilteredFavorites(filteredArray);
+      removeFromFavorites(course);
     } catch (error) {
       toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
       console.log(error.message);
@@ -47,7 +49,7 @@ export const FavoriteCourses = () => {
     }
   };
   const handleFilter = (event) => {
-    let newItems = [...filteredCart];
+    let newItems = [...filteredFavorites];
     const input = event.target.innerHTML;
 
     if (input === "نام") {
@@ -119,12 +121,12 @@ export const FavoriteCourses = () => {
         return 0;
       });
     }
-    setFilteredCart(newItems);
+    setFilteredFavorites(newItems);
   };
 
   return (
     <div className="relative w-full shadow-md sm:rounded-lg">
-      {filteredCart.length === 0 ? (
+      {filteredFavorites.length === 0 ? (
         <div>
           <p className="text-xl text-gray-600 text-center">
             علاقه مندی وجود ندارد
@@ -206,7 +208,7 @@ export const FavoriteCourses = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredCart.map((course) => (
+            {filteredFavorites.map((course) => (
               <tr
                 key={course.id}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
@@ -246,7 +248,7 @@ export const FavoriteCourses = () => {
                 </td>
                 <td className="relative px-6 py-4 text-right">
                   <button
-                    onClick={() => handleDelete(course.id)}
+                    onClick={() => handleDelete(course)}
                     disabled={isLoading}
                     className="bg-destructive hover:bg-destructive/80 disabled:bg-destructive/70 text-white hover:text-white/80 disabled:text-white/80 px-4 py-2 rounded-xl"
                   >

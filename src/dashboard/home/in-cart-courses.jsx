@@ -1,11 +1,10 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { useUser } from "../../components/providers/user-provider";
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
-import { DropDownMenu } from "../../components/drop-down-menu";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { Link } from "react-router-dom";
 
 export const InCartCourses = () => {
   const { userData, removeFromCart, checkout } = useUser();

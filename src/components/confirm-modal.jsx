@@ -56,7 +56,7 @@ export const ConfirmModal = () => {
               className="self-start justify-self-start text-rose-700 cursor-pointer"
               onClick={onClose}
             />
-            {userData?.user ? (
+            {!userData?.user ? (
               <div className="flex flex-col justify-center items-center gap-y-10 my-5">
                 <h1 className="text-xl text-gray-700">
                   آیا از خرید این دوره مطمئنید؟
@@ -78,7 +78,7 @@ export const ConfirmModal = () => {
               </div>
             ) : (
               <div className="flex flex-col justify-center items-center gap-y-10 my-5">
-                <h1>ابتدا وارد حساب خود شوید</h1>
+                <h1 className="text-xl">ابتدا وارد حساب خود شوید</h1>
                 <Link
                   to="/sign-in"
                   className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"

@@ -149,16 +149,16 @@ export const CourseInfo = () => {
   const [isBookMarked, setIsBookMarked] = useState(false);
 
   const isInCart = useMemo(
-    () => userData.cart.some((c) => c.id === id),
+    () => userData?.cart.some((c) => c.id === id),
     [userData.cart, id]
   );
   const isPurchased = useMemo(
-    () => userData.myCourses.some((c) => c.id === id),
+    () => userData?.myCourses.some((c) => c.id === id),
     [userData.myCourses, id]
   );
 
   useEffect(() => {
-    setIsBookMarked(userData.favorites.some((c) => c.id === course?.data.id));
+    setIsBookMarked(userData?.favorites.some((c) => c.id === course?.data.id));
   }, [course?.data.id, userData.favorites]);
 
   useLayoutEffect(() => {

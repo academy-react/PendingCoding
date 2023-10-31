@@ -9,11 +9,7 @@ export const Favorites = () => {
    Course PurchasedCourses 
   */}
       <div className="flex flex-col items-start justify-center gap-y-5">
-        <Banner
-          title="دوره های خریداری شده"
-          className="text-xl"
-          height="h-10"
-        />
+        <Banner title="لیست علاقه مندی‌ها" className="text-xl" height="h-10" />
         <FavoriteCourses />
       </div>
     </div>

@@ -47,18 +47,17 @@ export const CartModal = () => {
             initial="hidden"
             exit="exit"
             onClick={(e) => e.stopPropagation()}
-            className="overflow-hidden fixed inset-0 w-fit h-[450px] m-auto bg-white rounded-xl px-2 pb-10 pt-1 z-10"
+            className={cn(
+              "overflow-hidden fixed inset-0 w-fit h-[450px] m-auto bg-white rounded-xl px-2 pb-10 pt-1 z-10",
+              cart.length === 0 && "h-fit"
+            )}
           >
             <X
               className=" self-start justify-self-start text-rose-700 cursor-pointer"
               onClick={onClose}
             />
 
-            <motion.div
-              variants={backdrop}
-              animate="visible"
-              initial="hidden"
-              exit="exit"
+            <div
               onClick={(e) => e.stopPropagation()}
               className={cn(
                 "w-full h-full m-auto bg-white rounded-xl px-3 z-50",
@@ -83,7 +82,7 @@ export const CartModal = () => {
                   </div>
                 )}
               </div>
-            </motion.div>
+            </div>
           </motion.div>
         </motion.div>
       </AnimatePresence>
