@@ -8,7 +8,8 @@ export type ModalType =
   | "confirmDeleteModal"
   | "cartModal"
   | "shareModal"
-  | "sendRespond";
+  | "sendRespond"
+  | "unauthorizedModal";
 
 type ModalData = {
   user?: {

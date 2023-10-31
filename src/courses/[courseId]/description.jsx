@@ -92,7 +92,9 @@ export const Description = ({ details, selected }) => {
             src={details.teacher.image}
             alt="teacherAvatar"
           />
-          <h3 className="text-gray-700 text-lg text-center">{details.teacher.name}</h3>
+          <h3 className="text-gray-700 text-lg text-center">
+            {details.teacher.name}
+          </h3>
           <Link
             to={`/teachers/${details.teacher.id}`}
             className="w-1/3 xl:w-full py-2 text-center bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/80 disabled:cursor-not-allowed transition rounded-full "
@@ -100,7 +102,7 @@ export const Description = ({ details, selected }) => {
             نمایش پروفایل
           </Link>
           <button
-            onClick={() => onOpen("sendMessageModal")}
+            onClick={() => onOpen("sendRespond")}
             className="w-1/3 xl:w-full py-2 border-2 border-primary bg-white/20 hover:bg-[#EEEEEE] text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
           >
             ارسال پیام
@@ -133,7 +135,11 @@ export const Description = ({ details, selected }) => {
           ))}
         </div>
         <div className="w-full flex flex-col justify-center items-start gap-y-7">
-          <Banner title="دیدگاه خود را با ما به اشتراک بگذارید" height="h-8" className="text-lg" />
+          <Banner
+            title="دیدگاه خود را با ما به اشتراک بگذارید"
+            height="h-8"
+            className="text-lg"
+          />
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="w-full flex flex-col items-center justify-center gap-y-3"
@@ -157,17 +163,8 @@ export const Description = ({ details, selected }) => {
             </button>
           </form>
         </div>
-        
       </motion.div>
     );
   }
-  return (
-    <div
-      className={
-        selected !== details.label && "hidden"
-      }
-    >
-      {Info}
-    </div>
-  );
+  return <div className={selected !== details.label && "hidden"}>{Info}</div>;
 };

@@ -196,6 +196,13 @@ export const CourseInfo = () => {
   ];
   const registered = course?.data.capacity - course?.data.students;
 
+  const handleBookmark = () => {
+    if (userData.user !== "") {
+      addToFavorites(course?.data);
+      setIsBookMarked(true);
+    } else onOpen("unauthorizedModal");
+  };
+
   return (
     <div className="max-w-[1900px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5 pt-20">
       <div className="flex mx-auto md:mx-0 justify-center items-center">
@@ -215,10 +222,7 @@ export const CourseInfo = () => {
             />
           ) : (
             <Bookmark
-              onClick={() => {
-                addToFavorites(course?.data);
-                setIsBookMarked(true);
-              }}
+              onClick={handleBookmark}
               className="h-9 w-9 text-primary hover:text-primary/80 transition cursor-pointer"
             />
           )}
@@ -252,7 +256,11 @@ export const CourseInfo = () => {
         <div className=" flex flex-col items-center justify-center gap-y-3">
           {isInCart ? (
             <button
-              onClick={() => onOpen("confirmDeleteModal")}
+              onClick={() =>
+                onOpen(
+                  userData.user ? "confirmDeleteModal" : "unauthorizedModal"
+                )
+              }
               className="w-full px-20 py-2 bg-destructive hover:bg-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/80 disabled:cursor-not-allowed transition rounded-full "
             >
               حذف از سبد خرید
@@ -263,7 +271,9 @@ export const CourseInfo = () => {
             </p>
           ) : (
             <button
-              onClick={() => onOpen("confirmModal")}
+              onClick={() =>
+                onOpen(userData.user ? "confirmModal" : "unauthorizedModal")
+              }
               className="w-full px-20 py-2 bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/80 disabled:cursor-not-allowed transition rounded-full "
             >
               افزودن به سبد خرید
@@ -280,7 +290,7 @@ export const CourseInfo = () => {
       </div>
 
       {/* Main Div */}
-      <div className="w-full flex flex-col xl:flex-row justify-between items-center xl:items-start gap-x-5">
+      <div className="w-full flex flex-col xl:flex-row justify-between items-center xl:items-start gap-x-5 gap-y-20">
         {/* Course Image & Description */}
         <div className="w-full flex flex-col items-start justify-center gap-y-5">
           <img
@@ -311,8 +321,8 @@ export const CourseInfo = () => {
 
         {/* Course Infos */}
         <div className="w-full xl:w-1/4 flex flex-col items-center xl:items-start justify-center gap-y-10">
-          <Banner title="مشخصات دوره" className="text-xl" height="h-9" />
           <div className="flex flex-col items-start justify-center gap-y-5">
+            <Banner title="مشخصات دوره" className="text-xl" height="h-9" />
             <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
               <User2 className="text-primary h-6 w-6" />
               ظرفیت:
@@ -360,8 +370,12 @@ export const CourseInfo = () => {
               </h5>
             </span>
           </div>
-          <Banner title="جدید ترین دوره ها" className="text-xl" height="h-9" />
-          <div className="flex flex-col justify-center items-start">
+          <div className="flex flex-col justify-center items-start w-1/4 2xl:w-full">
+            <Banner
+              title="جدید ترین دوره ها"
+              className="text-xl"
+              height="h-9"
+            />
             {courses?.data.slice(0, 3).map((course) => (
               <NewCourseCard
                 key={course.id}

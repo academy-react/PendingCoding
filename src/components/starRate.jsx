@@ -3,16 +3,20 @@ import toast from "react-hot-toast";
 import { Star } from "lucide-react";
 import { useQuery } from "react-query";
 
-import { apiCall } from "../../libs/api-call";
-import { getCourses } from "../../libs/get-courses";
+import { useUser } from "./providers/user-provider";
 
-export const StarRate = ({ data,queryKey }) => {
+import { apiCall } from "../../libs/api-call";
+
+export const StarRate = ({ data, queryKey }) => {
   const [rating, setRating] = useState(data?.stars | null);
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { userData } = useUser();
   const { refetch } = useQuery({
     queryKey: [queryKey],
   });
+
+  const isAllowed = isLoading || userData.user === "";
 
   const onClick = async (currentRate) => {
     if (currentRate === 1) {
@@ -52,11 +56,11 @@ export const StarRate = ({ data,queryKey }) => {
         return (
           <button
             key={index}
-            disabled={isLoading}
+            disabled={isAllowed}
             className="disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer text-primary/70 hover:text-primary"
           >
             <input
-              disabled={isLoading}
+              disabled={isAllowed}
               type="radio"
               name="rate"
               value={currentRate}

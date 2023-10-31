@@ -15,10 +15,10 @@ function UserProvider({ children }) {
   const userInfo = JSON.parse(localStorage.getItem("user"));
 
   const [userData, setUserData] = useState({
-    user: userInfo.user || "",
-    cart: userInfo.cart || [],
-    favorites: userInfo.favorites || [],
-    myCourses: userInfo.myCourses || [],
+    user: userInfo?.user || "",
+    cart: userInfo?.cart || [],
+    favorites: userInfo?.favorites || [],
+    myCourses: userInfo?.myCourses || [],
   });
 
   const addToCart = (course) => {
