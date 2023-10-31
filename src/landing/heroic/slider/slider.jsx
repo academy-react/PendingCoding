@@ -82,6 +82,7 @@ export const Slider = () => {
           autoplay={{
             delay: 2500,
             disableOnInteraction: true,
+            pauseOnMouseEnter: true,
           }}
         >
           {photos.map((photo) => (

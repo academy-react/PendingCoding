@@ -76,12 +76,12 @@ export const NavbarMobile = (count) => {
           >
             ثبت نام
           </Link>
-          <div className="group relative cursor-pointer">
-            <ShoppingCart className="h-8 w-8 group-hover:text-black/60 transition" />
-            {count > 0 && (
-              <Dot className="h-14 w-14 absolute -inset-6 z-10 text-primary group-hover:text-primary/60 transition" />
-            )}
-          </div>
+          <Link
+            to="/dashboard"
+            className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
+          >
+            داشبورد
+          </Link>
         </motion.div>
       </motion.div>
     </AnimatePresence>

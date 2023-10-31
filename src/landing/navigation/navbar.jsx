@@ -22,9 +22,8 @@ const Navbar = () => {
   return (
     <nav
       className={cn(
-        "w-full flex items-center justify-between px-0 lg:px-16 xl:px-28 2xl:px-32 py-2 fixed top-0 z-20",
-        scrolled &&
-          "w-full px-20 bg-[#EEEEEE] border-b border-gray-200 shadow-md"
+        "w-full fixed top-0 bg-[#EEEEEE] flex items-center justify-between px-3 md:px-4 lg:px-16 xl:px-28 2xl:px-32 py-2",
+        scrolled && "border-b border-gray-200 shadow-md"
       )}
     >
       <div className="flex w-full items-center justify-between mx-auto">

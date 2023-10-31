@@ -2,6 +2,8 @@ import { LayoutPage } from "../../landing/layout";
 import { LandingPage } from "../../landing/landing";
 import { Courses } from "../../courses/courses";
 import { CourseInfo } from "../../courses/[courseId]/course-info";
+import { Teachers } from "../../teachers/teachers";
+import { TeacherInfo } from "../../teachers/[teacherId]/teacher-info";
 import { Blogs } from "../../blogs/blogs";
 import { BlogInfo } from "../../blogs/[blogId]/blog-info";
 import { Dashboard } from "../../dashboard/dashboard";
@@ -71,7 +73,11 @@ const routers = [
       },
       {
         path: "/teachers",
-        element: null,
+        element: <Teachers />,
+      },
+      {
+        path: "/teachers/:id",
+        element: <TeacherInfo />,
       },
       {
         path: "/about",

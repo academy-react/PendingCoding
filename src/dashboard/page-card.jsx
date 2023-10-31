@@ -1,10 +1,9 @@
-import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { cn } from "../../libs/utils";
 
 export const PageCard = ({ page }) => {
-  const pathname = useMemo(() => window.location.pathname, []);
+  const { pathname } = useLocation();
 
   const isActive = pathname === page.to;
 

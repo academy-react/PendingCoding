@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { useModal } from "../hooks/use-modal-store";
 import { useUser } from "./providers/user-provider";
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 
 const backdrop = {
   hidden: {
@@ -24,7 +25,7 @@ const backdrop = {
 
 export const ConfirmModal = () => {
   const { isOpen, onClose, type } = useModal();
-  const { addToCart } = useUser();
+  const { userData, addToCart } = useUser();
   const { data } = useQuery({
     queryKey: ["courseId"],
     enabled: false,
@@ -49,31 +50,43 @@ export const ConfirmModal = () => {
             initial="hidden"
             exit="exit"
             onClick={(e) => e.stopPropagation()}
-            className="fixed inset-0 w-96 h-fit m-auto bg-white rounded-xl p-3"
+            className="fixed inset-0 w-96 h-fit m-auto bg-white rounded-xl p-3 z-50"
           >
             <X
               className="self-start justify-self-start text-rose-700 cursor-pointer"
               onClick={onClose}
             />
-            <div className="flex flex-col justify-center items-center gap-y-10 my-5">
-              <h1 className="text-xl text-gray-700">
-                آیا از خرید این دوره مطمئنید؟
-              </h1>
-              <div className="w-full flex items-center justify-start gap-x-3 px-5 py-2">
-                <button
-                  onClick={() => addToCart(data?.data)}
-                  className="px-5 py-2 text-lg bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/90 rounded-xl"
-                >
-                  تائید
-                </button>
-                <button
-                  onClick={onClose}
-                  className="px-5 py-2 text-lg bg-destructive hover:bg-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/90 rounded-xl"
-                >
-                  لغو
-                </button>
+            {userData?.user ? (
+              <div className="flex flex-col justify-center items-center gap-y-10 my-5">
+                <h1 className="text-xl text-gray-700">
+                  آیا از خرید این دوره مطمئنید؟
+                </h1>
+                <div className="w-full flex items-center justify-start gap-x-3 px-5 py-2">
+                  <button
+                    onClick={() => addToCart(data?.data)}
+                    className="px-5 py-2 text-lg bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/90 rounded-xl"
+                  >
+                    تائید
+                  </button>
+                  <button
+                    onClick={onClose}
+                    className="px-5 py-2 text-lg bg-destructive hover:bg-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/90 rounded-xl"
+                  >
+                    لغو
+                  </button>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex flex-col justify-center items-center gap-y-10 my-5">
+                <h1>ابتدا وارد حساب خود شوید</h1>
+                <Link
+                  to="/sign-in"
+                  className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
+                >
+                  ورود به حساب
+                </Link>
+              </div>
+            )}
           </motion.div>
         </motion.div>
       </AnimatePresence>
