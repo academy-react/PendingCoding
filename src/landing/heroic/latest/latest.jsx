@@ -1,9 +1,9 @@
 import { Slider } from "../slider/slider";
 export const Latest = () => {
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center 2xl:gap-x-80">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-y-10 2xl:gap-x-80">
       <div className="w-80 flex flex-col gap-5 items-start justify-center">
-        <h1 className="text-3xl text-gray-600">جدید ترین اخبار روز</h1>
+        <h1 className="text-4xl text-gray-600">جدید ترین اخبار روز</h1>
         <h5 className="text-base text-gray-400">
           لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
           .استفاده از طراحان گرافیک است

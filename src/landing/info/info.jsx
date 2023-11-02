@@ -32,7 +32,7 @@ const teachers = [
 export const Info = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-y-16">
-      <h1 className="text-gray-500 text-2xl">
+      <h1 className="text-gray-500 text-4xl xl:text-2xl">
         تجربه یادگیری مهارت در مسیری حرفه ای
       </h1>
       <div className="flex w-full flex-col xl:flex-row items-center justify-center xl:items-start xl:justify-start xl:gap-x-[268px] gap-y-20">

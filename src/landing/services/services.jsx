@@ -12,8 +12,8 @@ export const Services = () => {
   return (
     <>
       <div className="flex flex-col items-center justify-center gap-y-2">
-        <h1 className="text-2xl text-gray-600">ویژگی ها و خدمات</h1>
-        <h4 className="text-sm text-gray-400">
+        <h1 className="text-4xl xl:text-2xl text-gray-600">ویژگی ها و خدمات</h1>
+        <h4 className="text-lg xl:text-sm text-gray-400">
           تمام آنچه شما به آن برای رسیدن به موفقیت نیاز دارید
         </h4>
       </div>
