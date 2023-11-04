@@ -43,7 +43,7 @@ export const UnauthorizedModal = () => {
             initial="hidden"
             exit="exit"
             onClick={(e) => e.stopPropagation()}
-            className="fixed inset-0 w-96 h-fit m-auto bg-white rounded-xl p-3 z-50"
+            className="fixed inset-0 w-96 h-fit m-auto bg-gray-50 rounded-xl p-3 z-50"
           >
             <X
               className="self-start justify-self-start text-rose-700 cursor-pointer"

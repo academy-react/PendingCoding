@@ -6,11 +6,13 @@ import { useQuery } from "react-query";
 import { useUser } from "./providers/user-provider";
 
 import { apiCall } from "../../libs/api-call";
+import { useTheme } from "./providers/theme-provider";
 
 export const StarRate = ({ data, queryKey }) => {
   const [rating, setRating] = useState(data?.stars | null);
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { isDarkTheme } = useTheme();
   const { userData } = useUser();
   const { refetch } = useQuery({
     queryKey: [queryKey],
@@ -57,7 +59,7 @@ export const StarRate = ({ data, queryKey }) => {
           <button
             key={index}
             disabled={isAllowed}
-            className="disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer text-primary/70 hover:text-primary"
+            className="disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer text-primary/70 dark:text-[#5d52ff] hover:text-primary dark:hover:text-[#5d52ff]"
           >
             <input
               disabled={isAllowed}
@@ -68,7 +70,15 @@ export const StarRate = ({ data, queryKey }) => {
             />
             <Star
               size={20}
-              fill={currentRate <= rating ? "#3730A3" : "#FFFFFF"}
+              fill={
+                currentRate <= rating
+                  ? isDarkTheme
+                    ? "#5d52ff"
+                    : "#3730A3"
+                  : isDarkTheme
+                  ? "#d2d2d2"
+                  : "#FFFFFF"
+              }
               onClick={() => onClick(currentRate)}
             />
           </button>

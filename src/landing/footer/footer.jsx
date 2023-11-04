@@ -42,8 +42,8 @@ export const Footer = () => {
         <div className="flex items-center justify-center">
           <div className="relative flex items-center justify-center">
             <img src={map} alt="MapPic" className="hidden xl:block" />
-            <div className="xl:absolute xl:left-32 bg-white flex flex-col justify-center items-center px-4 py-5 rounded-t-[250px] rounded-b-lg">
-              <div className="relative bg-[#808BF2] w-[96px] h-[96px] rounded-full flex items-center justify-center">
+            <div className="xl:absolute xl:left-32 bg-white dark:bg-gray-300 flex flex-col justify-center items-center px-4 py-5 rounded-t-[250px] rounded-b-lg">
+              <div className="relative bg-[#808BF2] dark:bg-dark-primary/80 w-[96px] h-[96px] rounded-full flex items-center justify-center">
                 <img src={mail} alt="MailPic" />
                 <div className="w-6 h-6 rounded-full absolute right-3 top-[52px]">
                   <img src={check} alt="CheckPic" />
@@ -55,7 +55,7 @@ export const Footer = () => {
                 className="flex flex-col items-start justify-start gap-y-2"
               >
                 <input
-                  className="disabled:cursor-not-allowed outline-none w-80 bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-full px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
+                  className="disabled:cursor-not-allowed outline-none w-80 bg-[#EEEEEE] dark:bg-gray-200 text-gray-500 dark:text-gray-800 border-2 rounded-full px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
                   placeholder="پست الکترونیکی"
                   {...form.register("email")}
                 />
@@ -65,7 +65,7 @@ export const Footer = () => {
                   </p>
                 )}
                 <textarea
-                  className="resize-none h-40 disabled:cursor-not-allowed outline-none w-80 bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
+                  className="resize-none h-40 disabled:cursor-not-allowed outline-none w-80 bg-[#EEEEEE] dark:bg-gray-200 text-gray-500 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
                   placeholder="متن پیام"
                   {...form.register("message")}
                 />
@@ -77,7 +77,7 @@ export const Footer = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting || !isValid}
-                  className="text-white hover:text-white/80 bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:text-white/80 py-2 text-lg w-2/4 self-center my-4 rounded-full transition"
+                  className="text-white hover:text-white/80 bg-primary dark:bg-dark-primary hover:bg-primary/80 dark:bg-dark-primary/80 disabled:bg-primary/80 dark:disabled:bg-dark-primary/70 disabled:text-white/80 py-2 text-lg w-2/4 self-center my-4 rounded-full transition"
                 >
                   ارسال پیام
                 </button>

@@ -48,7 +48,7 @@ export const CartModal = () => {
             exit="exit"
             onClick={(e) => e.stopPropagation()}
             className={cn(
-              "overflow-hidden fixed inset-0 w-fit h-[450px] m-auto bg-white rounded-xl px-2 pb-10 pt-1 z-10",
+              "overflow-hidden fixed inset-0 w-fit h-[450px] m-auto bg-gray-50 rounded-xl px-2 pb-10 pt-1 z-10",
               cart.length === 0 && "h-fit"
             )}
           >
@@ -60,7 +60,7 @@ export const CartModal = () => {
             <div
               onClick={(e) => e.stopPropagation()}
               className={cn(
-                "w-full h-full m-auto bg-white rounded-xl px-3 z-50",
+                "w-full h-full m-auto rounded-xl px-3 z-50",
                 cart.length > 1 && "overflow-y-auto"
               )}
             >

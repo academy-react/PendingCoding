@@ -89,20 +89,20 @@ export const Slider = () => {
             <SwiperSlide key={photo.id}>
               <Link
                 to={`/${photo.id}`}
-                className="border-2 border-white rounded-2xl bg-[#F0F0F0] flex flex-col items-start justify-center gap-y-2 p-4"
+                className="border-2 border-white dark:border-gray-300 rounded-2xl bg-gray-100 dark:bg-gray-500 flex flex-col items-start justify-center gap-y-2 p-4"
               >
                 <span
                   className={cn(
-                    "bg-[#CFCFF0] px-2 py-3 text-sm text-gray-500 rounded-full",
+                    "bg-[#CFCFF0] dark:bg-[#9e9eb9] dark:border dark:border-gray-300 px-2 py-3 text-sm text-gray-500 dark:text-gray-200 rounded-full",
                     photo.category === "خبر" && "p-3"
                   )}
                 >
                   {photo.category}
                 </span>
-                <h3 className="text-lg text-gray-600">
+                <h3 className="text-lg text-gray-600 dark:text-gray-300">
                   لورم ایپسوم متن ساختگی
                 </h3>
-                <h5 className="text-sm text-gray-400  line-clamp-2 break-normal">
+                <h5 className="text-sm text-gray-400 dark:text-gray-300/80 line-clamp-2 break-normal">
                   لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
                   استفاده از طراحان گرافیک است یشسیشیسسشیشییشسیشس
                 </h5>

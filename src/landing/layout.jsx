@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 import Navbar from "./navigation/navbar";
 import { Footer } from "./footer/footer";
@@ -47,7 +47,7 @@ export const LayoutPage = () => {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="bg-[#EEEEEE]"
+        className="bg-[#EEEEEE] dark:bg-gray-800"
       >
         <Outlet />
       </motion.main>

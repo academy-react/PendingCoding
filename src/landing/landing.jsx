@@ -24,7 +24,7 @@ export const LandingPage = () => {
       <div className="p-6 px-44 my-20 flex items-center justify-center">
         <Info />
       </div>
-      <div className="p-6 lg:px-44 mt-20 flex flex-col items-center justify-center">
+      <div className="p-6 mt-20 flex flex-col items-center justify-center">
         <BestTeachersList />
       </div>
     </div>
