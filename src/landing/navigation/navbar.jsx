@@ -89,7 +89,7 @@ const Navbar = () => {
           ) : (
             <Link
               className="border-[3px] border-primary dark:border-dark-primary px-5 py-1 rounded-full bg-primary dark:bg-dark-primary hover:bg-primary/90 dark:hover:bg-dark-primary/90 text-white/90 hover:text-white/80 transition font-semibold text-[16px]"
-              to="/sign-in"
+              to="/auth"
             >
               ورود / ثبت نام
             </Link>

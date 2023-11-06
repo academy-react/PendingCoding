@@ -11,12 +11,11 @@ import { Home } from "../../dashboard/home/home";
 import { MyCourses } from "../../dashboard/my-courses/my-courses";
 import { Favorites } from "../../dashboard/favorites/favorites";
 import { EditProfile } from "../../dashboard/edit/edit-profile";
-import { Holder } from "../../auth/login/holder";
-import { RegHolder } from "../../auth/register/regHolder";
 import { NotFound } from "../../404_notFound/404";
 import { ContactUs } from "../../contact_us/contact_us";
 import { About } from "../../about/about";
 import { Terms } from "../../auth/terms_and_conditions";
+import { Auth } from "../../auth";
 
 const routes = [
   {
@@ -93,12 +92,8 @@ const routers = [
         element: <ContactUs />,
       },
       {
-        path: "/sign-in",
-        element: <Holder />,
-      },
-      {
-        path: "/sign-up",
-        element: <RegHolder />,
+        path: "/auth",
+        element: <Auth />,
       },
       {
         path: "/terms-and-conditions",

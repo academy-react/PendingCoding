@@ -1,4 +1,4 @@
-import location from '../assets/location.svg'
+// import location from '../assets/location.svg'
 import { Banner } from '../components/banner'
 import { ContactItems } from './contact_items'
 import * as z from "zod";
@@ -16,6 +16,7 @@ import x from '../assets/contact_us_items/x.svg'
 
 import member from '../assets/contact_us_items/member.svg'
 import { getPersianNumbers } from '../../libs/get-persian-numbers';
+import { Map } from './map';
 
 
 const formSchema = z.object({
@@ -43,11 +44,11 @@ const ContactUs = () => {
   };
 
   return ( 
-    <div className="w-[clamp(100px,100%,1536px)] m-[0_auto] flex flex-col p-[0_50px_150px] pt-20">
+    <div className="w-[clamp(100px,100%,1596px)] m-[0_auto] flex flex-col p-[0_50px_150px] pt-20">
 
       <Banner title="ارتباط با ما" />
 
-      <div className="flex m-[80px_0]
+      <div className="flex m-[80px_0] gap-[20px]
       
       max-[1500px]:flex-col max-[1500px]:items-center max-[1500px]:gap-[60px]">
 
@@ -80,8 +81,12 @@ const ContactUs = () => {
 
         </div>
 
-        <div className="w-[clamp(100px,100%,961px)]">
-          <img src={location} className="w-full" />
+        <div className="w-[clamp(100px,100%,1000px)] border-[13px] border-transparent rounded-[20px] overflow-hidden shadow-[0_0_0_4px_#5c55c9] h-[460px]
+        max-[1500px]:h-[360px] max-[1500px]:w-[clamp(100px,100%,940px)]">
+          {/* <img src={location} className="w-full" /> */}
+          <div className='w-full h-full rounded-[13px] overflow-hidden'>          
+            <Map />
+          </div>
         </div>
 
       </div>

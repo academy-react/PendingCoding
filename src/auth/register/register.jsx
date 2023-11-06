@@ -8,7 +8,10 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../components/providers/user-provider";
 
-const Register = () => {
+import { motion } from "framer-motion";
+
+
+const Register = ({register : reg}) => {
   const formSchema = z
     .object({
       email: z
@@ -74,7 +77,9 @@ const Register = () => {
   };
 
   return (
-    <div
+
+    <motion.div
+      animate={reg}
       className="bg-[#EEEEEE] w-[700px] h-[700px] rounded-[100%] border-[15px] border-solid border-[#505050] flex justify-center items-center float-left relative
        
        max-[700px]:w-[500px] max-[700px]:h-[500px]"
@@ -294,7 +299,7 @@ const Register = () => {
           </>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

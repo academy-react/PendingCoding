@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
-const Log = () => {
+const Log = ({log , handleAnimate}) => {
   return (
-    <div
+    <motion.div
+     animate={log}
      className="w-[700px] h-[700px] rounded-[100%] bg-[#505050] flex justify-start   items-center text-[#fff] text-center float-right mt-[-700px] 
      
      max-[1110px]:mt-[-200px] max-[1110px]:justify-center
@@ -15,14 +17,15 @@ const Log = () => {
         <p className="text-[14px] w-[310px]"> لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و .با استفاده از طراحان گرافیک است </p>
 
         <button
+         onClick={handleAnimate}
          className="text-[#505050] bg-[#EEEEEE] cursor-pointer rounded-[50px] text-[18px] p-[10px_0] w-[300px] m-[20px_0] hover:bg-[#DDDDDD]
          
          max-[700px]:p-[7px_0] max-[700px]:w-[270px]  overflow-hidden relative"
         > ورود 
-        <Link to="/sign-in" className="w-full h-full absolute cursor-pointer top-0 left-0"></Link>
+
         </button>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
