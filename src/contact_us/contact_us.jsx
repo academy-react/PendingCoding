@@ -59,8 +59,10 @@ const ContactUs = () => {
           max-[1500px]:justify-center max-[1500px]:pl-[60px]">
             <img src={loc} />
             <div className="flex flex-col m-[0_10px_0_0]">
-              <p className="text-[#505050] text-[15px]"> آدرس پزوهشگاه : </p>
-              <p className="text-[#A4A4A4] text-[14px]">میدان خزر،نرسیده به دانشگاه روزبهان،جنب دنیای آرزو</p>
+              <p className="text-[#505050] text-[15px]  transition
+            dark:text-gray-400"> آدرس پزوهشگاه : </p>
+              <p className="text-[#A4A4A4] text-[14px]  transition
+            dark:text-gray-200">میدان خزر،نرسیده به دانشگاه روزبهان،جنب دنیای آرزو</p>
             </div>
           </div>
 
@@ -110,7 +112,8 @@ const ContactUs = () => {
             max-[960px]:w-full max-[960px]:items-center"
           >
             <input
-              className="disabled:cursor-not-allowed outline-none w-[clamp(100px,90%,704px)] bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-full px-6 pl-12 py-4 duration-200 border-gray-300 focus:border-gray-400 mb-[15px]"
+              className="disabled:cursor-not-allowed outline-none w-[clamp(100px,90%,704px)] bg-transparent text-gray-500 border-2 rounded-full px-6 pl-12 py-4 duration-200 border-gray-300 focus:border-gray-400 mb-[15px]
+              dark:bg-transparent dark:border-gray-400 dark:text-gray-300 dark:placeholder-gray-300"
               placeholder="پست الکترونیکی"
               {...form.register("email")}
             />
@@ -120,7 +123,8 @@ const ContactUs = () => {
               </p>
             )}
             <textarea
-              className="resize-none h-40 disabled:cursor-not-allowed outline-none w-[clamp(100px,90%,704px)] bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-[25px] px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
+              className="resize-none h-40 disabled:cursor-not-allowed outline-none w-[clamp(100px,90%,704px)] bg-transparent text-gray-500 border-2 rounded-[25px] px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400 transition
+              dark:bg-transparent dark:border-gray-400 dark:text-gray-300 dark:placeholder-gray-300"
               placeholder="متن پیام"
               {...form.register("message")}
             />
@@ -132,7 +136,8 @@ const ContactUs = () => {
             <button
               type="submit"
               disabled={isSubmitting || !isValid}
-              className="text-white hover:text-white/80 bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:text-white/80 py-2 text-lg w-2/4 my-4 rounded-full transition"
+              className="text-white hover:text-white/80 bg-primary hover:bg-primary/80 disabled:bg-primary/80 disabled:text-white/80 py-2 text-lg w-2/4 my-4  rounded-full transition
+              dark:disabled:bg-dark-primary dark:hover:bg-dark-primary/100 dark:bg-primary/90 "
             >
               ارسال پیام
             </button>
@@ -150,20 +155,20 @@ const ContactUs = () => {
             <div className="flex gap-[20px]">
               <img src={member} />
               <div className="flex flex-col gap-[10px]">
-                <p className="text-[18px] text-[#505050]">آرمان رضوانی</p>
-                <p className="text-[14px] text-[#A4A4A4]"> کارشناس پشتیبانی فنی </p>
-                <p className="text-[14px] text-[#A4A4A4]"> شماره موبایل: 90203693966 </p>
-                <p className="text-[14px] text-[#A4A4A4]"> پست الکترونیکی :   pendingcoding@gmail.com </p>
+                <p className="text-[18px] text-[#505050] dark:text-gray-400 transition">آرمان رضوانی</p>
+                <p className="text-[14px] text-[#A4A4A4] dark:text-gray-200 transition"> کارشناس پشتیبانی فنی </p>
+                <p className="text-[14px] text-[#A4A4A4] dark:text-gray-200 transition"> شماره موبایل: 90203693966 </p>
+                <p className="text-[14px] text-[#A4A4A4] dark:text-gray-200 transition"> پست الکترونیکی :   pendingcoding@gmail.com </p>
               </div>
             </div>
 
             <div className="flex gap-[20px]">
               <img src={member} />
               <div className="flex flex-col gap-[10px]">
-                <p className="text-[18px] text-[#505050]"> امیر عباس بابایی </p>
-                <p className="text-[14px] text-[#A4A4A4]"> کارشناس پشتیبانی فنی </p>
-                <p className="text-[14px] text-[#A4A4A4]"> شماره موبایل: 90203693966 </p>
-                <p className="text-[14px] text-[#A4A4A4]"> پست الکترونیکی :   pendingcoding@gmail.com </p>
+                <p className="text-[18px] text-[#505050] dark:text-gray-400 transition"> امیر عباس بابایی </p>
+                <p className="text-[14px] text-[#A4A4A4] dark:text-gray-200 transition"> کارشناس پشتیبانی فنی </p>
+                <p className="text-[14px] text-[#A4A4A4] dark:text-gray-200 transition"> شماره موبایل: 90203693966 </p>
+                <p className="text-[14px] text-[#A4A4A4] dark:text-gray-200 transition"> پست الکترونیکی :   pendingcoding@gmail.com </p>
               </div>
             </div>
 

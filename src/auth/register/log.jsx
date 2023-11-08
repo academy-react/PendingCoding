@@ -5,7 +5,8 @@ const Log = ({log , handleAnimate}) => {
   return (
     <motion.div
      animate={log}
-     className="w-[700px] h-[700px] rounded-[100%] bg-[#505050] flex justify-start   items-center text-[#fff] text-center float-right mt-[-700px] 
+     className="w-[700px] h-[700px] rounded-[100%] bg-[#505050] flex justify-start   items-center text-[#fff] text-center float-right mt-[-700px] transition
+     dark:bg-gray-600 dark:text-white
      
      max-[1110px]:mt-[-200px] max-[1110px]:justify-center
      max-[700px]:w-[500px] max-[700px]:h-[500px] max-[700px]:mt-[-150px]"
@@ -18,7 +19,9 @@ const Log = ({log , handleAnimate}) => {
 
         <button
          onClick={handleAnimate}
-         className="text-[#505050] bg-[#EEEEEE] cursor-pointer rounded-[50px] text-[18px] p-[10px_0] w-[300px] m-[20px_0] hover:bg-[#DDDDDD]
+         className="text-[#505050] bg-[#EEEEEE] cursor-pointer rounded-[50px] text-[18px] p-[10px_0] w-[300px] m-[20px_0] hover:bg-[#DDDDDD] transition
+         dark:bg-[rgb(113,123,136)] dark:text-white dark:hover:bg-[rgb(122,132,146)]
+        
          
          max-[700px]:p-[7px_0] max-[700px]:w-[270px]  overflow-hidden relative"
         > ورود 
