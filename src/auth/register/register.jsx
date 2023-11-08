@@ -8,7 +8,9 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/use-user";
 
-const Register = () => {
+import { motion } from "framer-motion";
+
+const Register = ({ register: reg }) => {
   const formSchema = z
     .object({
       email: z
@@ -74,9 +76,11 @@ const Register = () => {
   };
 
   return (
-    <div
+    <motion.div
+      animate={reg}
       className="bg-[#EEEEEE] w-[700px] h-[700px] rounded-[100%] border-[15px] border-solid border-[#505050] flex justify-center items-center float-left relative
-       
+      dark:bg-gray-800 dark:border-gray-600
+
        max-[700px]:w-[500px] max-[700px]:h-[500px]"
     >
       <div
@@ -88,6 +92,7 @@ const Register = () => {
           <>
             <h1
               className="text-[#505050] text-[28px] mb-[40px]
+              dark:text-gray-300
               
               max-[700px]:mb-[10px] max-[700px]:text-[26px]"
             >
@@ -101,10 +106,12 @@ const Register = () => {
                 placeholder="پست الکترونیکی"
                 className={cn(
                   `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
+                  dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50
                   
                 max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
                   errors.email &&
-                    `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]`
+                    `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
+                  dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
                 )}
                 {...register("email")}
               />
@@ -112,6 +119,7 @@ const Register = () => {
               {errors.email && (
                 <div
                   className="relative bottom-[25px] text-[#ff1f1f] right-[10px]
+                  dark:text-red-500
               
               max-[700px]:text-[13px] max-[700px]:bottom-[12px]"
                 >
@@ -124,16 +132,19 @@ const Register = () => {
                 placeholder="رمز عبور"
                 className={cn(
                   `focus:outline-none focus:border-[#989898]  block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
+                  dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50
                   
                 max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
                   errors.password &&
-                    `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]`
+                    `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
+                  dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
                 )}
                 {...register("password")}
               />
               {errors.password && (
                 <div
                   className="relative bottom-[25px] text-[#ff1f1f] right-[10px]
+                  dark:text-red-500
               
               max-[700px]:text-[13px] max-[700px]:bottom-[12px]"
                 >
@@ -146,16 +157,19 @@ const Register = () => {
                 placeholder="تکرار رمز عبور"
                 className={cn(
                   `focus:outline-none focus:border-[#989898]  block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
+                  dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50
                     
                 max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
                   errors.confirmPassword &&
-                    `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]`
+                    `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
+                  dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
                 )}
                 {...register("confirmPassword")}
               />
               {errors.confirmPassword && (
                 <div
                   className="relative bottom-[25px] text-[#ff1f1f] right-[10px]
+                  dark:text-red-500
               
               max-[700px]:text-[13px] max-[700px]:bottom-[12px]"
                 >
@@ -164,7 +178,8 @@ const Register = () => {
               )}
 
               <div
-                className="flex gap-[10px] m-[0_0_20px] items-center
+                className="flex gap-[10px] m-[0_0_20px] items-center text-[#969696]
+                dark:text-gray-200
                       
                       max-[700px]:m-[0_0_13px]"
               >
@@ -184,10 +199,7 @@ const Register = () => {
                   {" "}
                 </label>
 
-                <label
-                  htmlFor="term"
-                  className="text-[12px] text-[#969696] cursor-pointer"
-                >
+                <label htmlFor="term" className="text-[12px] cursor-pointer">
                   {" "}
                   با{" "}
                   <Link to="/terms-and-conditions" className="text-[#02B2B8]">
@@ -200,9 +212,10 @@ const Register = () => {
               <button
                 onClick={handleNext}
                 className="
-              bg-[#505050] cursor-pointer rounded-[50px] text-[18px] text-white w-[100%] p-[10px_0]
-                  
-              max-[700px]:p-[7px_0]"
+                bg-[#505050] cursor-pointer rounded-[50px] text-[18px] text-white w-[100%] p-[10px_0] transition hover:bg-[#626262]
+                dark:bg-gray-600 dark:hover:bg-[rgb(87,98,115)]
+                 
+                max-[700px]:p-[7px_0]"
                 type="submit"
               >
                 {" "}
@@ -216,6 +229,7 @@ const Register = () => {
           <>
             <h1
               className="text-[#505050] text-[28px] mb-[40px]
+              dark:text-gray-300
                 
                 max-[700px]:mb-[10px] max-[700px]:text-[26px]"
             >
@@ -232,16 +246,19 @@ const Register = () => {
                 placeholder="شماره موبایل"
                 className={cn(
                   `focus:outline-none focus:border-[#989898]  block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
+                  dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50
                     
                 max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
                   errors.phoneNumber &&
-                    `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]`
+                  `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
+                  dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
                 )}
                 {...register("phoneNumber")}
               />
               {errors.phoneNumber && (
                 <div
                   className="relative bottom-[25px] text-[#ff1f1f] right-[10px]
+                  dark:text-red-500
               
                 max-[700px]:text-[13px] max-[700px]:bottom-[12px]"
                 >
@@ -254,16 +271,19 @@ const Register = () => {
                 placeholder="شماره ملی"
                 className={cn(
                   `focus:outline-none focus:border-[#989898]  block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
+                  dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50
                     
                 max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
                   errors.idNumber &&
-                    `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]`
+                  `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
+                  dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
                 )}
                 {...register("idNumber")}
               />
               {errors.idNumber && (
                 <div
                   className="relative bottom-[25px] text-[#ff1f1f] right-[10px]
+                  dark:text-red-500
               
                 max-[700px]:text-[13px] max-[700px]:bottom-[12px]"
                 >
@@ -272,9 +292,10 @@ const Register = () => {
               )}
 
               <button
-                className="bg-[#505050] cursor-pointer rounded-[50px] text-[18px] text-white w-[100%] p-[10px_0] mb-[20px]
-              
-              max-[700px]:p-[7px_0]"
+                className="  bg-[#505050] cursor-pointer rounded-[50px] text-[18px] text-white w-[100%] p-[10px_0] transition hover:bg-[#626262]
+                dark:bg-gray-600 dark:hover:bg-[rgb(87,98,115)]
+                     
+                max-[700px]:p-[7px_0]"
                 type="submit"
               >
                 {" "}
@@ -283,7 +304,8 @@ const Register = () => {
 
               <button
                 onClick={handleBack}
-                className="cursor-pointer rounded-[50px] text-[18px] text-[#505050] p-[10px] m-[0_auto]
+                className="cursor-pointer rounded-[50px] text-[18px] text-[#505050] p-[10px] m-[10px_auto]
+                dark:text-gray-300
               
               max-[700px]:p-[7px_0]"
               >
@@ -294,7 +316,7 @@ const Register = () => {
           </>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

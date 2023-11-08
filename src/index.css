@@ -23,3 +23,32 @@ body,
 .range-slider__range {
   background-color: #3730a3 !important;
 }
+
+.leaflet-container {
+  height:100%;
+}
+
+.leaflet-layer{
+  /* filter: brightness(0.644) invert(1) contrast(3.4) hue-rotate(10deg) saturate(0.7); */
+}
+
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar{
+  border:none;
+}
+
+.leaflet-bar a {
+  background:#5c55c9;
+  border-radius:2px;
+  transform: scale(1.4);
+  margin:5px 0 20px 5px;
+  border:none;
+  color: white;
+}
+.leaflet-bar a:hover {
+  background:#837ce9;
+}
+
+.leaflet-control-attribution {
+  display: none;
+}

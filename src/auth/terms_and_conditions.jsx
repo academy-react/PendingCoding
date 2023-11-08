@@ -10,7 +10,8 @@ const Terms = () => {
             <div className="w-[40px]">  
                 <img src={bullet} className="w-full h-full"></img>
             </div>
-            <h1 className="text-[40px] font-extrabold text-[#505050] w-full  py-[40px]"> شرایط و قوانین </h1>
+            <h1 className="text-[40px] font-extrabold text-[#505050] w-full  py-[40px]
+            dark:text-gray-300"> شرایط و قوانین </h1>
         </div>
 
 

@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 const Reg = () => {
   return (
     <div
-      className="w-[700px] h-[700px] rounded-[100%] bg-[#505050] flex float-left mt-[-700px] justify-end items-center  text-white text-center 
+      className="w-[700px] h-[700px] rounded-[100%] bg-[#505050] flex float-left mt-[-700px] justify-end items-center  text-white text-center transition
+      dark:bg-gray-600 dark:text-white
     
-    max-[1110px]:mt-[-200px] max-[1110px]:justify-center
-    max-[700px]:w-[500px] max-[700px]:h-[500px] max-[700px]:mt-[-150px]"
+      max-[1110px]:mt-[-200px] max-[1110px]:justify-center
+      max-[700px]:w-[500px] max-[700px]:h-[500px] max-[700px]:mt-[-150px]"
     >
       {" "}
       {/* {style.reg} */}
@@ -42,9 +43,10 @@ const Reg = () => {
         </p>{" "}
         {/* {style.p} */}
         <button
-          className="text-[#505050] bg-[#EEEEEE] rounded-[50px] text-[18px] p-[10px_0] w-[300px] m-[20px_0] hover:bg-[#DDDDDD]
+          className="text-[#505050] bg-[#EEEEEE] rounded-[50px] text-[18px] p-[10px_0] w-[300px] m-[20px_0] hover:bg-[#DDDDDD] transition
+          dark:bg-[rgb(113,123,136)] dark:text-white dark:hover:bg-[rgb(122,132,146)]
         
-        max-[700px]:p-[7px_0] max-[700px]:w-[270px] overflow-hidden relative"
+          max-[700px]:p-[7px_0] max-[700px]:w-[270px] overflow-hidden relative"
         >
           <Link
             to="/sign-up"
