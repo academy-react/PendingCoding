@@ -23,14 +23,14 @@ export const Header = ({ label, selected, setSelected }) => {
       onClick={() => setSelected(label)}
       className="w-full flex flex-col justify-center items-center gap-y-2"
     >
-      <p className="text-xl text-gray-500">{label}</p>
+      <p className="text-xl text-gray-500 dark:text-gray-300">{label}</p>
       {label === selected && (
         <motion.div
           variants={backdrop}
           initial="hidden"
           animate="visible"
           exit="hidden"
-          className="w-full border-2 border-primary rounded-t-full"
+          className="w-full border-2 border-primary dark:border-dark-primary rounded-t-full"
         />
       )}
     </button>

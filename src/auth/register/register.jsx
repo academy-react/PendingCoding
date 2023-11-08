@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { useUser } from "../../components/providers/user-provider";
+import { useUser } from "../../hooks/use-user";
 
 const Register = () => {
   const formSchema = z
@@ -37,7 +37,7 @@ const Register = () => {
       path: ["confirmPassword"],
     });
 
-  const { userData } = useUser();
+  const { userData, setUserData } = useUser();
   const navigate = useNavigate();
 
   const {
@@ -53,11 +53,11 @@ const Register = () => {
       ...userData,
       user: { email: values.email, password: values.password },
     };
-
     localStorage.setItem("user", JSON.stringify(newObj));
     toast.success("با موافقیت وارد شدید");
     setTimeout(() => {
       navigate("/");
+      setUserData(newObj);
     }, 500);
   };
 

@@ -81,8 +81,11 @@ const NavigatorTracor = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center gap-x-2 text-gray-500">
-      <Link to="/" className="hover:text-gray-600 transition">
+    <div className="flex justify-center items-center gap-x-2 text-gray-500 dark:text-gray-300">
+      <Link
+        to="/"
+        className="hover:text-gray-600 dark:hover:text-gray-200 transition"
+      >
         <Home className="h-5 w-5" />
       </Link>
       <ChevronLeft className="h-5 w-5" />
@@ -90,11 +93,13 @@ const NavigatorTracor = () => {
         <div key={route.id}>
           {pathname === route.to ? (
             <div className="flex items-center justify-center">
-              <h1 className="text-gray-500 text-lg mt-[2px]">{route.label}</h1>
+              <h1 className="text-gray-500 dark:text-gray-300 text-lg mt-[2px]">
+                {route.label}
+              </h1>
             </div>
           ) : (
             <Link
-              className="hover:text-gray-600 transition text-lg flex items-center justify-center"
+              className="hover:text-gray-600 dark:hover:text-gray-200 transition text-lg flex items-center justify-center"
               to={route.to}
             >
               {route.label}

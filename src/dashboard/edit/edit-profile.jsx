@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader, Loader2, X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { toast } from "react-hot-toast";
 import DatePicker from "@hassanmojab/react-modern-calendar-datepicker";
 
-import { useUser } from "../../components/providers/user-provider";
+import { useUser } from "../../hooks/use-user";
 import { ImageUpload } from "../../components/image-upload";
 
 import { uploadApi } from "../../../libs/uploadApi";
@@ -103,7 +103,7 @@ export const EditProfile = () => {
     <div className="max-w-5xl mx-auto h-full flex items-center justify-center">
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full flex flex-col justify-center items-center gap-y-10 border-2 border-gray-200 rounded-xl shadow-sm py-5"
+        className="w-full flex flex-col justify-center items-center gap-y-10 border-2 border-gray-200 dark:border-gray-500 rounded-xl shadow-sm py-5"
       >
         <div className="grid grid-cols-2 w-full">
           <div className="flex flex-col justify-center items-center gap-y-10 mt-5">
@@ -112,7 +112,7 @@ export const EditProfile = () => {
               name="name"
               type="text"
               placeholder="نام خود را وارد کنید"
-              className="disabled:cursor-not-allowed outline-none w-1/2 bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
+              className="disabled:cursor-not-allowed outline-none w-1/2 bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
               {...form.register("name")}
             />
             {form.formState.errors.name && (
@@ -123,7 +123,7 @@ export const EditProfile = () => {
               name="nationalId"
               type="number"
               placeholder="کد ملی خود را وارد کنید"
-              className="disabled:cursor-not-allowed outline-none w-1/2 bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
+              className="disabled:cursor-not-allowed outline-none w-1/2 bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
               {...form.register("nationalId")}
             />
             {form.formState.errors.nationalId && (
@@ -136,7 +136,7 @@ export const EditProfile = () => {
               name="phoneNumber"
               type="number"
               placeholder="شماره همراه خود را وارد کنید"
-              className="disabled:cursor-not-allowed outline-none w-1/2 bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
+              className="disabled:cursor-not-allowed outline-none w-1/2 bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
               {...form.register("phoneNumber")}
             />
             {form.formState.errors.phoneNumber && (
@@ -147,7 +147,10 @@ export const EditProfile = () => {
           </div>
           <div className="flex flex-col justify-center items-center gap-y-10">
             {isLoading ? (
-              <Loader2 size={40} className="text-gray-500 animate-spin" />
+              <Loader2
+                size={40}
+                className="text-gray-500 dark:text-gray-300 animate-spin"
+              />
             ) : (
               <>
                 {url ? (
@@ -177,7 +180,7 @@ export const EditProfile = () => {
               inputPlaceholder="روز تولد..."
               maximumDate={maximumDate}
               colorPrimary="#5c55c9"
-              inputClassName="disabled:cursor-not-allowed outline-none text-[15px] bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
+              inputClassName="disabled:cursor-not-allowed outline-none text-[15px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
               shouldHighlightWeekends
               locale="fa"
             />
@@ -186,7 +189,7 @@ export const EditProfile = () => {
         <button
           disabled={isSubmitting || !isValid}
           type="submit"
-          className="bg-primary dark:bg-dark-primary text-white dark:text-gray-200 hover:bg-primary/70 dark:hover:bg-dark-primary/70 hover:text-white/90 dark:hover:text-gray-200/90 disabled:bg-primary/70 disabled:text-white/90 font-thin justify-self-center self-center px-10 py-2 rounded-xl text-lg transition"
+          className="bg-primary dark:bg-dark-primary text-gray-100 dark:text-gray-200 hover:bg-primary/70 dark:hover:bg-dark-primary/70 hover:text-white/90 dark:hover:text-gray-200/90 disabled:bg-primary/70 disabled:text-white/90 dark:disabled:bg-dark-primary/70 dark:disabled:text-gray-200/90 disabled:cursor-not-allowed font-thin justify-self-center self-center px-10 py-2 rounded-xl text-lg transition"
         >
           ذخیره
         </button>

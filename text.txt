@@ -1,32 +1,28 @@
-import { createContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 
 import { useModal } from "../../hooks/use-modal-store";
 
-export const UserContext = createContext(null);
+const UserContext = createContext(null);
+
+function useUser() {
+  return useContext(UserContext);
+}
 
 function UserProvider({ children }) {
   const { onClose } = useModal();
 
-  const userInfo = useMemo(() => JSON.parse(localStorage.getItem("user")), []);
-
-  const [userData, setUserData] = useState(
-    userInfo || {
-      user: null,
-      cart: [],
-      favorites: [],
-      myCourses: [],
-    }
-  );
+  const currentUser = useMemo(() => );
+  let userInfo = useMemo(() => currentUser, [currentUser]);
 
   const addToCart = (course) => {
     const newObj = {
-      ...userData,
-      cart: userData.cart.find((cartItem) => cartItem.id === course.id)
-        ? [...userData.cart]
-        : [...userData.cart, { ...course }],
+      ...userInfo,
+      cart: userInfo.cart.find((cartItem) => cartItem.id === course.id)
+        ? [...userInfo.cart]
+        : [...userInfo.cart, { ...course }],
     };
-    setUserData(newObj);
+    userInfo = newObj;
     localStorage.setItem("user", JSON.stringify(newObj));
     toast.success("دوره به سبدتون اضافه شد");
     onClose();
@@ -34,55 +30,55 @@ function UserProvider({ children }) {
 
   const removeFromCart = (id) => {
     const newObj = {
-      ...userData,
-      cart: userData.cart.filter((cartItem) => cartItem.id !== id),
+      ...userInfo,
+      cart: userInfo.cart.filter((cartItem) => cartItem.id !== id),
     };
-    setUserData(newObj);
-    userData.cart.length === 1 && onClose();
+    userInfo = newObj;
+    userInfo.cart.length === 1 && onClose();
     localStorage.setItem("user", JSON.stringify(newObj));
   };
 
   const checkout = (course) => {
     const newObj = {
-      ...userData,
-      cart: userData.cart.filter((c) => c.id !== course.id),
-      myCourses: userData.myCourses.find((mc) => mc.id === course.id)
-        ? [...userData.myCourses]
-        : [...userData.myCourses, { ...course }],
+      ...userInfo,
+      cart: userInfo.cart.filter((c) => c.id !== course.id),
+      myCourses: userInfo.myCourses.find((mc) => mc.id === course.id)
+        ? [...userInfo.myCourses]
+        : [...userInfo.myCourses, { ...course }],
     };
-    setUserData(newObj);
+    userInfo = newObj;
     localStorage.setItem("user", JSON.stringify(newObj));
   };
 
   // const increase = (id) => {
   //   const newObj = {
-  //     ...userData,
-  //     cart: userData.cart.map((cartItem) =>
+  //     ...userInfo,
+  //     cart: userInfo.cart.map((cartItem) =>
   //       cartItem.id === id
   //         ? { ...cartItem, count: cartItem.count + 1 }
   //         : cartItem
   //     ),
   //   };
-  //   setUserData(newObj);
+  //   userInfo=(newObj);
   //   localStorage.setItem("user", JSON.stringify(newObj));
   // };
 
   // const decrease = (id) => {
   //   const newObj = {
-  //     ...userData,
-  //     cart: userData.cart.map((cartItem) =>
+  //     ...userInfo,
+  //     cart: userInfo.cart.map((cartItem) =>
   //       cartItem.id === id
   //         ? { ...cartItem, count: cartItem.count > 1 ? cartItem.count - 1 : 1 }
   //         : cartItem
   //     ),
   //   };
-  //   setUserData(newObj);
+  //   userInfo=(newObj);
   //   localStorage.setItem("user", JSON.stringify(newObj));
   // };
 
   const addToFavorites = (course) => {
     const newObj = {
-      ...userData,
+      ...userInfo,
       favorites: [...userInfo.favorites, { ...course }],
     };
     localStorage.setItem("user", JSON.stringify(newObj));
@@ -93,7 +89,7 @@ function UserProvider({ children }) {
     const favorites = userInfo?.favorites.filter((f) => f.id !== course.id);
 
     const newObj = {
-      ...userData,
+      ...userInfo,
       favorites,
     };
     localStorage.setItem("user", JSON.stringify(newObj));
@@ -103,8 +99,7 @@ function UserProvider({ children }) {
   return (
     <UserContext.Provider
       value={{
-        userData,
-        setUserData,
+        userData: userInfo,
         addToCart,
         removeFromCart,
         checkout,
@@ -117,4 +112,4 @@ function UserProvider({ children }) {
   );
 }
 
-export { UserProvider };
+export { UserProvider, useUser };

@@ -55,14 +55,14 @@ export const Description = ({ details, selected }) => {
         initial="hidden"
         animate="visible"
         exit="hidden"
-        className="border-2 border-gray-300 px-5 py-4 rounded-xl text-gray-500 leading-10 text-sm text-justify"
+        className="border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl text-gray-500 dark:text-gray-300 leading-10 text-justify"
       >
         {details.value}
       </motion.p>
     );
   } else if (selected === details.label && details.label === "نقشه راه") {
     Info = (
-      <motion.ul className="border-2 border-gray-300 px-12 py-4 rounded-xl flex flex-col items-start justify-center gap-y-5">
+      <motion.ul className="border-2 border-gray-300 dark:border-gray-500 px-12 py-4 rounded-xl flex flex-col items-start justify-center gap-y-5">
         {details?.seasons?.map((season) => (
           <motion.li
             key={season.id}
@@ -70,7 +70,7 @@ export const Description = ({ details, selected }) => {
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="text-gray-500 leading-5 text-sm text-justify list-disc"
+            className="text-gray-500 dark:text-gray-300 leading-5 text-justify list-disc"
           >
             {season.value}
           </motion.li>
@@ -84,31 +84,31 @@ export const Description = ({ details, selected }) => {
         initial="hidden"
         animate="visible"
         exit="hidden"
-        className="border-2 border-gray-300 px-5 py-4 rounded-xl flex flex-col xl:flex-row justify-center items-center py-2 gap-x-10"
+        className="border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl flex flex-col xl:flex-row justify-center items-center gap-x-10"
       >
-        <div className="w-full flex flex-col justify-center items-center gap-y-3 pb-5 xl:pl-5 border-b xl:border-l xl:border-b-0 border-gray-300">
+        <div className="w-full flex flex-col justify-center items-center gap-y-3 pb-5 xl:pl-5 border-b xl:border-l xl:border-b-0 border-gray-300 dark:border-gray-400">
           <img
             className="w-24 h-24 rounded-full"
             src={details.teacher.image}
             alt="teacherAvatar"
           />
-          <h3 className="text-gray-700 text-lg text-center">
+          <h3 className="text-gray-700 dark:text-gray-200 text-lg text-center">
             {details.teacher.name}
           </h3>
           <Link
             to={`/teachers/${details.teacher.id}`}
-            className="w-1/3 xl:w-full py-2 text-center bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/80 disabled:cursor-not-allowed transition rounded-full "
+            className="w-1/3 xl:w-full py-2 text-center bg-primary dark:bg-dark-primary hover:bg-primary/80 dark:hover:bg-dark-primary/80 text-gray-100 hover:text-gray-100/90 disabled:text-white/90 disabled:bg-primary/80 disabled:cursor-not-allowed transition rounded-full "
           >
             نمایش پروفایل
           </Link>
           <button
             onClick={() => onOpen("sendRespond")}
-            className="w-1/3 xl:w-full py-2 border-2 border-primary bg-white/20 hover:bg-[#EEEEEE] text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
+            className="w-full px-20 py-2 border-2 border-primary dark:border-dark-primary bg-white/20 dark:bg-gray-300 dark:hover:bg-gray-300/90 hover:bg-[#EEEEEE] text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
           >
             ارسال پیام
           </button>
         </div>
-        <p className="self-start leading-9 text-gray-600 text-justify">
+        <p className="self-start leading-9 text-gray-600 dark:text-gray-300 text-justify">
           {details.value}
         </p>
       </motion.div>
@@ -122,7 +122,7 @@ export const Description = ({ details, selected }) => {
         exit="hidden"
         className="flex flex-col items-center justify-center gap-y-10"
       >
-        <div className="border-2 border-gray-300 px-5 py-4 rounded-xl">
+        <div className="border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl">
           {details.comments.map((item) => (
             <CommentCard
               key={item.id}
@@ -145,8 +145,8 @@ export const Description = ({ details, selected }) => {
             className="w-full flex flex-col items-center justify-center gap-y-3"
           >
             <textarea
-              className="resize-none h-60 w-full disabled:cursor-not-allowed outline-none bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
-              placeholder="متن پیام"
+              className="resize-none h-60 w-full disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
+              placeholder="متن پیام ..."
               {...form.register("message")}
             />
             {form.formState.errors.message && (

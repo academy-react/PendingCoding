@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-import { useUser } from "../../components/providers/user-provider";
+import { useUser } from "../../hooks/use-user";
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 
 export const BoughtCourses = () => {
@@ -112,7 +112,7 @@ export const BoughtCourses = () => {
     <div className="relative w-full shadow-md sm:rounded-lg">
       {filteredCart.length === 0 ? (
         <div>
-          <p className="text-xl text-gray-600 text-center">
+          <p className="text-xl text-gray-600 dark:text-gray-300 text-center">
             دوره‌ای خریداری نکرده‌اید
           </p>
         </div>
@@ -192,8 +192,8 @@ export const BoughtCourses = () => {
             {filteredCart.map((course) => (
               <tr
                 key={course.id}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-              >
+                className="bg-white border-b dark:bg-gray-900/60 dark:border-gray-800/60"
+                >
                 <th
                   scope="row"
                   className="max-w-[300px] px-0 py-2 flex items-center justify-center"

@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import { BookX, CopySlash, Grid2x2, Menu, Rows } from "lucide-react";
+import { BookX, Grid2x2, Menu, Rows } from "lucide-react";
 import { useQuery } from "react-query";
 import { useSearchParams } from "react-router-dom";
 
@@ -13,10 +13,10 @@ import { MobileFilter } from "./mobile-filter";
 import { Filter } from "./filter";
 import { Banner } from "../components/banner";
 import { CourseCards } from "./course-cards";
-import { cn } from "../../libs/utils";
-import { useModal } from "../hooks/use-modal-store";
 import { Loading } from "../components/loading";
 import { Error } from "../components/error";
+
+import { useModal } from "../hooks/use-modal-store";
 
 const orderBy = [
   {
@@ -115,17 +115,13 @@ export const Courses = () => {
   }
 
   return (
-    <div className="max-w-[1900px] mx-auto flex flex-col items-start justify-center gap-y-10 p-20">
+    <div className="max-w-[1900px] bg-gra mx-auto flex flex-col items-start justify-center gap-y-10 p-20">
       <div className="flex justify-center items-center">
         <NavigatorTracer />
       </div>
       <Banner title="لیست دوره ها" />
       <Seperator />
-      <div
-        className={cn(
-          "w-full flex flex-col xl:flex-row items-start justify-between gap-x-10"
-        )}
-      >
+      <div className="w-full flex flex-col xl:flex-row items-start justify-between gap-x-5">
         {/* Filter div */}
         <Filter values={values} setValues={setValues} />
         <MobileFilter values={values} setValues={setValues} />
@@ -136,7 +132,7 @@ export const Courses = () => {
           <Menu className="h-10 w-10" />
         </button>
         {/* Grid div */}
-        <div className="w-full flex flex-col justify-center items-start gap-y-5">
+        <div className="w-full flex flex-col justify-center items-start gap-y-10">
           {/* FilterDiv */}
           <div className="hidden xl:flex justify-between items-center w-full">
             <div>
@@ -175,7 +171,7 @@ export const Courses = () => {
               />
             </div>
           ) : (
-            <div className="w-full flex flex-col gap-3 items-center justify-center my-52 dark:bg-[#1E1F22]">
+            <div className="w-full flex flex-col gap-3 items-center justify-center my-52 dark:bg-gray-800">
               <BookX className="w-12 h-12 text-gray-600/90 dark:text-gray-300" />
               <p className="text-zinc dark:text-gray-300 text-xl">
                 درس مورد نظر پیدا نشد

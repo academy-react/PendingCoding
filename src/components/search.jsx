@@ -37,7 +37,7 @@ export const SearchInput = ({ queryName, placeholder, className }) => {
       <input
         value={value}
         className={cn(
-          "disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-200/80 text-gray-500 dark:text-gray-800 border-2 dark:border-gray-700 rounded-full duration-200 border-gray-300 focus:border-gray-400 dark:focus:border-gray-300/80",
+          "disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-200/80 text-gray-500 dark:text-gray-800 border-2 dark:border-gray-700 placeholder:text-gray-500 rounded-full duration-200 border-gray-300 focus:border-gray-400 dark:focus:border-gray-300/80",
           className
         )}
         onChange={(e) => setValue(e.target.value)}

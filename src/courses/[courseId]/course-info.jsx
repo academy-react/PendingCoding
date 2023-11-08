@@ -16,7 +16,7 @@ import { Description } from "./description";
 import { Banner } from "../../components/banner";
 import { NewCourseCard } from "../../components/new-course-card";
 import { Slider } from "./slider";
-import { useUser } from "../../components/providers/user-provider";
+import { useUser } from "../../hooks/use-user";
 
 function getCourseById(id) {
   return apiCall.get(`/items/${id}`);
@@ -227,8 +227,10 @@ export const CourseInfo = () => {
             />
           )}
           <span className="flex flex-col justify-center items-start gap-y-2">
-            <h5 className="text-sm text-gray-400">دسته بندی</h5>
-            <h5 className="text-sm text-gray-600/80">
+            <h5 className="text-sm text-gray-400 dark:text-gray-300">
+              دسته بندی
+            </h5>
+            <h5 className="text-sm text-gray-600/80 dark:text-gray-300/80">
               {course?.data.category}
             </h5>
           </span>
@@ -240,8 +242,12 @@ export const CourseInfo = () => {
             className="h-10 w-10 rounded-full"
           />
           <span className="flex flex-col justify-center items-start gap-y-2">
-            <h5 className="text-sm text-gray-400">استاد :</h5>
-            <h5 className="text-sm text-gray-600/80">{course?.data.teacher}</h5>
+            <h5 className="text-sm text-gray-400 dark:text-gray-300">
+              استاد :
+            </h5>
+            <h5 className="text-sm text-gray-600/80 dark:text-gray-300/80">
+              {course?.data.teacher}
+            </h5>
           </span>
         </div>
       </div>
@@ -250,7 +256,9 @@ export const CourseInfo = () => {
       <div className="w-full flex flex-col md:flex-row justify-between items-center gap-y-10 px-10">
         {/* Title Div */}
         <div>
-          <h1 className="text-3xl text-gray-700">{course?.data.title}</h1>
+          <h1 className="text-3xl text-gray-700 dark:text-gray-200">
+            {course?.data.title}
+          </h1>
         </div>
         {/* Add Div */}
         <div className=" flex flex-col items-center justify-center gap-y-3">
@@ -261,12 +269,12 @@ export const CourseInfo = () => {
                   userData.user ? "confirmDeleteModal" : "unauthorizedModal"
                 )
               }
-              className="w-full px-20 py-2 bg-destructive hover:bg-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/80 disabled:cursor-not-allowed transition rounded-full "
+              className="w-full px-20 py-2 bg-destructive dark:bg-dark-destructive hover:bg-destructive/80 dark:hover:bg-dark-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/80 disabled:cursor-not-allowed transition rounded-full "
             >
               حذف از سبد خرید
             </button>
           ) : isPurchased ? (
-            <p className="w-full px-20 py-2 bg-emerald-500 cursor-default text-white rounded-full">
+            <p className="w-full px-20 py-2 bg-emerald-500 dark:bg-emerald-700 cursor-default text-gray-100 dark:text-gray-200 rounded-full">
               شما این دوره را خریده‌اید
             </p>
           ) : (
@@ -274,7 +282,7 @@ export const CourseInfo = () => {
               onClick={() =>
                 onOpen(userData.user ? "confirmModal" : "unauthorizedModal")
               }
-              className="w-full px-20 py-2 bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/80 disabled:cursor-not-allowed transition rounded-full "
+              className="w-full px-20 py-2 bg-primary dark:bg-dark-primary hover:bg-primary/80 dark:hover:bg-dark-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/80 disabled:cursor-not-allowed transition rounded-full "
             >
               افزودن به سبد خرید
             </button>
@@ -282,7 +290,7 @@ export const CourseInfo = () => {
           <button
             onClick={() => onOpen("shareModal")}
             disabled={isOpen}
-            className="w-full px-20 py-2 border-2 border-primary bg-white/20 hover:bg-[#EEEEEE] text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
+            className="w-full px-20 py-2 border-2 border-primary dark:border-dark-primary bg-white/20 dark:bg-gray-300 dark:hover:bg-gray-300/90 hover:bg-[#EEEEEE] text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
           >
             اشتراک گذاری
           </button>
@@ -323,49 +331,49 @@ export const CourseInfo = () => {
         <div className="w-full xl:w-1/4 flex flex-col items-center xl:items-start justify-center gap-y-10">
           <div className="flex flex-col items-start justify-center gap-y-5">
             <Banner title="مشخصات دوره" className="text-xl" height="h-9" />
-            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-              <User2 className="text-primary h-6 w-6" />
+            <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
+              <User2 className="text-primary dark:text-gray-300/80 h-6 w-6" />
               ظرفیت:
-              <h5 className="text-gray-600">
+              <h5 className="text-gray-600 dark:text-gray-300/80">
                 {getPersianNumbers(course?.data.capacity, false)}
               </h5>
             </span>
-            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-              <Clock className="text-primary h-6 w-6" />
+            <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
+              <Clock className="text-primary dark:text-gray-300/80 h-6 w-6" />
               تاریخ شروع:
-              <h5 className="text-gray-600">
+              <h5 className="text-gray-600 dark:text-gray-300/80">
                 {`تاریخ شروع : ${getPersianNumbers(startDate?.[2], true)} ${
                   months[startDate?.[1] - 1]
                 } ${getPersianNumbers(startDate?.[0], true)}`}
               </h5>
             </span>
-            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-              <Clock className="text-primary h-6 w-6" />
+            <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
+              <Clock className="text-primary dark:text-gray-300/80 h-6 w-6" />
               تاریخ پایان:
-              <h5 className="text-gray-600">
+              <h5 className="text-gray-600 dark:text-gray-300/80">
                 {`تاریخ پایان : ${getPersianNumbers(endDate?.[2])} ${
                   months[endDate?.[1] - 1]
                 } ${getPersianNumbers(endDate?.[0], true)}`}
               </h5>
             </span>
-            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-              <Tags className="text-primary h-6 w-6" />
+            <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
+              <Tags className="text-primary dark:text-gray-300/80 h-6 w-6" />
               قیمت:
-              <h5 className="text-gray-600">
+              <h5 className="text-gray-600 dark:text-gray-300/80">
                 {`${getPersianNumbers(course?.data.price, false)} تومان`}
               </h5>
             </span>
-            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-              <Users2 className="text-primary h-6 w-6" />
+            <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
+              <Users2 className="text-primary dark:text-gray-300/80 h-6 w-6" />
               ظرفیت پر شده:
-              <h5 className="text-gray-600">
+              <h5 className="text-gray-600 dark:text-gray-300/80">
                 {getPersianNumbers(registered, false)}
               </h5>
             </span>
-            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-              <Book className="text-primary h-6 w-6" />
+            <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
+              <Book className="text-primary dark:text-gray-300/80 h-6 w-6" />
               تعداد فصول:
-              <h5 className="text-gray-600">
+              <h5 className="text-gray-600 dark:text-gray-300/80">
                 {getPersianNumbers(details?.[1].seasons.length, false)}
               </h5>
             </span>

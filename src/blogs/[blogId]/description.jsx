@@ -50,7 +50,7 @@ export const Description = ({ details, selected }) => {
         initial="hidden"
         animate="visible"
         exit="hidden"
-        className="border-2 border-gray-300 px-5 py-4 rounded-xl text-gray-500 leading-10 text-sm text-justify"
+        className="border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl text-gray-500 dark:text-gray-300 leading-10 text-sm text-justify"
       >
         {details.value}
       </motion.p>
@@ -63,7 +63,7 @@ export const Description = ({ details, selected }) => {
         animate="visible"
         exit="hidden"
       >
-        <div className="border-2 border-gray-300 px-5 py-4 rounded-xl flex flex-col items-center justify-center gap-y-10">
+        <div className="border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl flex flex-col items-center justify-center gap-y-10">
           {details.comments.map((item) => (
             <CommentCard
               key={item.id}
@@ -86,7 +86,7 @@ export const Description = ({ details, selected }) => {
             className="w-full flex flex-col items-center justify-center gap-y-3"
           >
             <textarea
-              className="resize-none h-60 w-full disabled:cursor-not-allowed outline-none bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
+              className="resize-none h-60 w-full disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
               placeholder="متن پیام"
               {...form.register("message")}
             />

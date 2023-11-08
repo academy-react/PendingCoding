@@ -52,7 +52,9 @@ export const Description = ({ details, selected }) => {
   const handleMore = () => {
     setIsLoading(true);
     setTimeout(() => {
-      setCount((c) => c + 6);
+      setCount((c) =>
+        c + 6 > details.courses?.length ? details.courses?.length : c + 6
+      );
       setIsLoading(false);
     }, 1500);
   };
@@ -71,7 +73,7 @@ export const Description = ({ details, selected }) => {
         initial="hidden"
         animate="visible"
         exit="hidden"
-        className="border-2 border-gray-300 px-5 py-4 rounded-xl text-gray-500 leading-10 text-sm text-justify"
+        className="border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl text-gray-500 dark:text-gray-300 leading-10 text-sm text-justify"
       >
         {details.value}
       </motion.p>
@@ -86,7 +88,7 @@ export const Description = ({ details, selected }) => {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="border-2 border-gray-300 px-0 py-4 rounded-xl flex flex-col items-start justify-center"
+        className="border-2 border-gray-300 dark:border-gray-500 px-0 py-4 rounded-xl flex flex-col items-start justify-center"
       >
         <div className="grid grid-col-1 lg:grid-cols-2 2xl:grid-cols-3 gap-y-5 w-full">
           {details?.courses?.slice(0, count).map((course) => (
@@ -102,14 +104,14 @@ export const Description = ({ details, selected }) => {
             {count === details?.courses?.length ? (
               <button
                 onClick={handleReset}
-                className="text-white bg-primary hover:text-white/80 hover:bg-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
+                className="text-gray-100 dark:text-gray-200 bg-primary dark:bg-dark-primary hover:text-gray-100/80 dark:hover:text-gray-200/80 hover:bg-primary/80 dark:hover:bg-dark-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
               >
                 نمایش کمتر
               </button>
             ) : (
               <button
                 onClick={handleMore}
-                className="text-white bg-primary hover:text-white/80 hover:bg-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
+                className="text-gray-100 dark:text-gray-200 bg-primary dark:bg-dark-primary hover:text-gray-100/80 dark:hover:text-gray-200/80 hover:bg-primary/80 dark:hover:bg-dark-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
               >
                 نمایش بیشتر
               </button>
@@ -125,7 +127,7 @@ export const Description = ({ details, selected }) => {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="border-2 border-gray-300 px-0 py-4 rounded-xl flex flex-col items-start justify-center"
+        className="border-2 border-gray-300 dark:border-gray-500 px-0 py-4 rounded-xl flex flex-col items-start justify-center"
       >
         <div className="grid grid-col-1 lg:grid-cols-2 2xl:grid-cols-3 gap-y-5 w-full">
           {details?.courses?.slice(0, count).map((course) => (
@@ -141,14 +143,14 @@ export const Description = ({ details, selected }) => {
             {count === details?.courses?.length ? (
               <button
                 onClick={handleReset}
-                className="text-white bg-primary hover:text-white/80 hover:bg-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
+                className="text-gray-100 dark:text-gray-200 bg-primary dark:bg-dark-primary hover:text-gray-100/80 dark:hover:text-gray-200/80 hover:bg-primary/80 dark:hover:bg-dark-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
               >
                 نمایش کمتر
               </button>
             ) : (
               <button
                 onClick={handleMore}
-                className="text-white bg-primary hover:text-white/80 hover:bg-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
+                className="text-gray-100 dark:text-gray-200 bg-primary dark:bg-dark-primary hover:text-gray-100/80 dark:hover:text-gray-200/80 hover:bg-primary/80 dark:hover:bg-dark-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
               >
                 نمایش بیشتر
               </button>
@@ -166,7 +168,7 @@ export const Description = ({ details, selected }) => {
         exit="hidden"
         className="flex flex-col items-center justify-center gap-y-10"
       >
-        <div className="border-2 border-gray-300 px-5 py-4 rounded-xl">
+        <div className="border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl">
           {details.comments.map((item) => (
             <CommentCard
               key={item.id}
@@ -189,7 +191,7 @@ export const Description = ({ details, selected }) => {
             className="w-full flex flex-col items-center justify-center gap-y-3"
           >
             <textarea
-              className="resize-none h-60 w-full disabled:cursor-not-allowed outline-none bg-[#EEEEEE] text-gray-500 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
+              className="resize-none h-60 w-full disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
               placeholder="متن پیام"
               {...form.register("message")}
             />

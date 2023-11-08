@@ -1,11 +1,11 @@
+import { useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 
 import { useModal } from "../../hooks/use-modal-store";
-import { useUser } from "../../components/providers/user-provider";
+import { useUser } from "../../hooks/use-user";
 import { CartItem } from "./cart-item";
 import { cn } from "../../../libs/utils";
-import { useMemo } from "react";
 
 const backdrop = {
   hidden: {

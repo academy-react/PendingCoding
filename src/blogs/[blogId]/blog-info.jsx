@@ -6,7 +6,7 @@ import { Bookmark } from "lucide-react";
 import { apiCall } from "../../../libs/api-call";
 import { useModal } from "../../hooks/use-modal-store";
 import { getCourses } from "../../../libs/get-courses";
-import { useUser } from "../../components/providers/user-provider";
+import { useUser } from "../../hooks/use-user";
 
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
@@ -130,7 +130,7 @@ export const BlogInfo = () => {
   };
 
   return (
-    <div className="max-w-[1900px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5">
+    <div className="max-w-[1900px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5 pt-20">
       <div className="flex mx-auto md:mx-0 justify-center items-center">
         <NavigatorTracer />
       </div>
@@ -143,7 +143,7 @@ export const BlogInfo = () => {
                 removeFromFavorites(blog?.data);
                 setIsBookMarked(false);
               }}
-              className="h-9 w-9 text-primary cursor-pointer"
+              className="h-9 w-9 text-primary dark:text-dark-primary cursor-pointer"
               fill="#5c55c9"
             />
           ) : (
@@ -153,8 +153,12 @@ export const BlogInfo = () => {
             />
           )}
           <span className="flex flex-col justify-center items-start gap-y-2">
-            <h5 className="text-sm text-gray-400">دسته بندی</h5>
-            <h5 className="text-sm text-gray-600/80">{blog?.data.category}</h5>
+            <h5 className="text-sm text-gray-400 dark:text-gray-300">
+              دسته بندی
+            </h5>
+            <h5 className="text-sm text-gray-600/80 dark:text-gray-300/80">
+              {blog?.data.category}
+            </h5>
           </span>
         </div>
         <div className="flex justify-center items-center gap-x-2">
@@ -164,14 +168,20 @@ export const BlogInfo = () => {
             className="h-10 w-10 rounded-full"
           />
           <span className="flex flex-col justify-center items-start gap-y-2">
-            <h5 className="text-sm text-gray-400">استاد :</h5>
-            <h5 className="text-sm text-gray-600/80">{blog?.data.teacher}</h5>
+            <h5 className="text-sm text-gray-400 dark:text-gray-300">
+              استاد :
+            </h5>
+            <h5 className="text-sm text-gray-600/80 dark:text-gray-300/80">
+              {blog?.data.teacher}
+            </h5>
           </span>
         </div>
       </div>
 
       {/* Title */}
-      <h1 className="text-3xl text-gray-700">{blog?.data.title}</h1>
+      <h1 className="text-3xl text-gray-700 dark:text-gray-200">
+        {blog?.data.title}
+      </h1>
 
       {/* Main Div */}
       <div className="w-full flex flex-col xl:flex-row justify-between items-center xl:items-start gap-x-5">
@@ -222,7 +232,7 @@ export const BlogInfo = () => {
             <button
               onClick={() => onOpen("shareModal")}
               disabled={isOpen}
-              className="w-full px-20 py-2 border-2 border-primary bg-white/20 hover:bg-[#EEEEEE] text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
+              className="w-full px-20 py-2 border-2 border-primary dark:border-dark-primary bg-white/20 dark:bg-gray-300 dark:hover:bg-gray-300/90 hover:bg-[#EEEEEE] text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
             >
               اشتراک گذاری
             </button>

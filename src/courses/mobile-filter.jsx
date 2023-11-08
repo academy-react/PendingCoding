@@ -114,7 +114,7 @@ export const MobileFilter = ({ values, setValues }) => {
         >
           <motion.div
             onClick={(e) => e.stopPropagation()}
-            className="h-full fixed top-0 right-0 flex flex-col items-center justify-start gap-y-5 bg-gray-50 border-r border-gray-200 shadow-md p-5 z-[99999]"
+            className="h-full fixed top-0 right-0 flex flex-col items-center justify-start gap-y-5 bg-gray-50 dark:bg-gray-700 border-r border-gray-200 shadow-md p-5 z-[99999]"
             variants={backdrop}
             animate="visible"
             initial="hidden"
@@ -127,7 +127,9 @@ export const MobileFilter = ({ values, setValues }) => {
             <div className="flex flex-col items-center justify-center gap-y-5">
               <div className="w-full flex items-start justify-between gap-x-16">
                 <div className="flex flex-col justify-start items-start">
-                  <h1 className="text-base text-gray-500 mb-2">دسته بندی</h1>
+                  <h1 className="text-base text-gray-500 dark:text-gray-300/90 mb-2">
+                    دسته بندی
+                  </h1>
                   {categories.map((category) => (
                     <CategoryItem
                       key={category.id}
@@ -141,7 +143,9 @@ export const MobileFilter = ({ values, setValues }) => {
               <Seperator />
               <div className="w-full flex items-start justify-between gap-x-16">
                 <div className="flex flex-col justify-start items-start">
-                  <h1 className="text-base text-gray-500 mb-2">ظرفیت</h1>
+                  <h1 className="text-base text-gray-500 dark:text-gray-300/90 mb-2">
+                    ظرفیت
+                  </h1>
                   {capacities.map((capacity) => (
                     <CapacityItems
                       key={capacity.id}
@@ -161,7 +165,9 @@ export const MobileFilter = ({ values, setValues }) => {
               <Seperator />
               <div className="w-full flex justify-between items-center">
                 <div className="flex flex-col justify-center items-start gap-y-2 w-full">
-                  <h4 className="text-sm text-gray-500">استاد</h4>
+                  <h1 className="text-base text-gray-500 dark:text-gray-300/90 mb-2">
+                    استاد
+                  </h1>
                   <SearchInput
                     queryName="teacher_name"
                     className="w-full text-sm py-2 px-4"
