@@ -6,8 +6,10 @@ import { cn } from "../../../libs/utils";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/use-user";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
-const Login = () => {
+
+const Login = ({ login }) => {
   const formSchema = z.object({
     email: z
       .string()
@@ -43,7 +45,8 @@ const Login = () => {
   };
 
   return (
-    <div
+    <motion.div
+      animate={login}
       className="bg-[#EEEEEE] w-[700px] h-[700px] rounded-[100%] border-[15px] border-solid border-[#505050] flex justify-center items-center relative transition
       dark:bg-gray-800 dark:border-gray-600
        
@@ -167,7 +170,7 @@ const Login = () => {
           </button>
         </form>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

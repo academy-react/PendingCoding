@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
-const Reg = () => {
+const Reg = ({reg , loginHandleAnimate}) => {
   return (
-    <div
+    <motion.div
+      animate={reg}
       className="w-[700px] h-[700px] rounded-[100%] bg-[#505050] flex float-left mt-[-700px] justify-end items-center  text-white text-center transition
       dark:bg-gray-600 dark:text-white
     
@@ -43,19 +45,20 @@ const Reg = () => {
         </p>{" "}
         {/* {style.p} */}
         <button
+          onClick={loginHandleAnimate}
           className="text-[#505050] bg-[#EEEEEE] rounded-[50px] text-[18px] p-[10px_0] w-[300px] m-[20px_0] hover:bg-[#DDDDDD] transition
           dark:bg-[rgb(113,123,136)] dark:text-white dark:hover:bg-[rgb(122,132,146)]
         
           max-[700px]:p-[7px_0] max-[700px]:w-[270px] overflow-hidden relative"
         >
-          <Link
+          {/* <Link
             to="/sign-up"
             className="w-full h-full absolute cursor-pointer top-0 left-0"
-          ></Link>
+          ></Link> */}
           ثبت نام
         </button>{" "}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
