@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import qs from "query-string";
 
@@ -20,7 +20,7 @@ export const Select = ({ queryName, filters, className, placeholder }) => {
   const course_name = searchParams.get("course_name");
   const teacher_name = searchParams.get("teacher_name");
 
-  useEffect(() => {
+  useMemo(() => {
     const url = qs.stringifyUrl(
       {
         url: pathname,
@@ -52,7 +52,7 @@ export const Select = ({ queryName, filters, className, placeholder }) => {
       defaultValue={filters[0]}
       onChange={handleSelection}
       className={cn(
-        "cursor-pointer disabled:cursor-not-allowed outline-none bg-[#EEEEEE] text-gray-400 dark:text-gray-800 border-2 rounded-full duration-200 border-gray-300 focus:border-gray-400",
+        "cursor-pointer disabled:cursor-not-allowed outline-none bg-[#EEEEEE] dark:bg-gray-200/80 dark:border-gray-700 dark:focus:border-gray-300/80 text-gray-400 dark:text-gray-800 border-2 rounded-full duration-200 border-gray-300 focus:border-gray-400",
         className
       )}
     >

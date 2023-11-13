@@ -13,10 +13,15 @@ export const Dashboard = () => {
     return () => clearTimeout(timeOut);
   }, []);
 
-  if (isLoading) return <Loading />;
+  if (isLoading)
+    return (
+      <div className="fixed inset-0 dark:bg-gray-800">
+        <Loading />
+      </div>
+    );
 
   return (
-    <div className="w-full h-full flex justify-center items-center gap-x-8 bg-[#EEEEEE]">
+    <div className="w-full h-full flex justify-center items-center gap-x-8 bg-[#EEEEEE] dark:bg-gray-800">
       {/* SideBar menu */}
       <SidebarMenu />
       {/* Datas */}

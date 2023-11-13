@@ -26,8 +26,8 @@ export const ImageUpload = ({ setIsLoading, setUrl, errors }) => {
         onClick={handleClick}
         className="group flex flex-col justify-center items-center gap-y-2 cursor-pointer"
       >
-        <ImagePlus className="w-16 h-16 text-primary/80 group-hover:text-primary transition" />
-        <p className="text-gray-600 group-hover:text-gray-800 transition">
+        <ImagePlus className="w-16 h-16 text-primary group-hover:text-primary/80 transition" />
+        <p className="text-gray-600 dark:text-gray-300 group-hover:text-gray-800 dark:group-hover:text-gray-300/80 transition">
           اضافه کردن تصویر
         </p>
       </label>

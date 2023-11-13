@@ -1,25 +1,23 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 
 import { useModal } from "../../hooks/use-modal-store";
 
-const UserContext = createContext(null);
-
-function useUser() {
-  return useContext(UserContext);
-}
+export const UserContext = createContext(null);
 
 function UserProvider({ children }) {
   const { onClose } = useModal();
 
-  const userInfo = JSON.parse(localStorage.getItem("user"));
+  const userInfo = useMemo(() => JSON.parse(localStorage.getItem("user")), []);
 
-  const [userData, setUserData] = useState({
-    user: userInfo?.user || null,
-    cart: userInfo?.cart || [],
-    favorites: userInfo?.favorites || [],
-    myCourses: userInfo?.myCourses || [],
-  });
+  const [userData, setUserData] = useState(
+    userInfo || {
+      user: null,
+      cart: [],
+      favorites: [],
+      myCourses: [],
+    }
+  );
 
   const addToCart = (course) => {
     const newObj = {
@@ -106,6 +104,7 @@ function UserProvider({ children }) {
     <UserContext.Provider
       value={{
         userData,
+        setUserData,
         addToCart,
         removeFromCart,
         checkout,
@@ -118,4 +117,4 @@ function UserProvider({ children }) {
   );
 }
 
-export { UserProvider, useUser };
+export { UserProvider };

@@ -15,7 +15,7 @@ import { TeacherCards } from "./teacher-cards";
 import { useModal } from "../hooks/use-modal-store";
 
 import { cn } from "../../libs/utils";
-import { getCourses } from "../../libs/get-courses";
+import { getCourses } from "../core/services/api/get-courses";
 
 const orderBy = [
   {
@@ -111,7 +111,7 @@ export const Teachers = () => {
         {/* Filter div */}
         <button
           onClick={() => onOpen("filterTeacherDialog")}
-          className="text-gray-500 hover:text-gray-700 transition mt-1 xl:hidden"
+          className="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200 transition mt-1 xl:hidden"
         >
           <Menu className="h-10 w-10" />
         </button>

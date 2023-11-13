@@ -46,7 +46,10 @@ export const CategoryItem = ({ value, label }) => {
   const isSelected = searchParams.get("categoryId") === value;
 
   return (
-    <label htmlFor="checkbox" className="flex gap-x-2 text-sm text-gray-500">
+    <label
+      htmlFor="checkbox"
+      className="flex gap-x-2 text-sm text-gray-500 dark:text-gray-300"
+    >
       <input
         type="checkbox"
         checked={isSelected}

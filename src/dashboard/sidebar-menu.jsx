@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { LogOut, UserCog } from "lucide-react";
 
-import { useUser } from "../components/providers/user-provider";
+import { useUser } from "../hooks/use-user";
 
 import { PageCard } from "./page-card";
 import { pages } from "./pages";
@@ -15,9 +15,11 @@ export const SidebarMenu = () => {
 
   const { pathname } = useLocation();
   return (
-    <div className="w-[250px] h-full bg-white border-l-2 border-l-gray-100 shadow-lg py-10">
+    <div className="w-[250px] h-full bg-white dark:bg-gray-700 border-l-2 border-l-gray-100 dark:border-l-gray-700 dark:shadow-gray-400 dark:shadow-md shadow-lg py-10">
       <div className="flex flex-col justify-center items-center gap-y-10 my-5">
-        <h1 className="text-xl text-gray-700 text-center">PendingCoding</h1>
+        <h1 className="text-xl text-gray-700 dark:text-gray-200 text-center">
+          PendingCoding
+        </h1>
         <img
           className="w-20 h-20 rounded-full m-auto"
           src={userData?.user?.image || defaultProfile}
@@ -34,24 +36,28 @@ export const SidebarMenu = () => {
           <Link
             to="/dashboard/edit-profile"
             className={cn(
-              "group w-full flex flex-row-reverse justify-end items-center gap-x-3 border-2 border-gray-100 px-6 py-4 rounded-xl cursor-pointer hover:bg-gray-100 transition",
+              "group w-full flex flex-row-reverse justify-end items-center gap-x-3 border-2 border-gray-100 dark:border-gray-300 dark:text-gray-300 dark:hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-300 px-6 py-4 rounded-xl cursor-pointer transition",
               pathname === "/dashboard/edit-profile" &&
-                "text-gray-800 bg-gray-100"
+                "border-gray-100 dark:border-gray-300 bg-gray-100 hover:bg-gray-100 dark:bg-gray-300 text-gray-700 dark:text-gray-800 dark:hover:bg-gray-300"
             )}
           >
-            <h1 className="group-hover:text-gray-900 text-gray-600">
-              ویرایش پروفایل
-            </h1>
-            <div className="group-hover:text-primary text-gray-600">
+            ویرایش پروفایل
+            <div
+              className={cn(
+                "group-hover:text-primary text-gray-500",
+                pathname === "/dashboard/edit-profile" &&
+                  "text-primary dark:text-dark-primary"
+              )}
+            >
               <UserCog className="h-6 w-6" />
             </div>
           </Link>
           <Link
             to="/"
-            className="group w-full flex flex-row-reverse justify-end items-center gap-x-3 border-2 border-gray-100 px-6 py-4 rounded-xl cursor-pointer hover:bg-gray-100 transition"
+            className="group w-full flex flex-row-reverse justify-end items-center gap-x-3 border-2 border-gray-100 dark:border-gray-300 dark:text-gray-300 dark:hover:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-300 px-6 py-4 rounded-xl cursor-pointer transition"
           >
-            <h1 className="group-hover:text-gray-900 text-gray-600">خروج</h1>
-            <div className="group-hover:text-primary text-gray-600">
+            خروج
+            <div className="group-hover:text-primary text-gray-500">
               <LogOut className="h-6 w-6" />
             </div>
           </Link>

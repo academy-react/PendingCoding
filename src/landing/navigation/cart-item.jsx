@@ -1,7 +1,7 @@
 import { Book, Clock, LayoutDashboard, Tags, User } from "lucide-react";
 
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
-import { useUser } from "../../components/providers/user-provider";
+import { useUser } from "../../hooks/use-user";
 
 export const CartItem = ({ course }) => {
   const { removeFromCart } = useUser();

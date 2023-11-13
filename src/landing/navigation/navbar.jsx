@@ -1,11 +1,12 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Dot, Menu, ShoppingCart } from "lucide-react";
+import { motion } from "framer-motion";
 
 import { useModal } from "../../hooks/use-modal-store";
 import { useScrollTop } from "../../hooks/use-scroll-top";
-import { useUser } from "../../components/providers/user-provider";
+import { useUser } from "../../hooks/use-user";
 
 import { NavbarMobile } from "./navbar-mobile";
 import { ThemeToggle } from "../../components/theme-toggle";
@@ -15,30 +16,62 @@ import { cn } from "../../../libs/utils";
 import { routes } from "../../components/routes/routes";
 import { useTheme } from "../../components/providers/theme-provider";
 
+import defaultImage from "../../assets/my-profile.jpg";
+
+const backdrop = {
+  hidden: {
+    y: "-40px",
+    opacity: 0,
+  },
+  visible: {
+    y: "0px",
+    opacity: 1,
+    transition: { duration: 0.5 },
+  },
+  exit: {
+    y: "40px",
+    opacity: 0,
+    transition: { duration: 0.5 },
+  },
+};
+
 const Navbar = () => {
-  const { userData } = useUser();
-  const { onOpen } = useModal();
+  const [dropdown, setDropdown] = useState(false);
+  const dropDownRef = useRef(null);
   const { isDarkTheme } = useTheme();
+  const { userData, setUserData } = useUser();
+  const { onOpen } = useModal();
 
   const count = useMemo(() => userData?.cart?.length, [userData?.cart?.length]);
   const scrolled = useScrollTop();
+
+  useEffect(() => {
+    const handler = (event) =>
+      !dropDownRef?.current?.contains(event.target) && setDropdown(false);
+
+    document.addEventListener("mousedown", handler);
+
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   const handleLogout = () => {
     const newObj = {
       ...userData,
       user: null,
     };
-
+    setUserData(newObj);
     localStorage.setItem("user", JSON.stringify(newObj));
     toast.success("با موفقیت خارج شدید");
   };
 
-  const isSignIn = useMemo(() => userData.user, [userData]);
+  const handleDropdown = () => {
+    setDropdown((c) => !c);
+  };
 
   return (
     <nav
       className={cn(
-        "w-full fixed top-0 bg-[#EEEEEE] dark:bg-gray-800 flex items-center justify-between px-3 md:px-4 lg:px-16 xl:px-28 2xl:px-32 py-2",
+        "w-full fixed top-0 bg-[#EEEEEE] dark:bg-gray-800 flex items-center justify-between px-5 md:px-4 lg:px-16 xl:px-28 2xl:px-32 py-6 md:py-2",
         scrolled && "border-b border-gray-200 dark:border-gray-600 shadow-md"
       )}
     >
@@ -71,21 +104,44 @@ const Navbar = () => {
           ))}
         </div>
         <div className="hidden md:flex items-center justify-center gap-x-1 lg:gap-x-6">
-          {isSignIn ? (
-            <>
-              <Link
-                to="/dashboard"
-                className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
-              >
-                داشبورد
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
-              >
-                خروج
-              </button>
-            </>
+          {userData.user ? (
+            <div
+              ref={dropDownRef}
+              onClick={handleDropdown}
+              className={cn(
+                "w-10 h-10 relative cursor-pointer opacity-80 hover:opacity-100 transition",
+                dropdown && "opacity-100"
+              )}
+            >
+              <img
+                className="object-contain rounded-full"
+                src={defaultImage}
+                alt="defaultProfile"
+              />
+              {dropdown && (
+                <motion.div
+                  variants={backdrop}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  onClick={handleDropdown}
+                  className="absolute -left-12 top-11 px-2 py-3 w-32 bg-gray-100 dark:bg-gray-500 border border-gray-200/80 dark:border-gray-500 shadow-xl rounded-lg flex flex-col items-center justify-center gap-y-1"
+                >
+                  <Link
+                    to="/dashboard"
+                    className="border-[3px] border-primary dark:border-dark-primary w-full text-center rounded-full bg-gray-100 dark:bg-gray-400 dark:hover:bg-gray-300 dark:text-dark-primary/80 dark:hover:text-dark-primary hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold"
+                  >
+                    داشبورد
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="border-[3px] border-primary dark:border-dark-primary w-full text-center rounded-full bg-primary dark:bg-dark-primary hover:bg-primary/90 dark:hover:bg-dark-primary/90 text-white/80 dark:text-gray-200/80 dark:hover:text-gray-200 hover:text-white/80 transition"
+                  >
+                    خروج
+                  </button>
+                </motion.div>
+              )}
+            </div>
           ) : (
             <Link
               className="border-[3px] border-primary dark:border-dark-primary px-5 py-1 rounded-full bg-primary dark:bg-dark-primary hover:bg-primary/90 dark:hover:bg-dark-primary/90 text-white/90 hover:text-white/80 transition font-semibold text-[16px]"
@@ -107,7 +163,7 @@ const Navbar = () => {
         <div className="md:hidden">
           <Menu
             onClick={() => onOpen("navDialog")}
-            className="h-8 w-8 cursor-pointer hover:text-black/60 transition"
+            className="h-8 w-8 cursor-pointer hover:text-black/60 dark:text-gray-300 dark:hover:text-gray-200 transition"
           />
           <NavbarMobile count={count} />
         </div>

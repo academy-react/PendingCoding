@@ -37,7 +37,7 @@ export const LayoutPage = () => {
   }, [pathname, onClose]);
 
   return (
-    <div className="w-full h-full bg-[#EEEEEE]">
+    <div className="w-full h-full bg-[#EEEEEE] dark:bg-gray-800">
       <ModalProvider />
       <div className="flex justify-center items-center px-6 py-3 shadow-md relative z-[2]">
         <Navbar />
@@ -51,7 +51,7 @@ export const LayoutPage = () => {
       >
         <Outlet />
       </motion.main>
-      <div className="flex justify-center items-center px-6 py-2 bg-[#464646]">
+      <div className="flex justify-center items-center px-6 py-2 bg-[#464646] dark:bg-gray-700">
         <Footer />
       </div>
     </div>

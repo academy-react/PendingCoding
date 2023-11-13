@@ -2,9 +2,8 @@ import { useLayoutEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 
-import { apiCall } from "../../../libs/api-call";
-import { useModal } from "../../hooks/use-modal-store";
-import { getCourses } from "../../../libs/get-courses";
+import { apiCall } from "../../core/services/interceptor/api-call";
+import { getCourses } from "../../core/services/api/get-courses";
 
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
@@ -105,7 +104,6 @@ export const TeacherInfo = () => {
   const { id } = useParams();
   const [isMounted, setIsMounted] = useState(false);
   const [selected, setSelected] = useState(details[0].label);
-  const { isOpen, onOpen } = useModal();
 
   useLayoutEffect(() => {
     if (!isMounted) {
@@ -129,7 +127,9 @@ export const TeacherInfo = () => {
       <div className="w-full flex flex-col md:flex-row justify-between items-center gap-y-10 px-10">
         {/* Title Div */}
         <div>
-          <h1 className="text-3xl text-gray-700">{course?.data.teacher}</h1>
+          <h1 className="text-3xl text-gray-700 dark:text-gray-200">
+            {course?.data.teacher}
+          </h1>
         </div>
         {/* Add Div */}
       </div>

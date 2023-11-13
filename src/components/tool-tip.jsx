@@ -15,7 +15,9 @@ export const TooTip = ({ name, children }) => {
         before:-translate-x-1/2 
         before:-translate-y-full 
         before:bg-[#818CF8]
+        dark:before:bg-dark-primary
         before:text-white 
+        dark:before:text-gray-200
         before:rounded-md 
         before:opacity-0 
         before:transition-all
@@ -28,6 +30,7 @@ export const TooTip = ({ name, children }) => {
         after:border-8 
         after:border-t-gray-700 
         after:text-white
+        dark:after:text-gray-200
         after:border-l-transparent 
         after:border-b-transparent 
         after:border-r-transparent 

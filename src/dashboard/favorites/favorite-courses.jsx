@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-import { useUser } from "../../components/providers/user-provider";
+import { useUser } from "../../hooks/use-user";
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 
 export const FavoriteCourses = () => {
@@ -128,7 +128,7 @@ export const FavoriteCourses = () => {
     <div className="relative w-full shadow-md sm:rounded-lg">
       {filteredFavorites.length === 0 ? (
         <div>
-          <p className="text-xl text-gray-600 text-center">
+          <p className="text-xl text-gray-600 dark:text-gray-300 text-center">
             علاقه مندی وجود ندارد
           </p>
         </div>
@@ -211,7 +211,7 @@ export const FavoriteCourses = () => {
             {filteredFavorites.map((course) => (
               <tr
                 key={course.id}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                className="bg-white border-b dark:bg-gray-900/60 dark:border-gray-800/60"
               >
                 <th
                   scope="row"

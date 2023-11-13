@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "../../../libs/utils";
 
 import { Link, useNavigate } from "react-router-dom";
-import { useUser } from "../../components/providers/user-provider";
+import { useUser } from "../../hooks/use-user";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 
@@ -21,7 +21,7 @@ const Login = ({ login }) => {
       .max(15, { message: "رمز عبور حداکثر 15 کاراکتر دارد" }),
   });
 
-  const { userData } = useUser();
+  const { userData, setUserData } = useUser();
   const navigate = useNavigate();
   const {
     register,
@@ -36,11 +36,11 @@ const Login = ({ login }) => {
       ...userData,
       user: { email: values.email, password: values.password },
     };
-
     localStorage.setItem("user", JSON.stringify(newObj));
     toast.success("با موافقیت وارد شدید");
     setTimeout(() => {
       navigate("/");
+      setUserData(newObj);
     }, 500);
   };
 

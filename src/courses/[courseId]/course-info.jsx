@@ -1,12 +1,23 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { Book, Bookmark, Clock, Tags, User2, Users2 } from "lucide-react";
+import {
+  Book,
+  Bookmark,
+  Clock,
+  PersonStanding,
+  Tags,
+  User,
+  User2,
+  Users2,
+} from "lucide-react";
 
-import { apiCall } from "../../../libs/api-call";
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import { useModal } from "../../hooks/use-modal-store";
-import { getCourses } from "../../../libs/get-courses";
+import {
+  getCourseById,
+  getCoursesByPagination,
+} from "../../core/services/api/get-courses";
 
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
@@ -16,13 +27,17 @@ import { Description } from "./description";
 import { Banner } from "../../components/banner";
 import { NewCourseCard } from "../../components/new-course-card";
 import { Slider } from "./slider";
-import { useUser } from "../../components/providers/user-provider";
+import { useUser } from "../../hooks/use-user";
 
-function getCourseById(id) {
-  return apiCall.get(`/items/${id}`);
-}
+import defaultCourseThumbnail from "../../assets/default-course-thumbnail.png";
 
 export const CourseInfo = () => {
+  const { id } = useParams();
+  const [isMounted, setIsMounted] = useState(false);
+  const { isOpen, onOpen } = useModal();
+  const { userData, addToFavorites, removeFromFavorites } = useUser();
+  const [isBookMarked, setIsBookMarked] = useState(false);
+
   const {
     data: course,
     isLoading: courseLoading,
@@ -30,7 +45,7 @@ export const CourseInfo = () => {
     refetch: refetchCourse,
   } = useQuery({
     queryKey: ["courseId"],
-    queryFn: async () => getCourseById(id),
+    queryFn: () => getCourseById(id),
     enabled: false,
   });
 
@@ -41,19 +56,14 @@ export const CourseInfo = () => {
     refetch: refetchCourses,
   } = useQuery({
     queryKey: ["courses"],
-    queryFn: async () => getCourses("/items"),
+    queryFn: () => getCoursesByPagination(6),
     enabled: false,
   });
   const details = [
     {
       id: 1,
       label: "توضیحات",
-      value: `لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون 
-      .و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهایsadasasdadadaas کاربردی می باشد
-      کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای
-      .طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد
-      در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروف چینی
-      .دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد`,
+      value: course?.describe,
     },
     {
       id: 2,
@@ -95,9 +105,9 @@ export const CourseInfo = () => {
       در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروف چینی
       .دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد`,
       teacher: {
-        id: course?.data.teacherId,
-        name: course?.data.teacher,
-        image: course?.data.teacherAvatar,
+        id: course?.teacherId,
+        name: course?.teacher,
+        image: course?.teacherAvatar,
       },
     },
     {
@@ -112,25 +122,25 @@ export const CourseInfo = () => {
           برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام
           و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی
            .سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد`,
-          createdAt: course?.data.createdAt,
+          createdAt: course?.createdAt,
           user: {
-            name: course?.data.studentName,
-            image: course?.data?.studentImage,
+            name: course?.studentName,
+            image: course?.studentImage,
           },
           responds: [
             {
-              id: course?.data.teacherId,
-              name: course?.data.teacher,
-              image: course?.data?.teacherAvatar,
+              id: course?.teacherId,
+              name: course?.teacher,
+              image: course?.teacherAvatar,
               respond: `.لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
               چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد
               .نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد`,
               role: "admin",
             },
             {
-              id: course?.data.studentId || 1234,
-              name: course?.data.studentName,
-              image: course?.data?.studentImage,
+              id: course?.studentId || 1234,
+              name: course?.studentName,
+              image: course?.studentImage,
               respond: `.لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
               چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد
               .نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد`,
@@ -141,12 +151,7 @@ export const CourseInfo = () => {
       ],
     },
   ];
-  const { id } = useParams();
-  const [isMounted, setIsMounted] = useState(false);
   const [selected, setSelected] = useState(details[0].label);
-  const { isOpen, onOpen } = useModal();
-  const { userData, addToFavorites, removeFromFavorites } = useUser();
-  const [isBookMarked, setIsBookMarked] = useState(false);
 
   const isInCart = useMemo(
     () => userData?.cart.some((c) => c.id === id),
@@ -158,8 +163,8 @@ export const CourseInfo = () => {
   );
 
   useEffect(() => {
-    setIsBookMarked(userData?.favorites.some((c) => c.id === course?.data.id));
-  }, [course?.data.id, userData.favorites]);
+    setIsBookMarked(userData?.favorites.some((c) => c.id === course?.id));
+  }, [course?.id, userData.favorites]);
 
   useLayoutEffect(() => {
     if (!isMounted) {
@@ -174,10 +179,10 @@ export const CourseInfo = () => {
   if (courseLoading && coursesLoading) return <Loading />;
   if (courseError && coursesError) return <Error />;
 
-  const startDate = new Date(course?.data.startDate)
+  const startDate = new Date(course?.startTime)
     .toLocaleDateString("fa-IR-u-nu-latn")
     .split("/");
-  const endDate = new Date(course?.data.endDate)
+  const endDate = new Date(course?.endTime)
     .toLocaleDateString("fa-IR-u-nu-latn")
     .split("/");
   const months = [
@@ -194,7 +199,7 @@ export const CourseInfo = () => {
     "بهمن",
     "اسفند",
   ];
-  const registered = course?.data.capacity - course?.data.students;
+  const registered = course?.currentRegistrants;
 
   const handleBookmark = () => {
     if (userData.user) {
@@ -227,21 +232,31 @@ export const CourseInfo = () => {
             />
           )}
           <span className="flex flex-col justify-center items-start gap-y-2">
-            <h5 className="text-sm text-gray-400">دسته بندی</h5>
-            <h5 className="text-sm text-gray-600/80">
-              {course?.data.category}
+            <h5 className="text-sm text-gray-400 dark:text-gray-300">
+              دسته بندی
+            </h5>
+            <h5 className="text-sm text-gray-600/80 dark:text-gray-300/80">
+              {course?.category}
             </h5>
           </span>
         </div>
         <div className="flex justify-center items-center gap-x-2">
-          <img
-            src={course?.data.teacherAvatar}
-            alt="teacherAvatar"
-            className="h-10 w-10 rounded-full"
-          />
+          {course?.teacherAvatar ? (
+            <img
+              src={course?.teacherAvatar}
+              alt="teacherAvatar"
+              className="h-10 w-10 rounded-full"
+            />
+          ) : (
+            <User className="dark:text-gray-300/80" />
+          )}
           <span className="flex flex-col justify-center items-start gap-y-2">
-            <h5 className="text-sm text-gray-400">استاد :</h5>
-            <h5 className="text-sm text-gray-600/80">{course?.data.teacher}</h5>
+            <h5 className="text-sm text-gray-400 dark:text-gray-300">
+              استاد :
+            </h5>
+            <h5 className="text-sm text-gray-600/80 dark:text-gray-300/80">
+              {course?.teacherName}
+            </h5>
           </span>
         </div>
       </div>
@@ -250,7 +265,9 @@ export const CourseInfo = () => {
       <div className="w-full flex flex-col md:flex-row justify-between items-center gap-y-10 px-10">
         {/* Title Div */}
         <div>
-          <h1 className="text-3xl text-gray-700">{course?.data.title}</h1>
+          <h1 className="text-3xl text-gray-700 dark:text-gray-200">
+            {course?.title}
+          </h1>
         </div>
         {/* Add Div */}
         <div className=" flex flex-col items-center justify-center gap-y-3">
@@ -261,12 +278,12 @@ export const CourseInfo = () => {
                   userData.user ? "confirmDeleteModal" : "unauthorizedModal"
                 )
               }
-              className="w-full px-20 py-2 bg-destructive hover:bg-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/80 disabled:cursor-not-allowed transition rounded-full "
+              className="w-full px-20 py-2 bg-destructive dark:bg-dark-destructive hover:bg-destructive/80 dark:hover:bg-dark-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/80 disabled:cursor-not-allowed transition rounded-full "
             >
               حذف از سبد خرید
             </button>
           ) : isPurchased ? (
-            <p className="w-full px-20 py-2 bg-emerald-500 cursor-default text-white rounded-full">
+            <p className="w-full px-20 py-2 bg-emerald-500 dark:bg-emerald-700 cursor-default text-gray-100 dark:text-gray-200 rounded-full">
               شما این دوره را خریده‌اید
             </p>
           ) : (
@@ -274,7 +291,7 @@ export const CourseInfo = () => {
               onClick={() =>
                 onOpen(userData.user ? "confirmModal" : "unauthorizedModal")
               }
-              className="w-full px-20 py-2 bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/80 disabled:cursor-not-allowed transition rounded-full "
+              className="w-full px-20 py-2 bg-primary dark:bg-dark-primary hover:bg-primary/80 dark:hover:bg-dark-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/80 disabled:cursor-not-allowed transition rounded-full "
             >
               افزودن به سبد خرید
             </button>
@@ -282,7 +299,7 @@ export const CourseInfo = () => {
           <button
             onClick={() => onOpen("shareModal")}
             disabled={isOpen}
-            className="w-full px-20 py-2 border-2 border-primary bg-white/20 hover:bg-[#EEEEEE] text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
+            className="w-full px-20 py-2 border-2 border-primary dark:border-dark-primary bg-white/20 dark:bg-gray-300 dark:hover:bg-gray-300/90 hover:bg-[#EEEEEE] text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
           >
             اشتراک گذاری
           </button>
@@ -293,11 +310,13 @@ export const CourseInfo = () => {
       <div className="w-full flex flex-col xl:flex-row justify-between items-center xl:items-start gap-x-5 gap-y-20">
         {/* Course Image & Description */}
         <div className="w-full flex flex-col items-start justify-center gap-y-5">
-          <img
-            className="rounded-xl w-full h-[475px] object-fill"
-            src={course?.data.image}
-            alt="courseImage"
-          />
+          <div className="relative w-full h-[475px]">
+            <img
+              className="rounded-xl w-full h-full"
+              src={course?.imageAddress || defaultCourseThumbnail}
+              alt="courseImage"
+            />
+          </div>
           <div className="w-full flex justify-between items-center gap-x-10">
             {details?.map((datail) => (
               <Header
@@ -323,49 +342,47 @@ export const CourseInfo = () => {
         <div className="w-full xl:w-1/4 flex flex-col items-center xl:items-start justify-center gap-y-10">
           <div className="flex flex-col items-start justify-center gap-y-5">
             <Banner title="مشخصات دوره" className="text-xl" height="h-9" />
-            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-              <User2 className="text-primary h-6 w-6" />
+            <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
+              <User2 className="text-primary dark:text-gray-300/80 h-6 w-6" />
               ظرفیت:
-              <h5 className="text-gray-600">
-                {getPersianNumbers(course?.data.capacity, false)}
+              <h5 className="text-gray-600 dark:text-gray-300/80">
+                {getPersianNumbers(course?.capacity, false)}
               </h5>
             </span>
-            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-              <Clock className="text-primary h-6 w-6" />
-              تاریخ شروع:
-              <h5 className="text-gray-600">
+            <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
+              <Clock className="text-primary dark:text-gray-300/80 h-6 w-6" />
+              <h5 className="text-gray-600 dark:text-gray-300/80">
                 {`تاریخ شروع : ${getPersianNumbers(startDate?.[2], true)} ${
                   months[startDate?.[1] - 1]
                 } ${getPersianNumbers(startDate?.[0], true)}`}
               </h5>
             </span>
-            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-              <Clock className="text-primary h-6 w-6" />
-              تاریخ پایان:
-              <h5 className="text-gray-600">
+            <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
+              <Clock className="text-primary dark:text-gray-300/80 h-6 w-6" />
+              <h5 className="text-gray-600 dark:text-gray-300/80">
                 {`تاریخ پایان : ${getPersianNumbers(endDate?.[2])} ${
                   months[endDate?.[1] - 1]
                 } ${getPersianNumbers(endDate?.[0], true)}`}
               </h5>
             </span>
-            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-              <Tags className="text-primary h-6 w-6" />
+            <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
+              <Tags className="text-primary dark:text-gray-300/80 h-6 w-6" />
               قیمت:
-              <h5 className="text-gray-600">
-                {`${getPersianNumbers(course?.data.price, false)} تومان`}
+              <h5 className="text-gray-600 dark:text-gray-300/80">
+                {`${getPersianNumbers(course?.cost, false)} تومان`}
               </h5>
             </span>
-            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-              <Users2 className="text-primary h-6 w-6" />
+            <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
+              <Users2 className="text-primary dark:text-gray-300/80 h-6 w-6" />
               ظرفیت پر شده:
-              <h5 className="text-gray-600">
+              <h5 className="text-gray-600 dark:text-gray-300/80">
                 {getPersianNumbers(registered, false)}
               </h5>
             </span>
-            <span className="flex justify-between items-center text-gray-500 text-sm gap-x-2">
-              <Book className="text-primary h-6 w-6" />
+            <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
+              <Book className="text-primary dark:text-gray-300/80 h-6 w-6" />
               تعداد فصول:
-              <h5 className="text-gray-600">
+              <h5 className="text-gray-600 dark:text-gray-300/80">
                 {getPersianNumbers(details?.[1].seasons.length, false)}
               </h5>
             </span>
@@ -376,14 +393,14 @@ export const CourseInfo = () => {
               className="text-xl"
               height="h-9"
             />
-            {courses?.data.slice(0, 3).map((course) => (
+            {courses?.courseFilterDtos.slice(0, 3).map((course) => (
               <NewCourseCard
-                key={course.id}
-                id={course.id}
+                key={course.courseId}
+                id={course.courseId}
                 title={course.title}
-                price={course.price}
-                teacher={course.teacher}
-                image={course.image}
+                price={course.cost}
+                teacher={course.teacherName}
+                image={course.tumbImageAddress}
               />
             ))}
           </div>
@@ -391,7 +408,7 @@ export const CourseInfo = () => {
       </div>
       <div className="w-full flex flex-col items-start justify-center gap-y-10 2xl">
         <Banner title="دوره های مشابه" />
-        <Slider courses={courses?.data} />
+        <Slider courses={courses?.courseFilterDtos} />
         <div></div>
       </div>
     </div>

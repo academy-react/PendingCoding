@@ -1,9 +1,9 @@
 import { useLayoutEffect, useState } from "react";
-import { BookX, CopySlash, Grid2x2, Menu, Rows } from "lucide-react";
+import { BookX, Grid2x2, Menu, Rows } from "lucide-react";
 import { useQuery } from "react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { getCourses } from "../../libs/get-courses";
+import { getCoursesByPagination } from "../core/services/api/get-courses";
 
 import NavigatorTracer from "../components/navigator-tracer";
 import { Seperator } from "../components/seperator";
@@ -13,10 +13,11 @@ import { MobileFilter } from "./mobile-filter";
 import { Filter } from "./filter";
 import { Banner } from "../components/banner";
 import { CourseCards } from "./course-cards";
-import { cn } from "../../libs/utils";
-import { useModal } from "../hooks/use-modal-store";
 import { Loading } from "../components/loading";
 import { Error } from "../components/error";
+
+import { useModal } from "../hooks/use-modal-store";
+import { cn } from "../../libs/utils";
 
 const orderBy = [
   {
@@ -49,9 +50,16 @@ export const Courses = () => {
 
   const [searchParams] = useSearchParams();
 
+  const course_name = searchParams.get("course_name");
+  const course_filter_by = searchParams.get("course_filter_by");
+  const categoryId = searchParams.get("categoryId");
+  const isFinished = searchParams.get("isFinished");
+  const teacher_name = searchParams.get("teacher_name");
+  const items_per_page = parseInt(searchParams.get("items_per_page"));
+
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["courses"],
-    queryFn: async () => getCourses("/items"),
+    queryFn: () => getCoursesByPagination(items_per_page || 6),
     staleTime: 5000,
     enabled: false,
   });
@@ -69,16 +77,9 @@ export const Courses = () => {
 
   if (isError) return <Error />;
 
-  const course_name = searchParams.get("course_name");
-  const courseFilterBy = searchParams.get("courseFilterBy");
-  const categoryId = searchParams.get("categoryId");
-  const isFinished = searchParams.get("isFinished");
-  const teacher_name = searchParams.get("teacher_name");
-  const itemsPerPage = parseInt(searchParams.get("items-per-page"));
-
-  let filteredData = data?.data.filter((course) => {
+  let filteredData = data?.courseFilterDtos?.filter((course) => {
     if (!course_name && !categoryId && !isFinished && !teacher_name) {
-      if (course.price >= values[0] && course.price <= values[1]) return course;
+      if (course.cost >= values[0] && course.cost <= values[1]) return course;
     } else if (
       course?.title
         .replace(/ /g, "")
@@ -88,9 +89,9 @@ export const Courses = () => {
           course_name?.replace(/ /g, "").replace("آ", "ا").toLowerCase()
         )
     ) {
-      if (course.price >= values[0] && course.price <= values[1]) return course;
+      if (course.cost >= values[0] && course.cost <= values[1]) return course;
     } else if (
-      course?.teacher
+      course?.teacherName
         .replace(/ /g, "")
         .replace("آ", "ا")
         .toLowerCase()
@@ -98,24 +99,24 @@ export const Courses = () => {
           teacher_name?.replace(/ /g, "").replace("آ", "ا").toLowerCase()
         )
     ) {
-      if (course.price >= values[0] && course.price <= values[1]) return course;
+      if (course.cost >= values[0] && course.cost <= values[1]) return course;
     }
   });
 
-  if (courseFilterBy) {
+  if (course_filter_by) {
     const newArray = [...filteredData];
-    if (courseFilterBy === "expensive")
-      newArray.sort((a, b) => b.price - a.price);
-    if (courseFilterBy === "cheapest")
-      newArray.sort((a, b) => a.price - b.price);
-    if (courseFilterBy === "popular")
-      newArray.sort((a, b) => b.likes - a.likes);
+    if (course_filter_by === "expensive")
+      newArray.sort((a, b) => b.cost - a.cost);
+    if (course_filter_by === "cheapest")
+      newArray.sort((a, b) => a.cost - b.cost);
+    if (course_filter_by === "popular")
+      newArray.sort((a, b) => b.likeCount - a.likeCount);
 
     filteredData = newArray;
   }
 
   return (
-    <div className="max-w-[1900px] mx-auto flex flex-col items-start justify-center gap-y-10 p-20">
+    <div className="max-w-[1900px] bg-gra mx-auto flex flex-col items-start justify-center gap-y-10 p-10 2xl:p-20">
       <div className="flex justify-center items-center">
         <NavigatorTracer />
       </div>
@@ -123,7 +124,10 @@ export const Courses = () => {
       <Seperator />
       <div
         className={cn(
-          "w-full flex flex-col xl:flex-row items-start justify-between gap-x-10"
+          "flex flex-col xl:flex-row items-start justify-between gap-x-5",
+          isVertical
+            ? "w-full"
+            : "w-3/4 lg:w-3/5 xl:w-4/6 2xl:w-full mx-auto xl:mx-0"
         )}
       >
         {/* Filter div */}
@@ -136,7 +140,7 @@ export const Courses = () => {
           <Menu className="h-10 w-10" />
         </button>
         {/* Grid div */}
-        <div className="w-full flex flex-col justify-center items-start gap-y-5">
+        <div className="w-full flex flex-col justify-center items-start gap-y-10">
           {/* FilterDiv */}
           <div className="hidden xl:flex justify-between items-center w-full">
             <div>
@@ -148,7 +152,7 @@ export const Courses = () => {
             </div>
             <div className="flex justify-center items-center gap-x-5">
               <Select
-                queryName="courseFilterBy"
+                queryName="course_filter_by"
                 placeholder="جستجو بر اساس"
                 filters={orderBy}
                 className="py-3 px-5"
@@ -170,12 +174,12 @@ export const Courses = () => {
             <div className="w-full">
               <CourseCards
                 courses={filteredData}
-                itemsPerPage={itemsPerPage | 6}
+                itemsPerPage={items_per_page | 6}
                 isVertical={isVertical}
               />
             </div>
           ) : (
-            <div className="w-full flex flex-col gap-3 items-center justify-center my-52 dark:bg-[#1E1F22]">
+            <div className="w-full flex flex-col gap-3 items-center justify-center my-52 dark:bg-gray-800">
               <BookX className="w-12 h-12 text-gray-600/90 dark:text-gray-300" />
               <p className="text-zinc dark:text-gray-300 text-xl">
                 درس مورد نظر پیدا نشد

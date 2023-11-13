@@ -31,7 +31,7 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
     <>
       <div
         className={cn(
-          "w-full grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-x-20 gap-y-5 justify-center items-center",
+          "w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-20 md:gap-20 xl:gap-32 2xl:gap-10",
           !isVertical && "hidden"
         )}
       >
@@ -41,7 +41,7 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
       </div>
       <div
         className={cn(
-          "w-full  flex flex-col items-center gap-y-10",
+          "w-full flex flex-col items-center gap-y-10",
           isVertical && "hidden"
         )}
       >
@@ -64,7 +64,7 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
           pageLinkClassName="border-2 border-gray-300 shadow-sm rounded-full w-10 h-10 flex items-center justify-center text-xl text-gray-400/60 hover:border-gray-400 transition"
           nextLinkClassName="border-2 border-gray-300 shadow-sm rounded-full w-10 h-10 flex items-center justify-center text-4xl text-gray-400/60 hover:text-gray-500/80 hover:border-gray-400 transition"
           previousLinkClassName="border-2 border-gray-300 shadow-sm rounded-full w-10 h-10 flex items-center justify-center text-4xl text-gray-400/60 hover:text-gray-500/80 hover:border-gray-400 transition"
-          activeLinkClassName="border-2 border-gray-300 shadow-sm rounded-full w-10 h-10 flex items-center justify-center text-4xl text-gray-400/60 bg-primary text-white hover:border-gray-300 hover:text-white"
+          activeLinkClassName="border-2 border-gray-300 shadow-sm rounded-full w-10 h-10 flex items-center justify-center text-4xl text-gray-400/60 bg-primary dark:bg-dark-primary text-white hover:border-gray-300 hover:text-white"
           disabledLinkClassName="border-2 border-gray-300 shadow-sm rounded-full w-10 h-10 flex items-center justify-center text-4xl text-gray-400/60"
           onPageChange={handlePageClick}
           pageRangeDisplayed={2}
@@ -75,7 +75,7 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
           renderOnZeroPageCount={null}
         />
         <Select
-          queryName="items-per-page"
+          queryName="items_per_page"
           filters={filters}
           className="px-2 py-1 text-center"
         />

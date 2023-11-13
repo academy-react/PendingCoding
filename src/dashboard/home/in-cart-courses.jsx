@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import toast from "react-hot-toast";
 
-import { useUser } from "../../components/providers/user-provider";
+import { useUser } from "../../hooks/use-user";
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 
 export const InCartCourses = () => {
@@ -138,142 +138,150 @@ export const InCartCourses = () => {
 
   return (
     <div className="relative w-full shadow-md sm:rounded-lg">
-      <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-6 py-3"></th>
-            <th scope="col" className="px-6 py-3">
-              <div
-                onClick={handleFilter}
-                className="flex items-center justify-start gap-x-1 cursor-pointer"
-              >
-                <p>نام</p>
-                {isAsc ? (
-                  <ChevronDown className="h-4 w-4 text-gray-400" />
-                ) : (
-                  <ChevronUp className="h-4 w-4 text-gray-400" />
-                )}
-              </div>
-            </th>
-            <th scope="col" className="px-6 py-3">
-              <div
-                onClick={handleFilter}
-                className="flex items-center justify-start gap-x-1 cursor-pointer"
-              >
-                <p>نام استاد</p>
-                {isAsc ? (
-                  <ChevronDown className="h-4 w-4 text-gray-400" />
-                ) : (
-                  <ChevronUp className="h-4 w-4 text-gray-400" />
-                )}
-              </div>
-            </th>
-            <th scope="col" className="px-6 py-3">
-              <div
-                onClick={handleFilter}
-                className="flex items-center justify-start gap-x-1 cursor-pointer"
-              >
-                <p>تاریخ شروع</p>
-                {isAsc ? (
-                  <ChevronDown className="h-4 w-4 text-gray-400" />
-                ) : (
-                  <ChevronUp className="h-4 w-4 text-gray-400" />
-                )}
-              </div>
-            </th>
-            <th scope="col" className="px-6 py-3">
-              <div
-                onClick={handleFilter}
-                className="flex items-center justify-start gap-x-1 cursor-pointer"
-              >
-                <p>تاریخ پایان</p>
-                {isAsc ? (
-                  <ChevronDown className="h-4 w-4 text-gray-400" />
-                ) : (
-                  <ChevronUp className="h-4 w-4 text-gray-400" />
-                )}
-              </div>
-            </th>
-            <th scope="col" className="px-6 py-3">
-              <div
-                onClick={handleFilter}
-                className="flex items-center justify-start gap-x-1 cursor-pointer"
-              >
-                <p>قیمت</p>
-                {isAsc ? (
-                  <ChevronDown className="h-4 w-4 text-gray-400" />
-                ) : (
-                  <ChevronUp className="h-4 w-4 text-gray-400" />
-                )}
-              </div>
-            </th>
-            <th scope="col" className="px-6 py-3" />
-          </tr>
-        </thead>
-        <tbody>
-          {filteredCart.map((course) => (
-            <tr
-              key={course.id}
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-            >
-              <th
-                scope="row"
-                className="max-w-[300px] px-0 py-2 flex items-center justify-center"
-              >
-                <img
-                  src={course.image}
-                  alt="courseImage"
-                  className="object-fill w-10 h-10 rounded-full"
-                />
+      {filteredCart.length === 0 ? (
+        <div>
+          <p className="text-xl text-gray-600 dark:text-gray-300 text-center">
+            دوره‌ای در سبد خریدتان نیست
+          </p>
+        </div>
+      ) : (
+        <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3"></th>
+              <th scope="col" className="px-6 py-3">
+                <div
+                  onClick={handleFilter}
+                  className="flex items-center justify-start gap-x-1 cursor-pointer"
+                >
+                  <p>نام</p>
+                  {isAsc ? (
+                    <ChevronDown className="h-4 w-4 text-gray-400" />
+                  ) : (
+                    <ChevronUp className="h-4 w-4 text-gray-400" />
+                  )}
+                </div>
               </th>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <Link
-                  to={`/courses/${course.id}`}
-                  className="text-gray-500 hover:text-gray-800 transition"
+              <th scope="col" className="px-6 py-3">
+                <div
+                  onClick={handleFilter}
+                  className="flex items-center justify-start gap-x-1 cursor-pointer"
                 >
-                  {course.title}
-                </Link>
+                  <p>نام استاد</p>
+                  {isAsc ? (
+                    <ChevronDown className="h-4 w-4 text-gray-400" />
+                  ) : (
+                    <ChevronUp className="h-4 w-4 text-gray-400" />
+                  )}
+                </div>
               </th>
-              <td className="px-6 py-4">{course.teacher}</td>
-              <td className="px-6 py-4">{`${getPersianNumbers(
-                startDate(course)?.[2],
-                true
-              )} ${months[startDate(course)?.[1] - 1]} ${getPersianNumbers(
-                startDate(course)?.[0],
-                true
-              )}`}</td>
-              <td className="px-6 py-4">{`${getPersianNumbers(
-                endDate(course)?.[2]
-              )} ${months[endDate(course)?.[1] - 1]} ${getPersianNumbers(
-                endDate(course)?.[0],
-                true
-              )}`}</td>
-              <td className="px-6 py-4">
-                {getPersianNumbers(course.price, false)}
-              </td>
-              <td className="max-w-[80px] flex items-center justify-center gap-x-5 px-6 py-4">
-                <button
-                  onClick={() => handleCheckout(course)}
-                  disabled={isLoading}
-                  className="bg-primary hover:bg-primary/80 disabled:bg-primary/70 text-white hover:text-white/80 disabled:text-white/80 px-5 py-2 rounded-xl"
+              <th scope="col" className="px-6 py-3">
+                <div
+                  onClick={handleFilter}
+                  className="flex items-center justify-start gap-x-1 cursor-pointer"
                 >
-                  تسویه
-                </button>
-                <button
-                  onClick={() => handleDelete(course.id)}
-                  disabled={isLoading}
-                  className="bg-destructive hover:bg-destructive/80 disabled:bg-destructive/70 text-white hover:text-white/80 disabled:text-white/80 px-5 py-2 rounded-xl"
+                  <p>تاریخ شروع</p>
+                  {isAsc ? (
+                    <ChevronDown className="h-4 w-4 text-gray-400" />
+                  ) : (
+                    <ChevronUp className="h-4 w-4 text-gray-400" />
+                  )}
+                </div>
+              </th>
+              <th scope="col" className="px-6 py-3">
+                <div
+                  onClick={handleFilter}
+                  className="flex items-center justify-start gap-x-1 cursor-pointer"
                 >
-                  حذف
-                </button>
-              </td>
+                  <p>تاریخ پایان</p>
+                  {isAsc ? (
+                    <ChevronDown className="h-4 w-4 text-gray-400" />
+                  ) : (
+                    <ChevronUp className="h-4 w-4 text-gray-400" />
+                  )}
+                </div>
+              </th>
+              <th scope="col" className="px-6 py-3">
+                <div
+                  onClick={handleFilter}
+                  className="flex items-center justify-start gap-x-1 cursor-pointer"
+                >
+                  <p>قیمت</p>
+                  {isAsc ? (
+                    <ChevronDown className="h-4 w-4 text-gray-400" />
+                  ) : (
+                    <ChevronUp className="h-4 w-4 text-gray-400" />
+                  )}
+                </div>
+              </th>
+              <th scope="col" className="px-6 py-3" />
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredCart.map((course) => (
+              <tr
+                key={course.id}
+                className="bg-white border-b dark:bg-gray-900/60 dark:border-gray-800/60"
+              >
+                <th
+                  scope="row"
+                  className="max-w-[300px] px-0 py-2 flex items-center justify-center"
+                >
+                  <img
+                    src={course.image}
+                    alt="courseImage"
+                    className="object-fill w-10 h-10 rounded-full"
+                  />
+                </th>
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  <Link
+                    to={`/courses/${course.id}`}
+                    className="text-gray-500 hover:text-gray-800 transition"
+                  >
+                    {course.title}
+                  </Link>
+                </th>
+                <td className="px-6 py-4">{course.teacher}</td>
+                <td className="px-6 py-4">{`${getPersianNumbers(
+                  startDate(course)?.[2],
+                  true
+                )} ${months[startDate(course)?.[1] - 1]} ${getPersianNumbers(
+                  startDate(course)?.[0],
+                  true
+                )}`}</td>
+                <td className="px-6 py-4">{`${getPersianNumbers(
+                  endDate(course)?.[2]
+                )} ${months[endDate(course)?.[1] - 1]} ${getPersianNumbers(
+                  endDate(course)?.[0],
+                  true
+                )}`}</td>
+                <td className="px-6 py-4">
+                  {getPersianNumbers(course.price, false)}
+                </td>
+                <td className="max-w-[80px] flex items-center justify-center gap-x-5 px-6 py-4">
+                  <button
+                    onClick={() => handleCheckout(course)}
+                    disabled={isLoading}
+                    className="bg-primary hover:bg-primary/80 dark:bg-dark-primary dark:hover:bg-dark-primary/80 disabled:bg-primary/70 text-white hover:text-white/80 disabled:text-white/80 px-5 py-2 rounded-xl"
+                  >
+                    تسویه
+                  </button>
+                  <button
+                    onClick={() => handleDelete(course.id)}
+                    disabled={isLoading}
+                    className="bg-destructive hover:bg-destructive/80 dark:bg-dark-destructive dark:hover:bg-dark-destructive/80 disabled:bg-destructive/70 text-white hover:text-white/80 disabled:text-white/80 px-5 py-2 rounded-xl"
+                  >
+                    حذف
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

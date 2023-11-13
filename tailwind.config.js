@@ -8,6 +8,7 @@ export default {
         primary: "#5c55c9",
         destructive: "#dd3359",
         "dark-primary": "#494495",
+        "dark-destructive": "#d23357",
       },
       transitionProperty: {
         width: "width",

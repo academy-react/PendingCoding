@@ -1,10 +1,9 @@
 import {
+  Calendar,
   Clock,
-  Eye,
   LayoutDashboard,
   MessagesSquare,
   MoveLeft,
-  Tags,
   ThumbsDown,
   ThumbsUp,
   User2,
@@ -12,9 +11,10 @@ import {
 import { Link } from "react-router-dom";
 
 import { getPersianNumbers } from "../../libs/get-persian-numbers";
+import { TooTip } from "../components/tool-tip";
 
 export const HorizontalCard = ({ blog }) => {
-  const [year, month, day] = new Date(blog.startDate)
+  const updateDate = new Date(blog?.updateDate)
     .toLocaleDateString("fa-IR-u-nu-latn")
     .split("/");
   const months = [
@@ -33,54 +33,46 @@ export const HorizontalCard = ({ blog }) => {
   ];
 
   return (
-    <div className="w-full flex flex-col xl:flex-row items-center justify-center bg-white rounded-lg shadow-lg xl:px-10 py-5">
+    <div className="w-full flex flex-col xl:flex-row items-center justify-center bg-gray-100 dark:bg-gray-600 rounded-lg shadow-lg xl:px-10 py-5">
       <img
         loading="lazy"
-        src={blog.image}
+        src={blog.currentImageAddressTumb}
         alt="blogImage"
-        className="h-1/3 w-1/3 rounded-xl"
+        className="xl:h-1/3 xl:w-1/3 object-contain rounded-xl"
       />
-      <div className="flex flex-col justify-start items-center gap-y-5 w-full px-10">
+      <div className="flex flex-col justify-start items-center gap-y-10 w-full px-10">
         <div className="self-center xl:self-start mt-5 xl:mt-0">
-          <h1 className="text-lg text-gray-600 mr-5">{blog.title}</h1>
+          <h1 className="text-lg text-gray-600 dark:text-gray-200 mr-5">
+            {blog.title}
+          </h1>
         </div>
         <div className="w-full px-5 flex flex-col md:flex-row justify-between items-center gap-y-5">
-          <span className="text-gray-500 text-sm flex items-center justify-center gap-x-1">
-            <User2 className="h-5 w-5 text-primary" />
-            ادمین
+          <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
+            <User2 className="h-5 w-5 text-primary dark:text-gray-200/80" />
+            {blog.addUserFullName}
           </span>
-          <span className="text-gray-500 text-sm flex items-center justify-center gap-x-1">
-            <LayoutDashboard className="h-5 w-5 text-primary" />
-            {blog.category}
+          <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
+            <LayoutDashboard className="h-5 w-5 text-primary dark:text-gray-200/80" />
+            {blog.newsCatregoryName ? "مقالات" : "خبر "}
           </span>
-          <span className="text-gray-500 text-sm flex items-center justify-center gap-x-1">
-            <Clock className="h-5 w-5 text-primary" />
-            {`${getPersianNumbers(day)} ${
-              months[month - 1]
-            } ${getPersianNumbers(year, true)}`}
-          </span>
-          <span className="flex items-center justify-center gap-x-1">
-            <MessagesSquare className="h-5 w-5 text-primary" />
-            {getPersianNumbers(blog.comments, false)}
-          </span>
-          <span className="flex items-center justify-center gap-x-1">
-            <ThumbsUp className="h-5 w-5 text-primary" />
-            {getPersianNumbers(blog.likes, false)}
-          </span>
-          <span className="flex items-center justify-center gap-x-1">
-            <ThumbsDown className="h-5 w-5 text-primary" />
-            {getPersianNumbers(blog.dislikes, false)}
-          </span>
+          <TooTip name="آخرین بروزرسانی">
+            <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
+              <Calendar className="h-4 w-4 text-primary dark:text-gray-200/80" />
+              {`${getPersianNumbers(updateDate?.[2], true)} ${
+                months[updateDate?.[1] - 1]
+              } ${getPersianNumbers(updateDate?.[0], true)}`}
+            </span>
+          </TooTip>
         </div>
         <span className="w-full">
-          <p className="text-gray-500 text-justify line-clamp-6">
-            {blog.description}
+          <p className="text-gray-500 dark:text-gray-200/80 text-justify line-clamp-6">
+            {blog.miniDescribe}
           </p>
         </span>
         <div className="w-full border border-gray-300" />
         <Link
           to={`/blogs/${blog.id}`}
-          className="flex justify-center items-center gap-x-2 text-gray-500 hover:text-gray-800 transition mr-auto"
+          className="flex justify-center items-center gap-x-2 text-primary hover:text-primary/80 dark:text-gray-200 dark:hover:text-gray-200/80 transition mr-auto"
         >
           مشاهده {blog.isBlog ? "مقاله" : "خبر"}
           <MoveLeft />

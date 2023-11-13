@@ -3,13 +3,13 @@ import toast from "react-hot-toast";
 import { Star } from "lucide-react";
 import { useQuery } from "react-query";
 
-import { useUser } from "./providers/user-provider";
+import { useUser } from "../hooks/use-user";
 
-import { apiCall } from "../../libs/api-call";
+import { apiCall } from "../core/services/interceptor/api-call";
 import { useTheme } from "./providers/theme-provider";
 
 export const StarRate = ({ data, queryKey }) => {
-  const [rating, setRating] = useState(data?.stars | null);
+  const [rating, setRating] = useState(data?.likeCount | null);
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { isDarkTheme } = useTheme();
@@ -59,7 +59,7 @@ export const StarRate = ({ data, queryKey }) => {
           <button
             key={index}
             disabled={isAllowed}
-            className="disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer text-primary/70 dark:text-[#5d52ff] hover:text-primary dark:hover:text-[#5d52ff]"
+            className="disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer text-primary/70 dark:text-[#4d41ff] hover:text-primary dark:hover:text-[#8d85ff]"
           >
             <input
               disabled={isAllowed}
@@ -73,7 +73,7 @@ export const StarRate = ({ data, queryKey }) => {
               fill={
                 currentRate <= rating
                   ? isDarkTheme
-                    ? "#5d52ff"
+                    ? "#4d41ff"
                     : "#3730A3"
                   : isDarkTheme
                   ? "#d2d2d2"

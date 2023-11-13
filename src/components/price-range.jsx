@@ -16,10 +16,12 @@ export const PriceRange = ({ values, setValues }) => {
 
   return (
     <div className="w-full rounded-xl">
-      <h3 className="text-sm text-[#3f4656] w-full">قیمت</h3>
+      <h1 className="text-base text-gray-500 dark:text-gray-300/90 mb-2">
+        قیمت
+      </h1>
       <div className="my-10">
         <RangeSlider
-          className="bg-gray-200"
+          className="bg-gray-200 dark:bg-gray-300/80"
           value={values}
           min={0}
           max={4000000}
@@ -30,14 +32,16 @@ export const PriceRange = ({ values, setValues }) => {
       <div className="flex items-center justify-center gap-x-2">
         {/* MIN */}
         <div className="flex flex-col items-start justify-center gap-y-1">
-          <h4 className="text-sm text-gray-500">حداقل</h4>
-          <div className="flex justify-between items-center gap-x-3 outline-none bg-[#EEEEEE] text-primary dark:text-gray-800 border-2 rounded-full py-2 px-3 duration-200 border-gray-300 focus:border-gray-400">
+          <h1 className="text-sm text-gray-500 dark:text-gray-300/90 mb-2">
+            حداقل
+          </h1>
+          <div className="flex justify-between items-center gap-x-3 outline-none bg-gray-100 dark:bg-gray-300 text-primary dark:text-gray-800 border-2 rounded-full py-2 px-3 duration-200 border-gray-300 focus:border-gray-400">
             <h4 className="text-sm text-gray-500">تومان</h4>
             <input
               value={values?.[0]}
               onChange={handleMin}
               type="number"
-              className="disabled:cursor-not-allowed w-20 text-left outline-none bg-[#EEEEEE] text-primary dark:text-gray-800 rounded-full duration-200"
+              className="disabled:cursor-not-allowed w-20 text-left outline-none bg-gray-100 dark:bg-gray-300 text-primary dark:text-gray-800 rounded-full duration-200"
             />
           </div>
         </div>
@@ -46,14 +50,16 @@ export const PriceRange = ({ values, setValues }) => {
 
         {/* MAX */}
         <div className="flex flex-col items-start justify-center gap-y-1">
-          <h4 className="text-sm text-gray-500">حداکثر</h4>
-          <div className="flex justify-between items-center gap-x-3 outline-none bg-[#EEEEEE] text-primary dark:text-gray-800 border-2 rounded-full py-2 px-3 duration-200 border-gray-300 focus:border-gray-400">
+          <h1 className="text-sm text-gray-500 dark:text-gray-300/90 mb-2">
+            حداکثر
+          </h1>
+          <div className="flex justify-between items-center gap-x-3 outline-none bg-gray-100 dark:bg-gray-300 text-primary dark:text-gray-800 border-2 rounded-full py-2 px-3 duration-200 border-gray-300 focus:border-gray-400">
             <h4 className="text-sm text-gray-500">تومان</h4>
             <input
               value={values?.[1]}
               onChange={handleMax}
               type="number"
-              className="disabled:cursor-not-allowed w-20 text-left outline-none bg-[#EEEEEE] text-primary dark:text-gray-800 rounded-full duration-200"
+              className="disabled:cursor-not-allowed w-20 text-left outline-none bg-gray-100 dark:bg-gray-300 text-primary dark:text-gray-800 rounded-full duration-200"
             />
           </div>
         </div>

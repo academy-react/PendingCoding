@@ -1,0 +1,115 @@
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { toast } from "react-hot-toast";
+
+import { useModal } from "../../hooks/use-modal-store";
+
+const UserContext = createContext(null);
+
+function useUser() {
+  return useContext(UserContext);
+}
+
+function UserProvider({ children }) {
+  const { onClose } = useModal();
+
+  const currentUser = useMemo(() => );
+  let userInfo = useMemo(() => currentUser, [currentUser]);
+
+  const addToCart = (course) => {
+    const newObj = {
+      ...userInfo,
+      cart: userInfo.cart.find((cartItem) => cartItem.id === course.id)
+        ? [...userInfo.cart]
+        : [...userInfo.cart, { ...course }],
+    };
+    userInfo = newObj;
+    localStorage.setItem("user", JSON.stringify(newObj));
+    toast.success("دوره به سبدتون اضافه شد");
+    onClose();
+  };
+
+  const removeFromCart = (id) => {
+    const newObj = {
+      ...userInfo,
+      cart: userInfo.cart.filter((cartItem) => cartItem.id !== id),
+    };
+    userInfo = newObj;
+    userInfo.cart.length === 1 && onClose();
+    localStorage.setItem("user", JSON.stringify(newObj));
+  };
+
+  const checkout = (course) => {
+    const newObj = {
+      ...userInfo,
+      cart: userInfo.cart.filter((c) => c.id !== course.id),
+      myCourses: userInfo.myCourses.find((mc) => mc.id === course.id)
+        ? [...userInfo.myCourses]
+        : [...userInfo.myCourses, { ...course }],
+    };
+    userInfo = newObj;
+    localStorage.setItem("user", JSON.stringify(newObj));
+  };
+
+  // const increase = (id) => {
+  //   const newObj = {
+  //     ...userInfo,
+  //     cart: userInfo.cart.map((cartItem) =>
+  //       cartItem.id === id
+  //         ? { ...cartItem, count: cartItem.count + 1 }
+  //         : cartItem
+  //     ),
+  //   };
+  //   userInfo=(newObj);
+  //   localStorage.setItem("user", JSON.stringify(newObj));
+  // };
+
+  // const decrease = (id) => {
+  //   const newObj = {
+  //     ...userInfo,
+  //     cart: userInfo.cart.map((cartItem) =>
+  //       cartItem.id === id
+  //         ? { ...cartItem, count: cartItem.count > 1 ? cartItem.count - 1 : 1 }
+  //         : cartItem
+  //     ),
+  //   };
+  //   userInfo=(newObj);
+  //   localStorage.setItem("user", JSON.stringify(newObj));
+  // };
+
+  const addToFavorites = (course) => {
+    const newObj = {
+      ...userInfo,
+      favorites: [...userInfo.favorites, { ...course }],
+    };
+    localStorage.setItem("user", JSON.stringify(newObj));
+    toast.success("به علاقه مندی اضافه شد");
+  };
+
+  const removeFromFavorites = (course) => {
+    const favorites = userInfo?.favorites.filter((f) => f.id !== course.id);
+
+    const newObj = {
+      ...userInfo,
+      favorites,
+    };
+    localStorage.setItem("user", JSON.stringify(newObj));
+    toast.success("از لیست علاقه مندی ها حذف شد");
+  };
+
+  return (
+    <UserContext.Provider
+      value={{
+        userData: userInfo,
+        addToCart,
+        removeFromCart,
+        checkout,
+        addToFavorites,
+        removeFromFavorites,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
+}
+
+export { UserProvider, useUser };

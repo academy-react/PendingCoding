@@ -1,10 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-
-import { useModal } from "../hooks/use-modal-store";
-import { useUser } from "./providers/user-provider";
 import { useQuery } from "react-query";
 import toast from "react-hot-toast";
+
+import { useModal } from "../hooks/use-modal-store";
+import { useUser } from "../hooks/use-user";
 
 const backdrop = {
   hidden: {
