@@ -2,8 +2,8 @@ import { useLayoutEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 
-import { apiCall } from "../../../libs/api-call";
-import { getCourses } from "../../../libs/get-courses";
+import { apiCall } from "../../core/services/interceptor/api-call";
+import { getCourses } from "../../core/services/api/get-courses";
 
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";

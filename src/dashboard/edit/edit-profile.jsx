@@ -9,7 +9,7 @@ import DatePicker from "@hassanmojab/react-modern-calendar-datepicker";
 import { useUser } from "../../hooks/use-user";
 import { ImageUpload } from "../../components/image-upload";
 
-import { uploadApi } from "../../../libs/uploadApi";
+import { uploadApi} from "../../core/services/interceptor/uploadApi"
 
 import defaultProfile from "../../assets/my-profile.jpg";
 

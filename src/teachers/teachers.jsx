@@ -15,7 +15,7 @@ import { TeacherCards } from "./teacher-cards";
 import { useModal } from "../hooks/use-modal-store";
 
 import { cn } from "../../libs/utils";
-import { getCourses } from "../../libs/get-courses";
+import { getCourses } from "../core/services/api/get-courses";
 
 const orderBy = [
   {

@@ -3,25 +3,47 @@ import { Clock, Eye, Tags, User2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { getPersianNumbers } from "../../libs/get-persian-numbers";
+import { useUser } from "../hooks/use-user";
 
 import { StarRate } from "../components/starRate";
-import { useUser } from "../hooks/use-user";
+import { TooTip } from "../components/tool-tip";
+
+import defaultCourseImage from "../assets/python.jpg";
+import defaultImageProfile from "../assets/my-profile.jpg";
 
 export const VerticalCard = ({ course }) => {
   const { userData } = useUser();
 
   const isPurchased = useMemo(
     () =>
-      userData?.cart?.some((c) => c.id === course.id) ||
-      userData?.myCourses.some((c) => c.id === course.id),
-    [userData, course.id]
+      userData?.cart?.some((c) => c.courseId === course.courseId) ||
+      userData?.myCourses.some((c) => c.courseId === course.courseId),
+    [userData, course.courseId]
   );
+
+  const lastUpdate = new Date(course?.lastUpdate)
+    .toLocaleDateString("fa-IR-u-nu-latn")
+    .split("/");
+  const months = [
+    "فروردين",
+    "ارديبهشت",
+    "خرداد",
+    "تير",
+    "مرداد",
+    "شهريور",
+    "مهر",
+    "آبان",
+    "آذر",
+    "دي",
+    "بهمن",
+    "اسفند",
+  ];
 
   return (
     <div className="w-[320px] flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg overflow-hidden self-center justify-self-center">
       <img
         loading="lazy"
-        src={course.image}
+        src={course.tumbImageAddress || defaultCourseImage}
         alt="CourseImage"
         className="w-full"
       />
@@ -33,12 +55,16 @@ export const VerticalCard = ({ course }) => {
       <div className="w-full px-5 flex justify-between items-center">
         <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
           <User2 className="h-4 w-4 text-primary dark:text-gray-200/80" />
-          {getPersianNumbers(course.students, false)}
+          {getPersianNumbers(course.currentRegistrants, false)}
         </span>
-        <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
-          <Clock className="h-4 w-4 text-primary dark:text-gray-200/80" />
-          {getPersianNumbers(course.time, false)} ساعت
-        </span>
+        <TooTip name="آخرین بروزرسانی">
+          <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
+            <Clock className="h-4 w-4 text-primary dark:text-gray-200/80" />
+            {`${getPersianNumbers(lastUpdate?.[2], true)} ${
+              months[lastUpdate?.[1] - 1]
+            } ${getPersianNumbers(lastUpdate?.[0], true)}`}
+          </span>
+        </TooTip>
         <span className="flex flex-row-reverse items-center justify-center gap-x-1">
           <StarRate data={course} queryKey="courses" />
         </span>
@@ -46,17 +72,17 @@ export const VerticalCard = ({ course }) => {
       <div className="flex justify-start w-full items-center px-3 py-2">
         <img
           loading="lazy"
-          src={course.teacherAvatar}
+          src={course.teacherAvatar || defaultImageProfile}
           className="w-14 h-14 rounded-full"
           alt="TeacherProfile"
         />
         <span className="flex flex-col justify-center items-start gap-y-1 px-3 py-1">
           <h2 className="text-gray-600 dark:text-gray-200/80 text-base">
-            {course.teacher}
+            {course.teacherName}
           </h2>
           <span className="bg-[#818CF8] dark:bg-[#6770c5] rounded-full px-2 py-1">
             <h5 className="text-white dark:text-white/80 text-sm">
-              {course.teacher}
+              {course.levelName}
             </h5>
           </span>
         </span>
@@ -67,14 +93,14 @@ export const VerticalCard = ({ course }) => {
           <h5 className="text-gray-600 dark:text-gray-200/80 flex justify-center items-center gap-x-1">
             قیمت :
             <p className="text-primary dark:text-gray-200">
-              {getPersianNumbers(course.price, false)}
+              {getPersianNumbers(course.cost, false)}
             </p>
             تومان
           </h5>
         </span>
         {isPurchased ? (
           <Link
-            to={`/courses/${course.id}`}
+            to={`/courses/${course.courseId}`}
             className="flex justify-center items-center gap-x-1 text-gray-500 dark:text-gray-200/80 hover:text-gray-800 dark:hover:text-gray-100 transition"
           >
             <Eye />
@@ -82,7 +108,7 @@ export const VerticalCard = ({ course }) => {
           </Link>
         ) : (
           <Link
-            to={`/courses/${course.id}`}
+            to={`/courses/${course.courseId}`}
             className="flex justify-center items-center gap-x-1 text-primary/80 dark:text-gray-200/80 hover:text-primary  dark:hover:text-gray-100 transition"
           >
             <Tags className="rotate-90" />

@@ -1,83 +1,89 @@
 import { Mail } from "lucide-react";
 
 import { useModal } from "../hooks/use-modal-store";
+import { useQuery } from "react-query";
+import { getUserById } from "../core/services/api/user";
+import { useLayoutEffect, useState } from "react";
+import { Loading } from "./loading";
+import { Error } from "./error";
+import { CommentRespond } from "./comment-respond";
 
-export const CommentCard = ({ image, name, createdAt, comment, responds }) => {
+export const CommentCard = ({
+  comment,
+  postDate,
+  userId,
+  likes,
+  replyCount,
+}) => {
+  const [isMounted, setIsMounted] = useState(false);
   const { onOpen } = useModal();
 
   const differenceInDays = Math.round(
-    (new Date().getTime() - new Date(createdAt).getTime()) / (1000 * 3600 * 24)
+    (new Date().getTime() - new Date(postDate).getTime()) / (1000 * 3600 * 24)
   );
+
+  const {
+    data: user,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["userData"],
+    queryFn: () => getUserById(userId),
+    enabled: false,
+    staleTime: 5000,
+  });
+
+  useLayoutEffect(() => {
+    if (!isMounted) {
+      setIsMounted(true);
+      refetch();
+    }
+  }, [isMounted, refetch]);
 
   return (
     <>
       <div className="flex flex-col lg:flex-row justify-center items-center py-2 gap-x-10">
-        <div className="w-full lg:w-1/6 flex flex-col justify-center items-center gap-y-3 pb-5 lg:pl-5 lg:border-l border-b lg:border-b-0 border-gray-300 dark:border-gray-500">
-          <img
-            className="w-24 h-24 rounded-full"
-            src={image}
-            alt="teacherAvatar"
-          />
-          <h3 className="text-gray-700 dark:text-gray-200 text-lg flex">
-            {name}
-          </h3>
-          <Mail className="h-4 w-4 text-gray-400 dark:text-gray-300" />
-          <h5 className="text-gray-400 dark:text-gray-300/80 text-sm">
-            {differenceInDays === 0
-              ? "به تازگی"
-              : ` ${differenceInDays} روز پیش`}
-          </h5>
-          <button
-            onClick={() => onOpen("sendRespond")}
-            className="w-1/3 lg:w-full py-2 border-2 border-primary dark:border-dark-primary bg-white/20 dark:bg-gray-300 dark:hover:bg-gray-300/90 hover:bg-gray-100 text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
-          >
-            ارسال پاسخ
-          </button>
-        </div>
-        <p className="w-5/6 self-center leading-9 mt-5 text-gray-600 dark:text-gray-300 text-justify">
-          {comment}
-        </p>
-      </div>
-      {responds.map((item) => (
-        <div
-          key={item.id}
-          className="my-1 border-2 border-gray-300 rounded-xl w-3/4 mx-auto flex flex-col lg:flex-row justify-center items-center px-5 py-2 gap-x-10"
-        >
-          <div className="w-full lg:w-1/6 flex flex-col justify-center items-center gap-y-3 pb-5 lg:pl-5 lg:border-l border-b lg:border-b-0 border-gray-300">
+        {isLoading ? (
+          // <Loading />
+          <></>
+        ) : (
+          <div className="w-full lg:w-1/6 flex flex-col justify-center items-center gap-y-3 pb-5 lg:pl-5 lg:border-l border-b lg:border-b-0 border-gray-300 dark:border-gray-500">
             <img
               className="w-24 h-24 rounded-full"
-              src={item.image}
+              src={user?.currentPictureAddress}
               alt="teacherAvatar"
             />
-            {item.role === "admin" ? (
-              <h1 className="text-gray-700 dark:text-gray-200 text-lg">
-                ادمین
-              </h1>
-            ) : (
-              <div className="flex flex-col items-center justify-center gap-y-2">
-                <h3 className="text-gray-700 dark:text-gray-200 text-lg">
-                  {item.name}
-                </h3>
-                <Mail className="h-4 w-4 text-gray-400 dark:text-gray-300/80" />
-                <h5 className="text-gray-400 dark:text-gray-300/80 text-sm">
-                  {differenceInDays === 0
-                    ? "به تازگی"
-                    : ` ${differenceInDays} روز پیش`}
-                </h5>
-              </div>
-            )}
+            <h3 className="text-gray-700 dark:text-gray-200 text-lg flex">
+              {user?.fname + user?.lname}
+            </h3>
+            <Mail className="h-4 w-4 text-gray-400 dark:text-gray-300" />
+            <h5 className="text-gray-400 dark:text-gray-300/80 text-sm">
+              {differenceInDays === 0
+                ? "به تازگی"
+                : ` ${differenceInDays} روز پیش`}
+            </h5>
             <button
               onClick={() => onOpen("sendRespond")}
-              className="w-1/3 lg:w-full py-2 border-2 border-primary bg-white/20 dark:bg-gray-300 dark:hover:bg-gray-300/90 hover:bg-[#EEEEEE] text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
+              className="w-1/3 lg:w-full py-2 border-2 border-primary dark:border-dark-primary bg-white/20 dark:bg-gray-300 dark:hover:bg-gray-300/90 hover:bg-gray-100 text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
             >
               ارسال پاسخ
             </button>
           </div>
-          <p className="w-5/6 self-center leading-10 mt-5 text-gray-600 dark:text-gray-300 text-justify">
-            {item.respond}
-          </p>
-        </div>
-      ))}
+        )}
+        {isError && <Error />}
+        <p className="w-5/6 self-center leading-9 mt-5 text-gray-600 dark:text-gray-300 text-justify">
+          {comment}
+        </p>
+      </div>
+      {/* {responds.map((res) => (
+        <CommentRespond
+          image={res.image}
+          name={res.name}
+          respond={res.respond}
+          role={res.role}
+        />
+      ))} */}
     </>
   );
 };

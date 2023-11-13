@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import { getPersianNumbers } from "../../libs/get-persian-numbers";
 
 import { StarRate } from "../components/starRate";
+import { TooTip } from "../components/tool-tip";
 
 export const VerticalCard = ({ blog }) => {
-  const [year, month, day] = new Date(blog.startDate)
+  const updateDate = new Date(blog?.updateDate)
     .toLocaleDateString("fa-IR-u-nu-latn")
     .split("/");
   const months = [
@@ -25,8 +26,13 @@ export const VerticalCard = ({ blog }) => {
   ];
 
   return (
-    <div className="w-[350px] mx-auto flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg s  overflow-hidden">
-      <img loading="lazy" src={blog.image} alt="blogImage" className="w-full" />
+    <div className="w-[380px] mx-auto flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg s  overflow-hidden">
+      <img
+        loading="lazy"
+        src={blog.currentImageAddressTumb}
+        alt="blogImage"
+        className="w-full h-80"
+      />
       <div className="self-start">
         <h1 className="text-lg text-gray-600 dark:text-gray-200 mr-5">
           {blog.title}
@@ -35,15 +41,16 @@ export const VerticalCard = ({ blog }) => {
       <div className="w-full px-5 flex justify-between items-center">
         <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
           <User2 className="h-4 w-4 text-primary dark:text-gray-200/80" />
-          ادمین
+          {blog.addUserFullName}
         </span>
-        <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
-          <Calendar className="h-4 w-4 text-primary dark:text-gray-200/80" />
-          {`${getPersianNumbers(day)} ${months[month - 1]} ${getPersianNumbers(
-            year,
-            true
-          )}`}
-        </span>
+        <TooTip name="آخرین بروزرسانی">
+          <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
+            <Calendar className="h-4 w-4 text-primary dark:text-gray-200/80" />
+            {`${getPersianNumbers(updateDate?.[2], true)} ${
+              months[updateDate?.[1] - 1]
+            } ${getPersianNumbers(updateDate?.[0], true)}`}
+          </span>
+        </TooTip>
         <span className="flex flex-row-reverse items-center justify-center gap-x-1">
           <StarRate data={blog} queryKey="courses" />
         </span>
@@ -59,8 +66,8 @@ export const VerticalCard = ({ blog }) => {
       <div className="w-full flex justify-between items-center px-4 pt-2 pb-7">
         <span>
           <h5 className="text-gray-600 dark:text-gray-200/80 flex justify-center items-center gap-x-1">
-            <LayoutDashboard className="h-5 w-5 text-primary" />
-            {blog.isBlog ? "مقاله" : "خبر "}
+            <LayoutDashboard className="h-5 w-5 text-primary dark:text-gray-200/80" />
+            {blog.newsCatregoryName ? "مقالات" : "خبر "}
           </h5>
         </span>
         <Link

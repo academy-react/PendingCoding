@@ -2,6 +2,7 @@ import { SearchInput } from "../../../components/search";
 
 import wavy from "../../../assets/wavy.svg";
 import mirror from "../../../assets/mirror.svg";
+import { SearchResult } from "./search-result";
 
 export const Intro = () => {
   return (
@@ -30,6 +31,7 @@ export const Intro = () => {
             className="w-80 px-6 pl-12 py-3"
             placeholder="جستجو ..."
           />
+          <SearchResult />
         </div>
       </div>
       {/* Image div */}
