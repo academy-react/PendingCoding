@@ -1,12 +1,23 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { Book, Bookmark, Clock, Tags, User2, Users2 } from "lucide-react";
+import {
+  Book,
+  Bookmark,
+  Clock,
+  PersonStanding,
+  Tags,
+  User,
+  User2,
+  Users2,
+} from "lucide-react";
 
-import { apiCall } from "../../../libs/api-call";
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import { useModal } from "../../hooks/use-modal-store";
-import { getCourses } from "../../../libs/get-courses";
+import {
+  getCourseById,
+  getCoursesByPagination,
+} from "../../core/services/api/get-courses";
 
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
@@ -18,11 +29,15 @@ import { NewCourseCard } from "../../components/new-course-card";
 import { Slider } from "./slider";
 import { useUser } from "../../hooks/use-user";
 
-function getCourseById(id) {
-  return apiCall.get(`/items/${id}`);
-}
+import defaultCourseThumbnail from "../../assets/default-course-thumbnail.png";
 
 export const CourseInfo = () => {
+  const { id } = useParams();
+  const [isMounted, setIsMounted] = useState(false);
+  const { isOpen, onOpen } = useModal();
+  const { userData, addToFavorites, removeFromFavorites } = useUser();
+  const [isBookMarked, setIsBookMarked] = useState(false);
+
   const {
     data: course,
     isLoading: courseLoading,
@@ -30,7 +45,7 @@ export const CourseInfo = () => {
     refetch: refetchCourse,
   } = useQuery({
     queryKey: ["courseId"],
-    queryFn: async () => getCourseById(id),
+    queryFn: () => getCourseById(id),
     enabled: false,
   });
 
@@ -41,19 +56,14 @@ export const CourseInfo = () => {
     refetch: refetchCourses,
   } = useQuery({
     queryKey: ["courses"],
-    queryFn: async () => getCourses("/items"),
+    queryFn: () => getCoursesByPagination(6),
     enabled: false,
   });
   const details = [
     {
       id: 1,
       label: "توضیحات",
-      value: `لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون 
-      .و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهایsadasasdadadaas کاربردی می باشد
-      کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای
-      .طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد
-      در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروف چینی
-      .دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد`,
+      value: course?.describe,
     },
     {
       id: 2,
@@ -95,9 +105,9 @@ export const CourseInfo = () => {
       در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروف چینی
       .دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد`,
       teacher: {
-        id: course?.data.teacherId,
-        name: course?.data.teacher,
-        image: course?.data.teacherAvatar,
+        id: course?.teacherId,
+        name: course?.teacher,
+        image: course?.teacherAvatar,
       },
     },
     {
@@ -112,25 +122,25 @@ export const CourseInfo = () => {
           برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می توان امید داشت که تمام
           و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی
            .سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد`,
-          createdAt: course?.data.createdAt,
+          createdAt: course?.createdAt,
           user: {
-            name: course?.data.studentName,
-            image: course?.data?.studentImage,
+            name: course?.studentName,
+            image: course?.studentImage,
           },
           responds: [
             {
-              id: course?.data.teacherId,
-              name: course?.data.teacher,
-              image: course?.data?.teacherAvatar,
+              id: course?.teacherId,
+              name: course?.teacher,
+              image: course?.teacherAvatar,
               respond: `.لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
               چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد
               .نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد`,
               role: "admin",
             },
             {
-              id: course?.data.studentId || 1234,
-              name: course?.data.studentName,
-              image: course?.data?.studentImage,
+              id: course?.studentId || 1234,
+              name: course?.studentName,
+              image: course?.studentImage,
               respond: `.لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است
               چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد
               .نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد`,
@@ -141,12 +151,7 @@ export const CourseInfo = () => {
       ],
     },
   ];
-  const { id } = useParams();
-  const [isMounted, setIsMounted] = useState(false);
   const [selected, setSelected] = useState(details[0].label);
-  const { isOpen, onOpen } = useModal();
-  const { userData, addToFavorites, removeFromFavorites } = useUser();
-  const [isBookMarked, setIsBookMarked] = useState(false);
 
   const isInCart = useMemo(
     () => userData?.cart.some((c) => c.id === id),
@@ -158,8 +163,8 @@ export const CourseInfo = () => {
   );
 
   useEffect(() => {
-    setIsBookMarked(userData?.favorites.some((c) => c.id === course?.data.id));
-  }, [course?.data.id, userData.favorites]);
+    setIsBookMarked(userData?.favorites.some((c) => c.id === course?.id));
+  }, [course?.id, userData.favorites]);
 
   useLayoutEffect(() => {
     if (!isMounted) {
@@ -174,10 +179,10 @@ export const CourseInfo = () => {
   if (courseLoading && coursesLoading) return <Loading />;
   if (courseError && coursesError) return <Error />;
 
-  const startDate = new Date(course?.data.startDate)
+  const startDate = new Date(course?.startTime)
     .toLocaleDateString("fa-IR-u-nu-latn")
     .split("/");
-  const endDate = new Date(course?.data.endDate)
+  const endDate = new Date(course?.endTime)
     .toLocaleDateString("fa-IR-u-nu-latn")
     .split("/");
   const months = [
@@ -194,7 +199,7 @@ export const CourseInfo = () => {
     "بهمن",
     "اسفند",
   ];
-  const registered = course?.data.capacity - course?.data.students;
+  const registered = course?.currentRegistrants;
 
   const handleBookmark = () => {
     if (userData.user) {
@@ -231,22 +236,26 @@ export const CourseInfo = () => {
               دسته بندی
             </h5>
             <h5 className="text-sm text-gray-600/80 dark:text-gray-300/80">
-              {course?.data.category}
+              {course?.category}
             </h5>
           </span>
         </div>
         <div className="flex justify-center items-center gap-x-2">
-          <img
-            src={course?.data.teacherAvatar}
-            alt="teacherAvatar"
-            className="h-10 w-10 rounded-full"
-          />
+          {course?.teacherAvatar ? (
+            <img
+              src={course?.teacherAvatar}
+              alt="teacherAvatar"
+              className="h-10 w-10 rounded-full"
+            />
+          ) : (
+            <User className="dark:text-gray-300/80" />
+          )}
           <span className="flex flex-col justify-center items-start gap-y-2">
             <h5 className="text-sm text-gray-400 dark:text-gray-300">
               استاد :
             </h5>
             <h5 className="text-sm text-gray-600/80 dark:text-gray-300/80">
-              {course?.data.teacher}
+              {course?.teacherName}
             </h5>
           </span>
         </div>
@@ -257,7 +266,7 @@ export const CourseInfo = () => {
         {/* Title Div */}
         <div>
           <h1 className="text-3xl text-gray-700 dark:text-gray-200">
-            {course?.data.title}
+            {course?.title}
           </h1>
         </div>
         {/* Add Div */}
@@ -301,11 +310,13 @@ export const CourseInfo = () => {
       <div className="w-full flex flex-col xl:flex-row justify-between items-center xl:items-start gap-x-5 gap-y-20">
         {/* Course Image & Description */}
         <div className="w-full flex flex-col items-start justify-center gap-y-5">
-          <img
-            className="rounded-xl w-full h-[475px] object-fill"
-            src={course?.data.image}
-            alt="courseImage"
-          />
+          <div className="relative w-full h-[475px]">
+            <img
+              className="rounded-xl w-full h-full"
+              src={course?.imageAddress || defaultCourseThumbnail}
+              alt="courseImage"
+            />
+          </div>
           <div className="w-full flex justify-between items-center gap-x-10">
             {details?.map((datail) => (
               <Header
@@ -335,12 +346,11 @@ export const CourseInfo = () => {
               <User2 className="text-primary dark:text-gray-300/80 h-6 w-6" />
               ظرفیت:
               <h5 className="text-gray-600 dark:text-gray-300/80">
-                {getPersianNumbers(course?.data.capacity, false)}
+                {getPersianNumbers(course?.capacity, false)}
               </h5>
             </span>
             <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
               <Clock className="text-primary dark:text-gray-300/80 h-6 w-6" />
-              تاریخ شروع:
               <h5 className="text-gray-600 dark:text-gray-300/80">
                 {`تاریخ شروع : ${getPersianNumbers(startDate?.[2], true)} ${
                   months[startDate?.[1] - 1]
@@ -349,7 +359,6 @@ export const CourseInfo = () => {
             </span>
             <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
               <Clock className="text-primary dark:text-gray-300/80 h-6 w-6" />
-              تاریخ پایان:
               <h5 className="text-gray-600 dark:text-gray-300/80">
                 {`تاریخ پایان : ${getPersianNumbers(endDate?.[2])} ${
                   months[endDate?.[1] - 1]
@@ -360,7 +369,7 @@ export const CourseInfo = () => {
               <Tags className="text-primary dark:text-gray-300/80 h-6 w-6" />
               قیمت:
               <h5 className="text-gray-600 dark:text-gray-300/80">
-                {`${getPersianNumbers(course?.data.price, false)} تومان`}
+                {`${getPersianNumbers(course?.cost, false)} تومان`}
               </h5>
             </span>
             <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
@@ -384,14 +393,14 @@ export const CourseInfo = () => {
               className="text-xl"
               height="h-9"
             />
-            {courses?.data.slice(0, 3).map((course) => (
+            {courses?.courseFilterDtos.slice(0, 3).map((course) => (
               <NewCourseCard
-                key={course.id}
-                id={course.id}
+                key={course.courseId}
+                id={course.courseId}
                 title={course.title}
-                price={course.price}
-                teacher={course.teacher}
-                image={course.image}
+                price={course.cost}
+                teacher={course.teacherName}
+                image={course.tumbImageAddress}
               />
             ))}
           </div>
@@ -399,7 +408,7 @@ export const CourseInfo = () => {
       </div>
       <div className="w-full flex flex-col items-start justify-center gap-y-10 2xl">
         <Banner title="دوره های مشابه" />
-        <Slider courses={courses?.data} />
+        <Slider courses={courses?.courseFilterDtos} />
         <div></div>
       </div>
     </div>

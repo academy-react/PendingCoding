@@ -1,35 +1,40 @@
-import { getPersianNumbers } from "../../../libs/get-persian-numbers";
-
-import { TeacherLatestImage } from "./teacher-latest-image";
+import { useLayoutEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
 import { ArrowUpLeft } from "lucide-react";
+import { useQuery } from "react-query";
 
-import teacherImage from "../../assets/teacher-prof.svg";
+import { getAllTeachers } from "../../core/services/api/get-teacher";
+
+import { TeacherLatestImage } from "./teacher-latest-image";
+import { Loading } from "../../components/loading";
+import { Error } from "../../components/error";
+
+import { getPersianNumbers } from "../../../libs/get-persian-numbers";
+
 import fun from "../../assets/fun.svg";
-
-const teachers = [
-  {
-    id: 1,
-    name: "دکتر بحرالعلومی",
-    expert: "توسعه دهنده فرانت",
-    image: teacherImage,
-  },
-  {
-    id: 2,
-    name: "دکتر بحرالعلومی",
-    expert: "توسعه دهنده فرانت",
-    image: teacherImage,
-  },
-  {
-    id: 3,
-    name: "دکتر بحرالعلومی",
-    expert: "توسعه دهنده فرانت",
-    image: teacherImage,
-  },
-];
+import defaultImage from "../../assets/my-profile.jpg";
 
 export const Info = () => {
+  const [isMounted, setIsMounted] = useState(false);
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["teachers"],
+    queryFn: () => getAllTeachers(),
+    staleTime: 5000,
+    enabled: false,
+  });
+
+  useLayoutEffect(() => {
+    if (!isMounted) {
+      setIsMounted(true);
+      refetch();
+    }
+  }, [isMounted, refetch]);
+
+  if (!isMounted) return null;
+  if (isError) return <Error />;
+  if (isLoading) return <Loading />;
+
   return (
     <div className="flex flex-col items-center justify-center gap-y-16">
       <h1 className="text-gray-500 dark:text-gray-300 text-4xl xl:text-2xl">
@@ -52,13 +57,13 @@ export const Info = () => {
           </div>
           <div>
             <div className="group flex flex-col items-center xl:items-start justify-center">
-              {teachers.map((teacher, index) => (
+              {data?.slice(0, 3).map((teacher, index) => (
                 <TeacherLatestImage
                   key={teacher.id}
                   id={teacher.id}
                   index={index}
-                  name={teacher.name}
-                  image={teacher.image}
+                  name={teacher.fullName || "امیرعباس"}
+                  image={teacher.pictureAddress || defaultImage}
                 />
               ))}
             </div>

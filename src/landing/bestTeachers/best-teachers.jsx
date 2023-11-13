@@ -1,5 +1,8 @@
 import { MoveDown, MoveUp } from "lucide-react";
 
+import teacher1 from "../../assets/teacher1.svg";
+import teacher2 from "../../assets/teacher2.svg";
+
 export const BestTeachers = ({ teachers }) => {
   return (
     <div className="w-full flex flex-1 justify-center items-center">
@@ -10,13 +13,13 @@ export const BestTeachers = ({ teachers }) => {
               key={teacher.id}
               className="flex flex-col items-center justify-center lg:mt-10 xl:mt-16 gap-y-10"
             >
-              <p className="text-gray-600 dark:text-gray-300 text-lg">
-                {teacher.name}
+              <p className="text-gray-600 dark:text-gray-300 text-lg text-center">
+                {teacher.fullName || "TeacherName"}
                 <MoveUp className="text-gray-400/70 dark:text-gray-400 mx-auto h-16 w-16" />
               </p>
               <span>
                 <img
-                  src={teacher.image}
+                  src={teacher.image || teacher1}
                   alt="TeacherProf"
                   className="object-contain w-44 h-44"
                 />
@@ -29,14 +32,14 @@ export const BestTeachers = ({ teachers }) => {
             >
               <span>
                 <img
-                  src={teacher.image}
+                  src={teacher.image || teacher2}
                   alt="TeacherProf"
                   className="object-contain w-44 h-44"
                 />
               </span>
-              <p className="text-gray-600 dark:text-gray-300 text-lg">
+              <p className="text-gray-600 dark:text-gray-300 text-lg text-center">
                 <MoveDown className="text-gray-400/70 dark:text-gray-400 mx-auto h-16 w-16" />
-                {teacher.name}
+                {teacher.fullName || "TeacherName"}
               </p>
             </div>
           );

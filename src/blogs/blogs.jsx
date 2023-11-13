@@ -3,7 +3,7 @@ import { Grid2x2, Newspaper, Rows } from "lucide-react";
 import { useQuery } from "react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { getCourses } from "../../libs/get-courses";
+import { getAllBlogs } from "../core/services/api/get-blogs";
 
 import NavigatorTracer from "../components/navigator-tracer";
 import { Seperator } from "../components/seperator";
@@ -45,8 +45,8 @@ export const Blogs = () => {
   const [searchParams] = useSearchParams();
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["courses"],
-    queryFn: async () => getCourses("/items"),
+    queryKey: ["blogs"],
+    queryFn: () => getAllBlogs(),
     staleTime: 5000,
     enabled: false,
   });
@@ -68,7 +68,7 @@ export const Blogs = () => {
   const blogFilterBy = searchParams.get("blogFilterBy");
   const itemsPerPage = parseInt(searchParams.get("items-per-page"));
 
-  let filteredData = data?.data.filter((blog) => {
+  let filteredData = data?.news.filter((blog) => {
     if (!blog_name) return blog;
     else if (
       blog?.title
@@ -142,7 +142,7 @@ export const Blogs = () => {
               />
             </div>
           ) : (
-            <div className="w-full flex flex-col gap-3 items-center justify-center my-52 dark:bg-[#1E1F22]">
+            <div className="w-full flex flex-col gap-3 items-center justify-center my-52 dark:bg-gray-800">
               <Newspaper className="w-12 h-12 text-gray-600/90 dark:text-gray-300" />
               <p className="text-zinc dark:text-gray-300 text-xl">
                 بلاگ مورد نظر پیدا نشد

@@ -67,11 +67,11 @@ export const Description = ({ details, selected }) => {
           {details.comments.map((item) => (
             <CommentCard
               key={item.id}
-              comment={item.comment}
-              createdAt={item.createdAt}
-              image={item.user.image}
-              name={item.user.name}
-              responds={item.responds}
+              comment={item?.describe}
+              postDate={item?.insertDate}
+              userId={item?.userId}
+              likes={item?.commentLike}
+              replyCount={item?.replyCount}
             />
           ))}
         </div>

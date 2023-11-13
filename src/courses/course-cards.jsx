@@ -41,7 +41,7 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
       </div>
       <div
         className={cn(
-          "w-full  flex flex-col items-center gap-y-10",
+          "w-full flex flex-col items-center gap-y-10",
           isVertical && "hidden"
         )}
       >
@@ -75,7 +75,7 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
           renderOnZeroPageCount={null}
         />
         <Select
-          queryName="items-per-page"
+          queryName="items_per_page"
           filters={filters}
           className="px-2 py-1 text-center"
         />
