@@ -1,4 +1,3 @@
-import { useLayoutEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 
@@ -6,37 +5,30 @@ import { Loading } from "./loading";
 import { Error } from "./error";
 
 import { getPersianNumbers } from "../../libs/get-persian-numbers";
+import { getTopCourses } from "../core/services/api/get-courses";
 
 import defaultCourseThumbnail from "../assets/default-course-thumbnail.png";
-import { getCourses } from "../core/services/api/get-courses";
 
 export const NewCourseCard = () => {
-  const [isMounted, setIsMounted] = useState(false);
-
   const {
     data: courses,
-    isLoading: coursesLoading,
-    isError: coursesError,
-    refetch: refetchCourses,
+    isLoading,
+    isError,
   } = useQuery({
-    queryKey: ["courses"],
-    queryFn: () => getCourses(3),
-    enabled: false,
+    queryKey: ["top_course"],
+    queryFn: () => getTopCourses(3),
+    staleTime: 5000,
   });
-  useLayoutEffect(() => {
-    if (!isMounted) {
-      setIsMounted(true);
-      refetchCourses();
-    }
-  }, [isMounted, refetchCourses]);
-  if (coursesLoading) return <Loading />;
-  if (coursesError) return <Error />;
+
+  if (isLoading) return <Loading />;
+  if (isError) return <Error />;
+
   return (
     <>
       {courses?.map((course) => (
-        <div key={course.id} className="py-2">
+        <div key={course.courseId} className="py-2">
           <Link
-            to={`/courses/${course.id}`}
+            to={`/courses/${course.courseId}`}
             className="flex items-center justify-center gap-x-3 hover:bg-gray-200 hover:shadow-lg dark:hover:bg-gray-700 transition px-5 py-2 rounded-xl"
           >
             <img
@@ -49,7 +41,7 @@ export const NewCourseCard = () => {
                 {course.title}
               </h2>
               <span className="text-xs text-white bg-[#818CF8] dark:bg-[#6770c5] py-[2px] px-4 rounded-full">
-                {`${getPersianNumbers(course.cost)} تومان`}
+                {`${getPersianNumbers(course.cost, false)} تومان`}
               </span>
               <h2 className="text-gray-500 dark:text-gray-300/80 text-xs">
                 {course.teacherName}

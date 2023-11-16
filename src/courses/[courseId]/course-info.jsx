@@ -1,23 +1,11 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import {
-  Book,
-  Bookmark,
-  Clock,
-  PersonStanding,
-  Tags,
-  User,
-  User2,
-  Users2,
-} from "lucide-react";
+import { Book, Bookmark, Clock, Tags, User, User2, Users2 } from "lucide-react";
 
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import { useModal } from "../../hooks/use-modal-store";
-import {
-  getCourseById,
-  getCoursesByPagination,
-} from "../../core/services/api/get-courses";
+import { getCourseById } from "../../core/services/api/get-courses";
 
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
@@ -30,35 +18,31 @@ import { Slider } from "./slider";
 import { useUser } from "../../hooks/use-user";
 
 import defaultCourseThumbnail from "../../assets/default-course-thumbnail.png";
+import { getTeacherById } from "../../core/services/api/get-teacher";
 
 export const CourseInfo = () => {
   const { id } = useParams();
-  const [isMounted, setIsMounted] = useState(false);
   const { isOpen, onOpen } = useModal();
   const { userData, addToFavorites, removeFromFavorites } = useUser();
   const [isBookMarked, setIsBookMarked] = useState(false);
+  const [teacher, setTeacher] = useState(null);
 
   const {
     data: course,
-    isLoading: courseLoading,
-    isError: courseError,
-    refetch: refetchCourse,
+    isLoading,
+    isError,
+    isSuccess,
   } = useQuery({
-    queryKey: ["courseId"],
+    queryKey: ["course_id"],
     queryFn: () => getCourseById(id),
-    enabled: false,
+    staleTime: 5000,
   });
 
-  const {
-    data: courses,
-    isLoading: coursesLoading,
-    isError: coursesError,
-    refetch: refetchCourses,
-  } = useQuery({
-    queryKey: ["courses"],
-    queryFn: () => getCoursesByPagination(6),
-    enabled: false,
-  });
+  useMemo(() => {
+    if (isSuccess)
+      getTeacherById(course?.teacherId).then((res) => setTeacher(res));
+  }, [isSuccess, course?.teacherId]);
+
   const details = [
     {
       id: 1,
@@ -166,18 +150,8 @@ export const CourseInfo = () => {
     setIsBookMarked(userData?.favorites.some((c) => c.id === course?.id));
   }, [course?.id, userData.favorites]);
 
-  useLayoutEffect(() => {
-    if (!isMounted) {
-      setIsMounted(true);
-      refetchCourse();
-      refetchCourses();
-    }
-  }, [isMounted, refetchCourse, refetchCourses]);
-
-  if (!isMounted) return null;
-
-  if (courseLoading && coursesLoading) return <Loading />;
-  if (courseError && coursesError) return <Error />;
+  if (isLoading && teacher) return <Loading />;
+  if (isError) return <Error />;
 
   const startDate = new Date(course?.startTime)
     .toLocaleDateString("fa-IR-u-nu-latn")
@@ -241,10 +215,10 @@ export const CourseInfo = () => {
           </span>
         </div>
         <div className="flex justify-center items-center gap-x-2">
-          {course?.teacherAvatar ? (
+          {teacher?.pictureAddress ? (
             <img
-              src={course?.teacherAvatar}
-              alt="teacherAvatar"
+              src={teacher?.pictureAddress}
+              alt="teacherPic"
               className="h-10 w-10 rounded-full"
             />
           ) : (
@@ -255,7 +229,7 @@ export const CourseInfo = () => {
               استاد :
             </h5>
             <h5 className="text-sm text-gray-600/80 dark:text-gray-300/80">
-              {course?.teacherName}
+              {teacher?.fullName}
             </h5>
           </span>
         </div>
@@ -330,6 +304,7 @@ export const CourseInfo = () => {
           <div className="w-full">
             {details?.map((detail) => (
               <Description
+                teacher={teacher}
                 key={detail.id}
                 details={detail}
                 selected={selected}
@@ -344,9 +319,8 @@ export const CourseInfo = () => {
             <Banner title="مشخصات دوره" className="text-xl" height="h-9" />
             <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
               <User2 className="text-primary dark:text-gray-300/80 h-6 w-6" />
-              ظرفیت:
               <h5 className="text-gray-600 dark:text-gray-300/80">
-                {getPersianNumbers(course?.capacity, false)}
+                {`ظرفیت: ${getPersianNumbers(course?.capacity)}`}
               </h5>
             </span>
             <span className="flex justify-between items-center text-gray-500 dark:text-gray-300 text-sm gap-x-2">
@@ -393,22 +367,13 @@ export const CourseInfo = () => {
               className="text-xl"
               height="h-9"
             />
-            {courses?.courseFilterDtos.slice(0, 3).map((course) => (
-              <NewCourseCard
-                key={course.courseId}
-                id={course.courseId}
-                title={course.title}
-                price={course.cost}
-                teacher={course.teacherName}
-                image={course.tumbImageAddress}
-              />
-            ))}
+            <NewCourseCard />
           </div>
         </div>
       </div>
       <div className="w-full flex flex-col items-start justify-center gap-y-10 2xl">
         <Banner title="دوره های مشابه" />
-        <Slider courses={courses?.courseFilterDtos} />
+        <Slider />
         <div></div>
       </div>
     </div>

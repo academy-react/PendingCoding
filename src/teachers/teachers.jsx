@@ -15,7 +15,7 @@ import { TeacherCards } from "./teacher-cards";
 import { useModal } from "../hooks/use-modal-store";
 
 import { cn } from "../../libs/utils";
-import { getCourses } from "../core/services/api/get-courses";
+import { getAllTeachers } from "../core/services/api/get-teacher";
 
 const orderBy = [
   {
@@ -49,7 +49,7 @@ export const Teachers = () => {
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["courses"],
-    queryFn: async () => getCourses("/items"),
+    queryFn: async () => getAllTeachers("/items"),
     staleTime: 5000,
     enabled: false,
   });

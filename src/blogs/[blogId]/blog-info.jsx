@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Bookmark, User } from "lucide-react";
@@ -22,7 +22,6 @@ export const BlogInfo = () => {
     data: blog,
     isLoading: blogLoading,
     isError: blogError,
-    refetch: refetchBlog,
   } = useQuery({
     queryKey: ["blogId"],
     queryFn: () => getBlogById(id),
@@ -79,7 +78,6 @@ export const BlogInfo = () => {
   //   },
   // ],
   const { id } = useParams();
-  const [isMounted, setIsMounted] = useState(false);
   const [selected, setSelected] = useState(details[0].label);
   const { isOpen, onOpen } = useModal();
 
@@ -91,15 +89,6 @@ export const BlogInfo = () => {
       userData.favorites.some((f) => f.id === blog?.detailsNewsDto.id)
     );
   }, [blog?.detailsNewsDto.id, userData.favorites]);
-
-  useLayoutEffect(() => {
-    if (!isMounted) {
-      setIsMounted(true);
-      refetchBlog();
-    }
-  }, [isMounted, refetchBlog]);
-
-  if (!isMounted) return null;
 
   if (blogLoading) return <Loading />;
   if (blogError) return <Error />;

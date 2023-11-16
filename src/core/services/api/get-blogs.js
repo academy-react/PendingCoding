@@ -1,9 +1,6 @@
 import { apiCall } from "../interceptor/api-call";
 
-const getAllBlogs = async () =>
-  await apiCall(
-    `/News?PageNumber=1&RowsOfPage=10&SortingCol=InsertDate&SortType=DESC`
-  );
+const getAllBlogs = async () => await apiCall("/News");
 
 const getBlogById = async (id) => await apiCall(`/News/${id}`);
 
