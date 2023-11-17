@@ -193,7 +193,7 @@ export const CourseInfo = () => {
   };
 
   return (
-    <div className="max-w-[1900px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5 pt-20">
+    <div className="max-w-[1700px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5 pt-20">
       <div className="flex mx-auto md:mx-0 justify-center items-center">
         <NavigatorTracer />
       </div>

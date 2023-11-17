@@ -35,7 +35,6 @@ export const Info = () => {
 
   const isLoading = results.some((result) => result.isLoading);
   const isError = results.some((result) => result.isError);
-  console.log(results);
 
   useLayoutEffect(() => {
     if (!isMounted) {
