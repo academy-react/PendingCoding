@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { CommentCard } from "../../components/comment-card";
+// import { CommentCard } from "../../components/comment-card";
 import { Banner } from "../../components/banner";
 import { CourseCard } from "./course-card";
 import { useState } from "react";
@@ -168,7 +168,7 @@ export const Description = ({ details, selected }) => {
         exit="hidden"
         className="flex flex-col items-center justify-center gap-y-10"
       >
-        <div className="border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl">
+        {/* <div className="border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl">
           {details.comments.map((item) => (
             <CommentCard
               key={item.id}
@@ -179,7 +179,7 @@ export const Description = ({ details, selected }) => {
               responds={item.responds}
             />
           ))}
-        </div>
+        </div> */}
         <div className="w-full flex flex-col justify-center items-start gap-y-7">
           <Banner
             title="دیدگاه خود را با ما به اشتراک بگذارید"

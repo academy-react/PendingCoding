@@ -1,35 +1,23 @@
 import { Link } from "react-router-dom";
 import { LayoutDashboard } from "lucide-react";
 import { useQuery } from "react-query";
-import { useLayoutEffect, useState } from "react";
 import { getAllBlogs } from "../core/services/api/get-blogs";
 import { Loading } from "./loading";
 import { Error } from "./error";
 
 export const NewBlogCard = () => {
-  const [isMounted, setIsMounted] = useState(false);
-
   const {
     data: blogs,
-    isLoading: blogsLoading,
-    isError: blogsError,
-    refetch: refetchBlogs,
+    isLoading,
+    isError,
   } = useQuery({
     queryKey: ["blogs"],
     queryFn: () => getAllBlogs(),
     staleTime: 5000,
-    enabled: false,
-    onError: () => refetchBlogs(),
   });
-  useLayoutEffect(() => {
-    if (!isMounted) {
-      setIsMounted(true);
-      refetchBlogs();
-    }
-  }, [isMounted, refetchBlogs]);
 
-  if (blogsLoading) return <Loading />;
-  if (blogsError) return <Error />;
+  if (isLoading) return <Loading />;
+  if (isError) return <Error />;
   return (
     <>
       {blogs?.news.slice(0, 3).map((blog) => (

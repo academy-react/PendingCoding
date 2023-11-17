@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import { Grid2x2, Newspaper, Rows } from "lucide-react";
 import { useQuery } from "react-query";
 import { useSearchParams } from "react-router-dom";
@@ -40,25 +40,14 @@ const orderBy = [
 
 export const Blogs = () => {
   const [isVertical, setIsVertical] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
 
   const [searchParams] = useSearchParams();
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["blogs"],
     queryFn: () => getAllBlogs(),
     staleTime: 5000,
-    enabled: false,
   });
-
-  useLayoutEffect(() => {
-    if (!isMounted) {
-      setIsMounted(true);
-      refetch();
-    }
-  }, [isMounted, refetch]);
-
-  if (!isMounted) return null;
 
   if (isLoading) return <Loading />;
 
@@ -91,7 +80,7 @@ export const Blogs = () => {
   }
 
   return (
-    <div className="max-w-[1900px] mx-auto flex flex-col items-start justify-center gap-y-10 p-20">
+    <div className="max-w-[1900px] mx-auto flex flex-col items-start justify-center gap-y-10 p-0 md:p-20">
       <div className="flex justify-center items-center">
         <NavigatorTracer />
       </div>

@@ -3,7 +3,8 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 
 import { apiCall } from "../../core/services/interceptor/api-call";
-import { getCourses } from "../../core/services/api/get-courses";
+import { getTeacherById } from "../../core/services/api/get-teacher";
+import { getAllCourses } from "../../core/services/api/get-courses";
 
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
@@ -13,10 +14,6 @@ import { Description } from "./description";
 import { Banner } from "../../components/banner";
 import { Slider } from "./slider";
 
-function getCourseById(id) {
-  return apiCall.get(`/items/${id}`);
-}
-
 export const TeacherInfo = () => {
   const {
     data: course,
@@ -24,8 +21,8 @@ export const TeacherInfo = () => {
     isError: courseError,
     refetch: refetchCourse,
   } = useQuery({
-    queryKey: ["courseId"],
-    queryFn: async () => getCourseById(id),
+    queryKey: ["teacher_id"],
+    queryFn: () => getTeacherById(id),
     enabled: false,
   });
 
@@ -36,7 +33,7 @@ export const TeacherInfo = () => {
     refetch: refetchCourses,
   } = useQuery({
     queryKey: ["courses"],
-    queryFn: async () => getCourses("/items"),
+    queryFn: () => getAllCourses(),
     enabled: false,
   });
   const details = [

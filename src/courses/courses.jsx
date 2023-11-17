@@ -1,9 +1,9 @@
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import { BookX, Grid2x2, Menu, Rows } from "lucide-react";
 import { useQuery } from "react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { getCoursesByPagination } from "../core/services/api/get-courses";
+import { getAllCourses } from "../core/services/api/get-courses";
 
 import NavigatorTracer from "../components/navigator-tracer";
 import { Seperator } from "../components/seperator";
@@ -45,7 +45,6 @@ const orderBy = [
 export const Courses = () => {
   const [values, setValues] = useState([20, 450000]);
   const [isVertical, setIsVertical] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
   const { onOpen } = useModal();
 
   const [searchParams] = useSearchParams();
@@ -57,21 +56,11 @@ export const Courses = () => {
   const teacher_name = searchParams.get("teacher_name");
   const items_per_page = parseInt(searchParams.get("items_per_page"));
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["courses"],
-    queryFn: () => getCoursesByPagination(items_per_page || 6),
+    queryFn: () => getAllCourses(),
     staleTime: 5000,
-    enabled: false,
   });
-
-  useLayoutEffect(() => {
-    if (!isMounted) {
-      setIsMounted(true);
-      refetch();
-    }
-  }, [isMounted, refetch]);
-
-  if (!isMounted) return null;
 
   if (isLoading) return <Loading />;
 

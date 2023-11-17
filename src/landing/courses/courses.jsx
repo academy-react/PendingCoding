@@ -6,14 +6,14 @@ import { Heading } from "../../components/heading";
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
 
-import { getCourses } from "../../core/services/api/get-courses";
+import { getTopCourses } from "../../core/services/api/get-courses";
 
 export const Courses = () => {
   const [isMounted, setIsMounted] = useState(false);
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["landingCourses"],
-    queryFn: () => getCourses(3),
+    queryFn: () => getTopCourses(3),
     staleTime: 5000,
     enabled: false,
   });

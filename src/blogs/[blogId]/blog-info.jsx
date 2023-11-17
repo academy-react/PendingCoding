@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Bookmark, User } from "lucide-react";
@@ -20,16 +20,14 @@ import { Slider } from "./slider";
 export const BlogInfo = () => {
   const {
     data: blog,
-    isLoading: blogLoading,
-    isError: blogError,
-    refetch: refetchBlog,
+    isLoading,
+    isError,
   } = useQuery({
     queryKey: ["blogId"],
     queryFn: () => getBlogById(id),
-    enabled: false,
+    staleTime: 5000,
   });
 
-  const { data: blogs } = useQuery("blogs");
   const details = [
     {
       id: 1,
@@ -79,7 +77,6 @@ export const BlogInfo = () => {
   //   },
   // ],
   const { id } = useParams();
-  const [isMounted, setIsMounted] = useState(false);
   const [selected, setSelected] = useState(details[0].label);
   const { isOpen, onOpen } = useModal();
 
@@ -92,17 +89,8 @@ export const BlogInfo = () => {
     );
   }, [blog?.detailsNewsDto.id, userData.favorites]);
 
-  useLayoutEffect(() => {
-    if (!isMounted) {
-      setIsMounted(true);
-      refetchBlog();
-    }
-  }, [isMounted, refetchBlog]);
-
-  if (!isMounted) return null;
-
-  if (blogLoading) return <Loading />;
-  if (blogError) return <Error />;
+  if (isLoading) return <Loading />;
+  if (isError) return <Error />;
 
   const handleBookmark = () => {
     if (userData.user !== "") {
@@ -222,7 +210,7 @@ export const BlogInfo = () => {
       </div>
       <div className="w-full flex flex-col items-start justify-center gap-y-10 2xl">
         <Banner title="اخرین خبر ها" />
-        <Slider blogs={blogs?.news && blogs.news} />
+        <Slider />
         <div></div>
       </div>
     </div>
