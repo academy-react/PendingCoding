@@ -105,7 +105,7 @@ export const Courses = () => {
   }
 
   return (
-    <div className="max-w-[1900px] bg-gra mx-auto flex flex-col items-start justify-center gap-y-10 p-10 2xl:p-20">
+    <div className="max-w-[1700px] bg-gra mx-auto flex flex-col items-start justify-center gap-y-10 p-10 2xl:p-20">
       <div className="flex justify-center items-center">
         <NavigatorTracer />
       </div>
