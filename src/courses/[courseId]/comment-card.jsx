@@ -2,15 +2,30 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import { Clock, ThumbsDown, ThumbsUp, User } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  ThumbsDown,
+  ThumbsUp,
+  User,
+} from "lucide-react";
+
+import {
+  disLikeComment,
+  likeComment,
+  replyComment,
+} from "../../core/services/api/get-courses";
+
+import { getPersianNumbers } from "../../../libs/get-persian-numbers";
+import { cn } from "../../../libs/utils";
+
+import { useModal } from "../../hooks/use-modal-store";
+import { useUser } from "../../hooks/use-user";
 
 import { CommentRespond } from "./comment-respond";
-
-import { getPersianNumbers } from "../../libs/get-persian-numbers";
-import { likeComment, replyComment } from "../core/services/api/get-comments";
-import { cn } from "../../libs/utils";
 
 const backdrop = {
   hidden: {
@@ -55,9 +70,12 @@ const formSchema = z.object({
 });
 
 export const CommentCard = ({ comment }) => {
+  const { onOpen } = useModal();
+  const { userData } = useUser();
   const [likeCount, setLikeCount] = useState(comment?.likeCount);
   const [disLikeCount, setDisLikeCount] = useState(comment?.disslikeCount);
   const [isLoading, setIsLoading] = useState(false);
+  const [showReplies, setShowReplies] = useState(false);
   const [isAnswering, setIsAnswering] = useState(false);
 
   const form = useForm({
@@ -95,7 +113,7 @@ export const CommentCard = ({ comment }) => {
   const handleLike = async () => {
     try {
       setIsLoading(true);
-      await likeComment(comment?.courseId).then(() => {
+      await likeComment(comment?.id).then(() => {
         setLikeCount((c) => c + 1);
         toast.success("نظر پسندیده شد");
       });
@@ -109,7 +127,7 @@ export const CommentCard = ({ comment }) => {
   const handleDisLike = async () => {
     try {
       setIsLoading(true);
-      await likeComment(comment?.courseId).then(() => {
+      await disLikeComment(comment?.id).then(() => {
         setDisLikeCount((c) => c + 1);
         toast.success("نظر پسندیده شد");
       });
@@ -130,9 +148,7 @@ export const CommentCard = ({ comment }) => {
         Title: values.subject,
         Describe: values.message,
       };
-      await replyComment(Obj).then((res) => {
-        toast.success("نظرتان ثبت شد");
-      });
+      await replyComment(Obj).then(() => toast.success("نظرتان ثبت شد"));
     } catch (error) {
       console.log(error);
       toast.error("مشکلی پیش آمده دوباره امتحان کنید");
@@ -146,10 +162,15 @@ export const CommentCard = ({ comment }) => {
     form.reset();
   };
 
+  const handleAnswer = () => {
+    if (userData.user) setIsAnswering(true);
+    else onOpen("unauthorizedModal");
+  };
+
   return (
     <>
       <div className="flex flex-col lg:flex-row justify-center items-center py-2 gap-x-10">
-        <div className="bg-gray-300/20 shadow-md dark:bg-gray-700 rounded-lg w-full flex flex-col justify-center items-start px-4 py-2">
+        <div className="shadow-md dark:shadow-gray-600 bg-gray-300/20 dark:bg-gray-700 rounded-lg w-full flex flex-col justify-center items-start px-4 py-2">
           {/* Title and Author div */}
           <div className="flex justify-start items-center gap-x-5 py-5 border-b-2 border-gray-400/50 dark:border-gray-400 rounded-xl w-full">
             <span className="flex gap-x-3">
@@ -174,7 +195,7 @@ export const CommentCard = ({ comment }) => {
                   disabled={isLoading}
                   className="flex items-center justify-center gap-x-1 dark:text-gray-300 text-gray-500 hover:text-primary dark:hover:text-dark-primary transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <ThumbsUp className="h-7 w-7 md:h-5 md:w-5" />
+                  <ThumbsUp className="h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-primary text-primary hover:text-primary/80 dark:hover:text-dark-primary/80 transition " />
                   <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
                     {getPersianNumbers(likeCount)}
                   </p>
@@ -182,9 +203,9 @@ export const CommentCard = ({ comment }) => {
                 <button
                   onClick={handleDisLike}
                   disabled={isLoading}
-                  className="flex items-center justify-center gap-x-1 dark:text-gray-300 text-gray-500 hover:text-primary dark:hover:text-dark-primary transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center justify-center gap-x-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <ThumbsDown className="h-7 w-7 md:h-5 md:w-5 mt-2" />
+                  <ThumbsDown className="h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-destructive text-destructive hover:text-destructive/80 dark:hover:text-dark-destructive/80 transition " />
                   <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
                     {getPersianNumbers(disLikeCount)}
                   </p>
@@ -213,9 +234,9 @@ export const CommentCard = ({ comment }) => {
                     className={cn(
                       "resize-none w-full max-w-sm disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-9 py-3 duration-200 border-gray-300 focus:border-gray-400",
                       form.formState.errors.subject &&
-                        "border-destructive dark:border-dark-destructive"
+                        "border-destructive dark:border-dark-destructive focus:border-destructive dark:focus:border-dark-destructive"
                     )}
-                    placeholder="متن پیام"
+                    placeholder="عنوان پیام"
                     {...form.register("subject")}
                   />
                   <p
@@ -237,7 +258,8 @@ export const CommentCard = ({ comment }) => {
                   <textarea
                     className={cn(
                       "resize-none w-full h-40 disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400",
-                      form.formState.errors.message && "border-destructive"
+                      form.formState.errors.message &&
+                        "border-destructive dark:border-dark-destructive focus:border-destructive dark:focus:border-dark-destructive"
                     )}
                     placeholder="متن پیام"
                     {...form.register("message")}
@@ -271,7 +293,7 @@ export const CommentCard = ({ comment }) => {
               </motion.div>
             ) : (
               <button
-                onClick={() => setIsAnswering(true)}
+                onClick={handleAnswer}
                 className="text-sm text-gray-700 bg-gray-300 hover:bg-gray-300/80 hover:text-gray-500/80 transition rounded-lg px-4 py-3"
               >
                 پاسخ
@@ -291,17 +313,39 @@ export const CommentCard = ({ comment }) => {
                 </p>
               </span>
             </div>
+            {comment.acceptReplysCount !== 0 && (
+              <>
+                {showReplies ? (
+                  <>
+                    <button
+                      onClick={() => setShowReplies(false)}
+                      className="flex mt-4 text-sm text-gray-700 bg-gray-300 hover:bg-gray-300/80 hover:text-gray-500/80 transition rounded-lg px-4 py-3"
+                    >
+                      {comment.acceptReplysCount > 1
+                        ? `پنهان کردن پاسخ‌ها`
+                        : comment.acceptReplysCount === 1 && "پنهان کردن پاسخ‌"}
+                      <ChevronUp className="h-4 w-4 mt-[2px]" />
+                    </button>
+                    <CommentRespond commentId={comment.id} />
+                  </>
+                ) : (
+                  <button
+                    onClick={() => setShowReplies(true)}
+                    className="flex mt-4 text-sm text-gray-700 bg-gray-300 hover:bg-gray-300/80 hover:text-gray-500/80 transition rounded-lg px-4 py-3"
+                  >
+                    {comment.acceptReplysCount > 1
+                      ? `نمایش پاسخ‌ها (${getPersianNumbers(
+                          comment.acceptReplysCount
+                        )})`
+                      : comment.acceptReplysCount === 1 && "نمایش  پاسخ‌"}
+                    <ChevronDown className="h-4 w-4 mt-[2px]" />
+                  </button>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
-      {/* {responds.map((res) => (
-        <CommentRespond
-          image={res.image}
-          name={res.name}
-          respond={res.respond}
-          role={res.role}
-        />
-      ))} */}
     </>
   );
 };

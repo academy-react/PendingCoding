@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useModal } from "../../hooks/use-modal-store";
 
 import { routes } from "../../components/routes/routes";
+import { useUser } from "../../hooks/use-user";
 
 const backdrop = {
   hidden: {
@@ -23,7 +24,8 @@ const backdrop = {
   },
 };
 
-export const NavbarMobile = (count) => {
+export const NavbarMobile = () => {
+  const { userData } = useUser();
   const { isOpen, onClose, type } = useModal();
   const isDialogOpen = isOpen && type === "navDialog";
 
@@ -65,24 +67,29 @@ export const NavbarMobile = (count) => {
                 </NavLink>
               </div>
             ))}
-            <Link
-              className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
-              to="/sign-in"
-            >
-              ورود
-            </Link>
-            <Link
-              className="border-[3px] border-primary px-10 py-1 rounded-full bg-primary hover:bg-primary/90 text-white hover:text-white/90 transition font-semibold text-[16px]"
-              to="/sign-up"
-            >
-              ثبت نام
-            </Link>
-            <Link
-              to="/dashboard"
-              className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
-            >
-              داشبورد
-            </Link>
+            {userData.user ? (
+              <Link
+                to="/dashboard"
+                className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
+              >
+                داشبورد
+              </Link>
+            ) : (
+              <>
+                <Link
+                  className="border-[3px] border-primary px-10 py-1 rounded-full bg-white-100 hover:bg-gray-100 text-primary hover:text-primary/90 transition font-semibold text-[16px]"
+                  to="/sign-in"
+                >
+                  ورود
+                </Link>
+                <Link
+                  className="border-[3px] border-primary px-10 py-1 rounded-full bg-primary hover:bg-primary/90 text-white hover:text-white/90 transition font-semibold text-[16px]"
+                  to="/sign-up"
+                >
+                  ثبت نام
+                </Link>
+              </>
+            )}
           </motion.div>
         </motion.div>
       </AnimatePresence>

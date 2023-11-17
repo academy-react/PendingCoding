@@ -7,13 +7,12 @@ import { useQuery } from "react-query";
 
 import { useModal } from "../../hooks/use-modal-store";
 
-import { CommentCard } from "../../components/comment-card";
+import { CommentCard } from "./comment-card";
 import { Banner } from "../../components/banner";
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
 
-import { getTeacherById } from "../../core/services/api/get-teacher";
-import { getCourseComments } from "../../core/services/api/get-comments";
+import { getCourseComments } from "../../core/services/api/get-courses";
 
 import defaultProfileImage from "../../assets/my-profile.jpg";
 
@@ -171,9 +170,17 @@ export const Description = ({ teacher, details, selected }) => {
             <Loading />
           ) : (
             <>
-              {comments?.map((comment) => (
-                <CommentCard key={comment.id} comment={comment} />
-              ))}
+              {comments?.length > 0 ? (
+                <>
+                  {comments?.map((comment) => (
+                    <CommentCard key={comment.id} comment={comment} />
+                  ))}
+                </>
+              ) : (
+                <p className="text-lg text-gray-500 dark:text-gray-300">
+                  نظری برای این دوره تاکنون ثبت نشده است
+                </p>
+              )}
             </>
           )}
           {isError && <Error />}

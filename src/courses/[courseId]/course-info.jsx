@@ -1,11 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Book, Bookmark, Clock, Tags, User, User2, Users2 } from "lucide-react";
 
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
-import { useModal } from "../../hooks/use-modal-store";
 import { getCourseById } from "../../core/services/api/get-courses";
+import { getTeacherById } from "../../core/services/api/get-teacher";
+
+import { useModal } from "../../hooks/use-modal-store";
+import { useUser } from "../../hooks/use-user";
 
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
@@ -15,16 +18,15 @@ import { Description } from "./description";
 import { Banner } from "../../components/banner";
 import { NewCourseCard } from "../../components/new-course-card";
 import { Slider } from "./slider";
-import { useUser } from "../../hooks/use-user";
 
 import defaultCourseThumbnail from "../../assets/default-course-thumbnail.png";
-import { getTeacherById } from "../../core/services/api/get-teacher";
 
 export const CourseInfo = () => {
   const { id } = useParams();
   const { isOpen, onOpen } = useModal();
   const { userData, addToFavorites, removeFromFavorites } = useUser();
   const [isBookMarked, setIsBookMarked] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [teacher, setTeacher] = useState(null);
 
   const {
@@ -32,11 +34,19 @@ export const CourseInfo = () => {
     isLoading,
     isError,
     isSuccess,
+    refetch,
   } = useQuery({
     queryKey: ["course_id"],
     queryFn: () => getCourseById(id),
     staleTime: 5000,
   });
+
+  useLayoutEffect(() => {
+    if (!isMounted) {
+      setIsMounted(true);
+      refetch();
+    }
+  }, [isMounted, refetch]);
 
   useMemo(() => {
     if (isSuccess)
@@ -150,7 +160,7 @@ export const CourseInfo = () => {
     setIsBookMarked(userData?.favorites.some((c) => c.id === course?.id));
   }, [course?.id, userData.favorites]);
 
-  if (isLoading && teacher) return <Loading />;
+  if (isLoading && !teacher) return <Loading />;
   if (isError) return <Error />;
 
   const startDate = new Date(course?.startTime)

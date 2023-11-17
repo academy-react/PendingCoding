@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { CommentCard } from "../../components/comment-card";
+import { CommentCard } from "./comment-card";
 import { Banner } from "../../components/banner";
 
 const backdrop = {
@@ -62,17 +62,11 @@ export const Description = ({ details, selected }) => {
         initial="hidden"
         animate="visible"
         exit="hidden"
+        className="flex flex-col items-center justify-center gap-y-10"
       >
-        <div className="border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl flex flex-col items-center justify-center gap-y-10">
-          {details.comments.map((item) => (
-            <CommentCard
-              key={item.id}
-              comment={item?.describe}
-              postDate={item?.insertDate}
-              userId={item?.userId}
-              likes={item?.commentLike}
-              replyCount={item?.replyCount}
-            />
+        <div className="w-full border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl">
+          {details.comments.map((comment) => (
+            <CommentCard key={comment.id} comment={comment} />
           ))}
         </div>
         <div className="w-full flex flex-col justify-center mt-8 mb-5 items-start gap-y-7">
