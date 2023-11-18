@@ -15,7 +15,7 @@ import { TeacherCards } from "./teacher-cards";
 import { useModal } from "../hooks/use-modal-store";
 
 import { cn } from "../../libs/utils";
-import { getCourses } from "../core/services/api/get-courses";
+import { getAllTeachers } from "../core/services/api/get-teacher";
 
 const orderBy = [
   {
@@ -25,43 +25,31 @@ const orderBy = [
   },
   {
     id: 20,
-    label: "با سابقه ترین",
-    value: "professional",
+    label: "مقاله‌ بیشتر",
+    value: "moreBlogs",
   },
   {
     id: 21,
-    label: "جوان ترین",
-    value: "youngest",
-  },
-  {
-    id: 22,
-    label: "محبوب ترین",
-    value: "popular",
+    label: "دوره ییشتر",
+    value: "moreCourse",
   },
 ];
 
 export const Teachers = () => {
   const [isVertical, setIsVertical] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
   const { onOpen } = useModal();
 
   const [searchParams] = useSearchParams();
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["courses"],
-    queryFn: async () => getCourses("/items"),
+  const {
+    data: teachers,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["teachers"],
+    queryFn: () => getAllTeachers(),
     staleTime: 5000,
-    enabled: false,
   });
-
-  useLayoutEffect(() => {
-    if (!isMounted) {
-      setIsMounted(true);
-      refetch();
-    }
-  }, [isMounted, refetch]);
-
-  if (!isMounted) return null;
 
   if (isLoading) return <Loading />;
 
@@ -71,33 +59,31 @@ export const Teachers = () => {
   const teacherFilterBy = searchParams.get("teacherFilterBy");
   const itemsPerPage = parseInt(searchParams.get("items-per-page"));
 
-  let filteredData = data?.data.filter((teacher) => {
-    if (!teacher_name) return teacher;
+  let filteredData = teachers?.filter((t) => {
+    if (!teacher_name) return t;
     else if (
-      teacher?.name ||
-      teacher.teacher
-        .replace(/ /g, "")
-        .replace("آ", "ا")
-        .toLowerCase()
-        .includes(
+      t?.fullName
+        ?.replace(/ /g, "")
+        ?.replace("آ", "ا")
+        ?.toLowerCase()
+        ?.includes(
           teacher_name?.replace(/ /g, "").replace("آ", "ا").toLowerCase()
         )
     )
-      return teacher;
+      return t;
   });
   if (teacherFilterBy) {
     const newArray = [...filteredData];
-    if (teacherFilterBy === "professional")
-      newArray.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
-    if (teacherFilterBy === "youngest") newArray.sort((a, b) => a.age - b.age);
-    if (teacherFilterBy === "popular")
-      newArray.sort((a, b) => b.likes - a.likes);
+    if (teacherFilterBy === "moreBlogs")
+      newArray.sort((a, b) => a.newsCount - b.newsCount);
+    if (teacherFilterBy === "moreCourse")
+      newArray.sort((a, b) => b.courseCounts - a.courseCounts);
 
     filteredData = newArray;
   }
 
   return (
-    <div className="max-w-[1900px] mx-auto flex flex-col items-start justify-center gap-y-10 p-20">
+    <div className="max-w-[1700px] mx-auto flex flex-col items-start justify-center gap-y-10 p-20">
       <div className="flex justify-center items-center">
         <NavigatorTracer />
       </div>
@@ -111,14 +97,14 @@ export const Teachers = () => {
         {/* Filter div */}
         <button
           onClick={() => onOpen("filterTeacherDialog")}
-          className="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200 transition mt-1 xl:hidden"
+          className="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200 transition mt-1 sm:hidden"
         >
           <Menu className="h-10 w-10" />
         </button>
         {/* Grid div */}
         <div className="w-full flex flex-col justify-center items-start gap-y-5">
           {/* FilterDiv */}
-          <div className="hidden xl:flex justify-between items-center w-full">
+          <div className="hidden sm:flex justify-between items-center w-full">
             <div>
               <SearchInput
                 queryName="teacher_name"

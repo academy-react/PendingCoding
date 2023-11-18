@@ -26,23 +26,27 @@ export const VerticalCard = ({ blog }) => {
   ];
 
   return (
-    <div className="w-[380px] mx-auto flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg s  overflow-hidden">
-      <img
-        loading="lazy"
-        src={blog.currentImageAddressTumb}
-        alt="blogImage"
-        className="w-full h-80"
-      />
+    <div className="mx-auto flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg">
+      <div className="w-[380px] rounded-lg overflow-hidden">
+        <img
+          loading="lazy"
+          src={blog.currentImageAddressTumb}
+          alt="blogImage"
+          className="w-full h-80"
+        />
+      </div>
       <div className="self-start">
         <h1 className="text-lg text-gray-600 dark:text-gray-200 mr-5">
           {blog.title}
         </h1>
       </div>
       <div className="w-full px-5 flex justify-between items-center">
-        <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
-          <User2 className="h-4 w-4 text-primary dark:text-gray-200/80" />
-          {blog.addUserFullName}
-        </span>
+        <TooTip name={blog.addUserFullName}>
+          <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
+            <User2 className="h-4 w-4 text-primary dark:text-gray-200/80" />
+            {`...${blog.addUserFullName.slice(0, 10)}`}
+          </span>
+        </TooTip>
         <TooTip name="آخرین بروزرسانی">
           <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
             <Calendar className="h-4 w-4 text-primary dark:text-gray-200/80" />

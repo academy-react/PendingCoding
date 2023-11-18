@@ -1,13 +1,28 @@
+import { useQuery } from "react-query";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, FreeMode } from "swiper/modules";
 
 import { VerticalCard } from "../vertical-card";
+import { Loading } from "../../components/loading";
+import { Error } from "../../components/error";
+
+import { getAllBlogs } from "../../core/services/api/get-blogs";
 
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/autoplay";
 
-export const Slider = ({ blogs }) => {
+export const Slider = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["blogs"],
+    queryFn: () => getAllBlogs(),
+    staleTime: 5000,
+  });
+  if (isLoading) return <Loading />;
+  if (isError) return <Error />;
+
+  const blogs = data?.news;
+
   return (
     <div className="w-full">
       <Swiper
@@ -36,7 +51,7 @@ export const Slider = ({ blogs }) => {
           pauseOnMouseEnter: true,
         }}
       >
-        {blogs?.map((blog) => (
+        {blogs.map((blog) => (
           <SwiperSlide key={blog.id}>
             <VerticalCard blog={blog} />
           </SwiperSlide>

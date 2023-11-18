@@ -1,14 +1,44 @@
 import { apiCall } from "../interceptor/api-call";
 
-const getCourses = async (count) =>
+const getTopCourses = async (count) =>
   await apiCall(`/Home/GetCoursesTop?Count=${count}`);
 
-const getCoursesByPagination = async (rowsPerPage = 6) =>
-  await apiCall(
-    `/Home/GetCoursesWithPagination?PageNumber=1&RowsOfPage=${rowsPerPage}&SortingCol=Active&SortType=DESC&TechCount=0`
-  );
+const getAllCourses = async (params) =>
+  await apiCall("/Home/GetCoursesWithPagination", { params });
 
 const getCourseById = async (id) =>
   await apiCall(`/Home/GetCourseDetails?CourseId=${id}`);
 
-export { getCourses, getCoursesByPagination, getCourseById };
+const getCourseComments = async (courseId) =>
+  await apiCall(`/Course/GetCourseCommnets/${courseId}`);
+
+const likeComment = async (commentId) => {
+  const formData = new FormData();
+  formData.append("CourseCommandId", commentId);
+  await apiCall("/Course/AddCourseCommentLike", formData);
+};
+const disLikeComment = async (commentId) => {
+  const formData = new FormData();
+  formData.append("CourseCommandId", commentId);
+  await apiCall("/Course/AddCourseCommentDissLike", formData);
+};
+
+const replyComment = async (body) => {
+  const formData = new FormData();
+  for (const attr in body) formData.append(attr, body[attr]);
+  await apiCall("/Course/AddReplyCourseComment", formData);
+};
+
+const getCommentReplies = async (courseId, commentId) =>
+  await apiCall(`/Course/GetCourseReplyCommnets/${courseId}/${commentId}`);
+
+export {
+  getTopCourses,
+  getAllCourses,
+  getCourseById,
+  getCourseComments,
+  likeComment,
+  disLikeComment,
+  replyComment,
+  getCommentReplies,
+};

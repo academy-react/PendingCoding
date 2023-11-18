@@ -11,6 +11,8 @@ import {
   persianPagination,
 } from "../../libs/get-persian-numbers";
 
+import defaultProfileImage from "../assets/my-profile.jpg";
+
 const filters = [
   { id: 1, label: 6, value: 6 },
   { id: 2, label: 12, value: 12 },
@@ -38,10 +40,10 @@ export const TeacherCards = ({ teachers, itemsPerPage, isVertical }) => {
       >
         {currentItems?.map((teacher) => (
           <VerticalCard
-            key={teacher.id}
-            id={teacher.id}
-            name={teacher.name || teacher.teacher}
-            image={teacher.image || teacher.teacherAvatar}
+            key={teacher.teacherId}
+            id={teacher.teacherId}
+            name={teacher.fullName || "TeacherName"}
+            image={teacher.pictureAddress || defaultProfileImage}
           />
         ))}
       </div>

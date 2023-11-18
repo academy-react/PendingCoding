@@ -2,7 +2,7 @@ import { useLayoutEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
 import { ArrowUpLeft } from "lucide-react";
-import { useQuery } from "react-query";
+import { useQueries } from "react-query";
 
 import { getAllTeachers } from "../../core/services/api/get-teacher";
 
@@ -11,25 +11,38 @@ import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
 
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
+import { getLandingReport } from "../../core/services/api/get-landing-report";
 
 import fun from "../../assets/fun.svg";
 import defaultImage from "../../assets/my-profile.jpg";
 
 export const Info = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["teachers"],
-    queryFn: () => getAllTeachers(),
-    staleTime: 5000,
-    enabled: false,
-  });
+  const results = useQueries([
+    {
+      queryKey: ["teachers"],
+      queryFn: () => getAllTeachers(),
+      staleTime: 5000,
+      enabled: false,
+    },
+    {
+      queryKey: ["landing_report"],
+      queryFn: () => getLandingReport(),
+      staleTime: 5000,
+      enabled: false,
+    },
+  ]);
+
+  const isLoading = results.some((result) => result.isLoading);
+  const isError = results.some((result) => result.isError);
 
   useLayoutEffect(() => {
     if (!isMounted) {
       setIsMounted(true);
-      refetch();
+      results?.[0].refetch();
+      results?.[1].refetch();
     }
-  }, [isMounted, refetch]);
+  }, [isMounted, results]);
 
   if (!isMounted) return null;
   if (isError) return <Error />;
@@ -45,19 +58,19 @@ export const Info = () => {
         <div className="flex flex-col items-center justify-center gap-y-5">
           <div className="text-gray-400 dark:text-gray-300/80 text-sm text-center xl:text-start xl:ml-auto">
             <h3 className="text-gray-500 dark:text-gray-300/80 text-2xl">
-              {getPersianNumbers(400)}
+              {getPersianNumbers(results?.[1].data?.courseCount)}
             </h3>
             دوره مدرن آموزشی
           </div>
           <div className="text-gray-400 dark:text-gray-300/80 text-sm text-center xl:text-start xl:ml-auto">
-            <h3 className="text-gray-500 dark:text-gray-300/80 text-2xl">{`${getPersianNumbers(
-              69
-            )}%`}</h3>
-            رضایت مندی دانشجویان
+            <h3 className="text-gray-500 dark:text-gray-300/80 text-2xl">
+              {getPersianNumbers(results?.[1].data?.teacherCount)}
+            </h3>
+            استاد مجرّب در مجموعه
           </div>
           <div>
             <div className="group flex flex-col items-center xl:items-start justify-center">
-              {data?.slice(0, 3).map((teacher, index) => (
+              {results?.[0]?.data.slice(0, 3).map((teacher, index) => (
                 <TeacherLatestImage
                   key={teacher.id}
                   id={teacher.id}
@@ -82,7 +95,7 @@ export const Info = () => {
           <span className="w-28 h-28 rounded-full bg-gray-700 dark:bg-gray-400" />
           <div className="flex flex-col items-center xl:items-start justify-center gap-y-1">
             <h1 className="text-3xl text-gray-600 dark:text-gray-300/80">
-              {getPersianNumbers(443223)}
+              {getPersianNumbers(results?.[1].data?.studentCount)}
             </h1>
             <h2 className="text-gray-500 dark:text-gray-300/80 text-lg">
               دانشجویان مجموعه

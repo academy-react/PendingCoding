@@ -1,13 +1,30 @@
+import { useQuery } from "react-query";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, FreeMode } from "swiper/modules";
 
 import { VerticalCard } from "../vertical-card";
 
+import { getAllCourses } from "../../core/services/api/get-courses";
+
+import { Loading } from "../../components/loading";
+import { Error } from "../../components/error";
+
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/autoplay";
 
-export const Slider = ({ courses }) => {
+export const Slider = () => {
+  const {
+    data: courses,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["courses"],
+    queryFn: () => getAllCourses(),
+    staleTime: 5000,
+  });
+  if (isLoading) return <Loading />;
+  if (isError) return <Error />;
   return (
     <div className="w-full">
       <Swiper
@@ -36,8 +53,8 @@ export const Slider = ({ courses }) => {
           pauseOnMouseEnter: true,
         }}
       >
-        {courses?.map((course) => (
-          <SwiperSlide key={course.id}>
+        {courses?.courseFilterDtos.map((course) => (
+          <SwiperSlide key={course.courseId}>
             <VerticalCard course={course} />
           </SwiperSlide>
         ))}
