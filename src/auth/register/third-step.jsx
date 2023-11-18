@@ -2,12 +2,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "../../../libs/utils";
-
-import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { useUser } from "../../hooks/use-user";
 
-const ThirdStep = ({setStep , setUserInfo}) => {
+const ThirdStep = ({ setStep, setUserInfo }) => {
   const formSchema = z
     .object({
       email: z
@@ -28,7 +25,6 @@ const ThirdStep = ({setStep , setUserInfo}) => {
       path: ["confirmPassword"],
     });
 
-
   const {
     register,
     handleSubmit,
@@ -40,12 +36,19 @@ const ThirdStep = ({setStep , setUserInfo}) => {
   const onSubmit = (values) => {
     const newObj = [values.email, values.password];
     setUserInfo(...newObj);
-    setStep((cs) => cs + 1); 
+    setStep((cs) => cs + 1);
+  };
+
+  const handleBack = () => {
+    setStep((cs) => cs - 1);
   };
 
   return (
     <>
-      <form className="w-[100%] flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="w-[100%] flex flex-col"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <input
           type="text"
           placeholder="پست الکترونیکی"
@@ -165,6 +168,17 @@ const ThirdStep = ({setStep , setUserInfo}) => {
         >
           {" "}
           مرحله بعد{" "}
+        </button>
+
+        <button
+          onClick={handleBack}
+          className="cursor-pointer rounded-[50px] text-[18px] text-[#505050] p-[10px] m-[10px_auto]
+                dark:text-gray-300
+              
+              max-[700px]:p-[7px_0]"
+        >
+          {" "}
+          مرحله قبل{" "}
         </button>
       </form>
     </>

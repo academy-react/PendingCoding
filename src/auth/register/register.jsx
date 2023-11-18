@@ -11,6 +11,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ThirdStep } from "./third-step";
 import { SecondStep } from "./second-step";
+import { FirstStep } from "./first-step";
 
 const Register = ({ register: reg }) => {
   // const formSchema = z
@@ -103,7 +104,7 @@ const Register = ({ register: reg }) => {
         </h1>
 
         {step === 1 && (
-          <ThirdStep
+          <FirstStep
             setStep={setStep}
             userInfo={userInfo}
             setUserInfo={setUserInfo}
@@ -111,6 +112,14 @@ const Register = ({ register: reg }) => {
         )}
 
         {step === 2 && (
+          <ThirdStep
+            setStep={setStep}
+            userInfo={userInfo}
+            setUserInfo={setUserInfo}
+          />
+        )}
+
+        {step === 3 && (
           <SecondStep
             setStep={setStep}
             userInfo={userInfo}
