@@ -1,40 +1,34 @@
+import { useLayoutEffect, useState } from "react";
+import { useQuery } from "react-query";
+
 import { Heading } from "../../components/heading";
 import { BestTeachersMobile } from "./best-teachers-mobile";
 import { BestTeachers } from "./best-teachers";
+import { Error } from "../../components/error";
+import { Loading } from "../../components/loading";
 
-import teacher1 from "../../assets/teacher1.svg";
-import teacher2 from "../../assets/teacher2.svg";
-import teacher3 from "../../assets/teacher3.svg";
-import teacher4 from "../../assets/teacher4.svg";
-
-const teachers = [
-  {
-    id: 1,
-    name: "دکتر بحرالعلومی",
-    expert: "توسعه دهنده فرانت",
-    image: teacher1,
-  },
-  {
-    id: 2,
-    name: "دکتر بحرالعلومی",
-    expert: "توسعه دهنده فرانت",
-    image: teacher2,
-  },
-  {
-    id: 3,
-    name: "دکتر بحرالعلومی",
-    expert: "توسعه دهنده فرانت",
-    image: teacher3,
-  },
-  {
-    id: 4,
-    name: "دکتر بحرالعلومی",
-    expert: "توسعه دهنده فرانت",
-    image: teacher4,
-  },
-];
+import { getAllTeachers } from "../../core/services/api/get-teacher";
 
 export const BestTeachersList = () => {
+  const [isMounted, setIsMounted] = useState(false);
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["teachers"],
+    queryFn: () => getAllTeachers(),
+    staleTime: 5000,
+    enabled: false,
+  });
+
+  useLayoutEffect(() => {
+    if (!isMounted) {
+      setIsMounted(true);
+      refetch();
+    }
+  }, [isMounted, refetch]);
+
+  if (!isMounted) return null;
+  if (isError) return <Error />;
+  if (isLoading) return <Loading />;
+
   return (
     <>
       <Heading
@@ -42,9 +36,9 @@ export const BestTeachersList = () => {
         description="برترین دوره های آموزشی با بروز ترین و مدرن ترین روش آموزش"
         to="/teachers"
       />
-      <BestTeachers teachers={teachers} />
+      <BestTeachers teachers={data?.slice(0, 4)} />
 
-      <BestTeachersMobile teachers={teachers} />
+      <BestTeachersMobile teachers={data?.slice(0, 4)} />
     </>
   );
 };

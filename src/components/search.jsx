@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import qs from "query-string";
 import { Search } from "lucide-react";
@@ -7,29 +7,36 @@ import { cn } from "../../libs/utils";
 import { useDebounce } from "../hooks/use-debounce";
 
 export const SearchInput = ({ queryName, placeholder, className }) => {
-  const [value, setValue] = useState("");
   const navigate = useNavigate();
-  const debouncedValue = useDebounce(value);
   const pathname = useMemo(() => window.location.pathname, []);
   const [searchParams] = useSearchParams();
+  const [value, setValue] = useState(searchParams.get(queryName) || "");
+  const debouncedValue = useDebounce(value);
 
-  const courseFilterBy = searchParams.get("courseFilterBy");
-  const itemsPerPage = searchParams.get("items-per-page");
+  const course_filter_by = searchParams.get("course_filter_by");
+  const items_per_page = searchParams.get("items_per_page");
 
-  useEffect(() => {
+  useMemo(() => {
     const url = qs.stringifyUrl(
       {
         url: pathname,
         query: {
           [queryName]: debouncedValue,
-          courseFilterBy,
-          itemsPerPage,
+          course_filter_by,
+          items_per_page,
         },
       },
       { skipEmptyString: true, skipNull: true }
     );
     navigate(url);
-  }, [debouncedValue, navigate, pathname, queryName, courseFilterBy]);
+  }, [
+    debouncedValue,
+    navigate,
+    pathname,
+    queryName,
+    course_filter_by,
+    items_per_page,
+  ]);
 
   return (
     <div className="relative w-full">

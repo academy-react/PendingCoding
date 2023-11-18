@@ -5,11 +5,11 @@ import { useQuery } from "react-query";
 
 import { useUser } from "../hooks/use-user";
 
-import { apiCall } from "../../libs/api-call";
+import { apiCall } from "../core/services/interceptor/api-call";
 import { useTheme } from "./providers/theme-provider";
 
 export const StarRate = ({ data, queryKey }) => {
-  const [rating, setRating] = useState(data?.stars | null);
+  const [rating, setRating] = useState(data?.likeCount | null);
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { isDarkTheme } = useTheme();

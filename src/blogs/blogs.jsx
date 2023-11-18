@@ -1,9 +1,9 @@
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import { Grid2x2, Newspaper, Rows } from "lucide-react";
 import { useQuery } from "react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { getCourses } from "../../libs/get-courses";
+import { getAllBlogs } from "../core/services/api/get-blogs";
 
 import NavigatorTracer from "../components/navigator-tracer";
 import { Seperator } from "../components/seperator";
@@ -40,25 +40,14 @@ const orderBy = [
 
 export const Blogs = () => {
   const [isVertical, setIsVertical] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
 
   const [searchParams] = useSearchParams();
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["courses"],
-    queryFn: async () => getCourses("/items"),
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["blogs"],
+    queryFn: () => getAllBlogs(),
     staleTime: 5000,
-    enabled: false,
   });
-
-  useLayoutEffect(() => {
-    if (!isMounted) {
-      setIsMounted(true);
-      refetch();
-    }
-  }, [isMounted, refetch]);
-
-  if (!isMounted) return null;
 
   if (isLoading) return <Loading />;
 
@@ -68,7 +57,7 @@ export const Blogs = () => {
   const blogFilterBy = searchParams.get("blogFilterBy");
   const itemsPerPage = parseInt(searchParams.get("items-per-page"));
 
-  let filteredData = data?.data.filter((blog) => {
+  let filteredData = data?.news.filter((blog) => {
     if (!blog_name) return blog;
     else if (
       blog?.title
@@ -91,7 +80,7 @@ export const Blogs = () => {
   }
 
   return (
-    <div className="max-w-[1900px] mx-auto flex flex-col items-start justify-center gap-y-10 p-20">
+    <div className="max-w-[1900px] mx-auto flex flex-col items-start justify-center gap-y-10 p-0 md:p-20">
       <div className="flex justify-center items-center">
         <NavigatorTracer />
       </div>
@@ -142,7 +131,7 @@ export const Blogs = () => {
               />
             </div>
           ) : (
-            <div className="w-full flex flex-col gap-3 items-center justify-center my-52 dark:bg-[#1E1F22]">
+            <div className="w-full flex flex-col gap-3 items-center justify-center my-52 dark:bg-gray-800">
               <Newspaper className="w-12 h-12 text-gray-600/90 dark:text-gray-300" />
               <p className="text-zinc dark:text-gray-300 text-xl">
                 بلاگ مورد نظر پیدا نشد
