@@ -7,7 +7,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/use-user";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-
+import { useState } from "react";
+import { loginAPI } from "../../core/services/api/auth";
+import { setItem } from "../../core/services/common/storage.services";
 
 const Login = ({ login }) => {
   const formSchema = z.object({
@@ -31,7 +33,13 @@ const Login = ({ login }) => {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (values) => {
+  const [isCheck, setIsCheck] = useState(false);
+
+  const handleCheckBox = () => {
+    setIsCheck(!isCheck);
+  };
+
+  const onSubmit = async (values) => {
     const newObj = {
       ...userData,
       user: { email: values.email, password: values.password },
@@ -42,6 +50,18 @@ const Login = ({ login }) => {
       navigate("/");
       setUserData(newObj);
     }, 500);
+
+    // login API
+    const obj = {
+      phoneOrGmail: values.email,
+      password: values.password,
+      rememberMe: isCheck,
+    };
+    const loginResult = await loginAPI(obj);
+
+    setItem("token", loginResult.token);
+
+    console.log(loginResult, obj);
   };
 
   return (
@@ -132,6 +152,8 @@ const Login = ({ login }) => {
                 name="remember"
                 id="remember"
                 className="absolute invisible peer"
+                checked={isCheck}
+                onChange={handleCheckBox}
               />
 
               <label
@@ -143,10 +165,7 @@ const Login = ({ login }) => {
                 {" "}
               </label>
 
-              <label
-                htmlFor="remember"
-                className="text-[12px] cursor-pointer"
-              >
+              <label htmlFor="remember" className="text-[12px] cursor-pointer">
                 مرا به خاطر بسپار
               </label>
             </div>

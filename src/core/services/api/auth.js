@@ -1,4 +1,4 @@
-import http from "../interceptor";
+import http from "../my-interceptor/index";
 
 export const loginAPI = async (user) => {
   try {
