@@ -126,6 +126,7 @@ export const CommentRespond = ({ commentId }) => {
 
   const handleLike = async () => {
     try {
+      if (!userData.user) return onOpen("unauthorizedModal");
       setIsLoading(true);
       await likeComment(responds?.id).then(() => {
         setLikeCount((c) => c + 1);
@@ -140,6 +141,7 @@ export const CommentRespond = ({ commentId }) => {
   };
   const handleDisLike = async () => {
     try {
+      if (!userData.user) return onOpen("unauthorizedModal");
       setIsLoading(true);
       await disLikeComment(responds?.id).then(() => {
         setDisLikeCount((c) => c + 1);

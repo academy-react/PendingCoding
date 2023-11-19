@@ -4,6 +4,9 @@ const getAllBlogs = async () => await apiCall("/News");
 
 const getBlogById = async (id) => await apiCall(`/News/${id}`);
 
+const likeBlog = async (blogId) =>
+  await apiCall.post(`/News/NewsLike/${blogId}`);
+
 const getBlogComments = async (id) =>
   await apiCall(`/News/GetNewsComments?NewsId=${id}`);
 
@@ -20,6 +23,7 @@ const replyComment = async (body) => {
 export {
   getAllBlogs,
   getBlogById,
+  likeBlog,
   getBlogComments,
   getCommentReplies,
   likeComment,

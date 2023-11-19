@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { Bookmark, User } from "lucide-react";
+import { Bookmark, ThumbsUp, User } from "lucide-react";
 
-import { getBlogById } from "../../core/services/api/get-blogs";
+import { getBlogById, likeBlog } from "../../core/services/api/get-blogs";
 import { useModal } from "../../hooks/use-modal-store";
 import { useUser } from "../../hooks/use-user";
 
@@ -16,6 +16,9 @@ import { Banner } from "../../components/banner";
 import { NewCourseCard } from "../../components/new-course-card";
 import { NewBlogCard } from "../../components/new-blog-card";
 import { Slider } from "./slider";
+import { getPersianNumbers } from "../../../libs/get-persian-numbers";
+import toast from "react-hot-toast";
+import { cn } from "../../../libs/utils";
 
 export const BlogInfo = () => {
   const {
@@ -82,12 +85,20 @@ export const BlogInfo = () => {
 
   const { userData, addToFavorites, removeFromFavorites } = useUser();
   const [isBookMarked, setIsBookMarked] = useState(false);
+  const [isPending, setIsPending] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  // const [dissLikeCount, setDisLikeCount] = useState(0);
 
-  useEffect(() => {
+  useMemo(() => {
     setIsBookMarked(
       userData.favorites.some((f) => f.id === blog?.detailsNewsDto.id)
     );
-  }, [blog?.detailsNewsDto.id, userData.favorites]);
+    setLikeCount(blog?.detailsNewsDto.currentLikeCount);
+  }, [
+    blog?.detailsNewsDto.id,
+    userData.favorites,
+    blog?.detailsNewsDto.currentLikeCount,
+  ]);
 
   if (isLoading) return <Loading />;
   if (isError) return <Error />;
@@ -99,13 +110,44 @@ export const BlogInfo = () => {
     } else onOpen("unauthorizedModal");
   };
 
+  const handleLike = async () => {
+    try {
+      if (!userData.user) return onOpen("unauthorizedModal");
+      setIsPending(true);
+      await likeBlog(blog?.detailsNewsDto.id).then(() => {
+        setLikeCount((c) => c + 1);
+        toast.success("نظر پسندیده شد");
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش آمده دوباره امتحان کنید");
+    } finally {
+      setIsPending(false);
+    }
+  };
+  // const handleDisLike = async () => {
+  //   try {
+  //     if (!userData.user) return onOpen("unauthorizedModal");
+  //     setIsPending(true);
+  //     await likeCourse(blog?.detailsNewsDto.id).then(() => {
+  //       setDisLikeCount((c) => c + 1);
+  //       toast.success("نظر پسندیده شد");
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("مشکلی پیش آمده دوباره امتحان کنید");
+  //   } finally {
+  //     setIsPending(false);
+  //   }
+  // };
+
   return (
     <div className="max-w-[1900px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5 pt-20">
       <div className="flex mx-auto md:mx-0 justify-center items-center">
         <NavigatorTracer />
       </div>
       {/* BookMark and Teacher Pic */}
-      <div className="w-full flex justify-start items-center gap-x-10 mt-5 mb-10">
+      <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-10 mt-5 mb-10">
         <div className="flex justify-center items-center gap-x-2">
           {isBookMarked ? (
             <Bookmark
@@ -149,6 +191,33 @@ export const BlogInfo = () => {
               {blog?.detailsNewsDto.addUserFullName}
             </h5>
           </span>
+        </div>
+        <div className="flex justify-center items-center gap-x-3 self-end">
+          <button
+            onClick={handleLike}
+            disabled={isPending || blog?.detailsNewsDto.currentUserIsLike}
+            className="flex items-center justify-center gap-x-1 dark:text-gray-300 text-gray-500 hover:text-primary dark:hover:text-dark-primary transition disabled:opacity-50 dark:disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            <ThumbsUp
+              className={cn(
+                "h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-primary text-primary hover:text-primary/80 dark:hover:text-dark-primary/80 transition",
+                blog?.detailsNewsDto.currentUserIsLike && "fill-primary"
+              )}
+            />
+            <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
+              {getPersianNumbers(likeCount)}
+            </p>
+          </button>
+          {/* <button
+            onClick={handleDisLike}
+            disabled={isPending}
+            className="flex items-center justify-center gap-x-2"
+          >
+            <ThumbsDown className="h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-destructive text-destructive hover:text-destructive/80 dark:hover:text-dark-destructive/80 transition " />
+            <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
+              {getPersianNumbers(dissLikeCount)}
+            </p>
+          </button> */}
         </div>
       </div>
 
@@ -197,7 +266,7 @@ export const BlogInfo = () => {
             <button
               onClick={() => onOpen("shareModal")}
               disabled={isOpen}
-              className="w-full px-20 py-2 border-2 border-primary dark:border-dark-primary bg-white/20 dark:bg-gray-300 dark:hover:bg-gray-300/90 hover:bg-[#EEEEEE] text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
+              className="w-full py-2 border-2 border-primary dark:border-dark-primary bg-white/20 dark:bg-gray-300 dark:hover:bg-gray-300/90 hover:bg-[#EEEEEE] text-primary hover:text-primary/90 disabled:text-primary/90 disabled:bg-[#EEEEEE] disabled:cursor-not-allowed transition rounded-full "
             >
               اشتراک گذاری
             </button>
