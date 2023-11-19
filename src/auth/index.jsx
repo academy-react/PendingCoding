@@ -9,8 +9,10 @@ const Auth = () => {
   const [show, setShow] = useState(false);
 
   const register = useAnimationControls();
-
   const log = useAnimationControls();
+
+  const login = useAnimationControls();
+  const reg = useAnimationControls();
 
   const handleAnimate = () => {
     register.start({
@@ -27,6 +29,22 @@ const Auth = () => {
     setTimeout(() => setShow(true) , 300)
   };
 
+  const loginHandleAnimate = () => {
+    login.start({
+      x: "-400px",
+      transition: { duration: 0.3 },
+      opacity: "0",
+    });
+    reg.start({
+      x: "400px",
+      transition: { duration: 0.3 },
+      opacity: "0",
+    });
+
+    setTimeout(() => setShow(false) , 300)
+
+  }
+
   return (
     <div className="flex items-center justify-center w-full h-full p-[50px_0_100px] select-none">
       <div
@@ -42,8 +60,8 @@ const Auth = () => {
           </>
         ) : (
           <>
-            <Login />
-            <Reg />
+            <Login login={login} />
+            <Reg reg={reg} loginHandleAnimate={loginHandleAnimate} />
           </>
         )}
       </div>

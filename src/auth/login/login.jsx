@@ -6,8 +6,12 @@ import { cn } from "../../../libs/utils";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/use-user";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { loginAPI } from "../../core/services/api/auth";
+import { setItem } from "../../core/services/common/storage.services";
 
-const Login = () => {
+const Login = ({ login }) => {
   const formSchema = z.object({
     email: z
       .string()
@@ -29,7 +33,13 @@ const Login = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (values) => {
+  const [isCheck, setIsCheck] = useState(false);
+
+  const handleCheckBox = () => {
+    setIsCheck(!isCheck);
+  };
+
+  const onSubmit = async (values) => {
     const newObj = {
       ...userData,
       user: { email: values.email, password: values.password },
@@ -40,10 +50,23 @@ const Login = () => {
       navigate("/");
       setUserData(newObj);
     }, 500);
+
+    // login API
+    const obj = {
+      phoneOrGmail: values.email,
+      password: values.password,
+      rememberMe: isCheck,
+    };
+    const loginResult = await loginAPI(obj);
+
+    setItem("token", loginResult.token);
+
+    console.log(loginResult, obj);
   };
 
   return (
-    <div
+    <motion.div
+      animate={login}
       className="bg-[#EEEEEE] w-[700px] h-[700px] rounded-[100%] border-[15px] border-solid border-[#505050] flex justify-center items-center relative transition
       dark:bg-gray-800 dark:border-gray-600
        
@@ -129,6 +152,8 @@ const Login = () => {
                 name="remember"
                 id="remember"
                 className="absolute invisible peer"
+                checked={isCheck}
+                onChange={handleCheckBox}
               />
 
               <label
@@ -140,10 +165,7 @@ const Login = () => {
                 {" "}
               </label>
 
-              <label
-                htmlFor="remember"
-                className="text-[12px] cursor-pointer"
-              >
+              <label htmlFor="remember" className="text-[12px] cursor-pointer">
                 مرا به خاطر بسپار
               </label>
             </div>
@@ -167,7 +189,7 @@ const Login = () => {
           </button>
         </form>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
