@@ -12,6 +12,18 @@ const getCourseById = async (id) =>
 const getCourseComments = async (courseId) =>
   await apiCall(`/Course/GetCourseCommnets/${courseId}`);
 
+const likeCourse = async (courseId) => {
+  const formData = new FormData();
+  formData.append("CourseId", courseId);
+  await apiCall.post("/Course/AddCourseLike", formData);
+};
+
+const deleteCourseLike = async (course_like_id) => {
+  const formData = new FormData();
+  formData.append("CourseLikeId", course_like_id);
+  await apiCall.delete("/Course/DeleteCourseLike", formData);
+};
+
 const likeComment = async (commentId) => {
   const formData = new FormData();
   formData.append("CourseCommandId", commentId);
@@ -36,6 +48,8 @@ export {
   getTopCourses,
   getAllCourses,
   getCourseById,
+  likeCourse,
+  deleteCourseLike,
   getCourseComments,
   likeComment,
   disLikeComment,
