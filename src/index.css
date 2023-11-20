@@ -29,7 +29,7 @@ body,
 }
 
 .leaflet-layer{
-  /* filter: brightness(0.644) invert(1) contrast(3.4) hue-rotate(10deg) saturate(0.7); */
+  filter: brightness(0.644) invert(1) contrast(3.4) hue-rotate(10deg) saturate(0.7);
 }
 
 .leaflet-touch .leaflet-control-layers,
@@ -39,7 +39,7 @@ body,
 
 .leaflet-bar a {
   background:#5c55c9;
-  border-radius:2px;
+  border-radius:15px;
   transform: scale(1.4);
   margin:5px 0 20px 5px;
   border:none;

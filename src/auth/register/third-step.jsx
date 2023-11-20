@@ -2,9 +2,12 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "../../../libs/utils";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { useUser } from "../../hooks/use-user";
+import { useNavigate } from "react-router-dom";
 
-const ThirdStep = ({ setStep, setUserInfo }) => {
+const ThirdStep = ({ setStep, userInfo }) => {
   const formSchema = z
     .object({
       email: z
@@ -25,20 +28,32 @@ const ThirdStep = ({ setStep, setUserInfo }) => {
       path: ["confirmPassword"],
     });
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(formSchema),
-  });
-
-  const onSubmit = (values) => {
-    const newObj = [values.email, values.password];
-    setUserInfo(...newObj);
-    setStep((cs) => cs + 1);
-  };
-
+    const { userData, setUserData } = useUser();
+    const navigate = useNavigate();
+  
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm({
+      resolver: zodResolver(formSchema),
+    });
+  
+    const onSubmit = (values) => {
+      const newObj = {
+        ...userData,
+        user: { ...userInfo, email: values.email, password: values.password },
+      };
+      localStorage.setItem("user", JSON.stringify(newObj));
+      toast.success("با موافقیت وارد شدید");
+      setTimeout(() => {
+        navigate("/");
+        setUserData(newObj);
+      }, 500);
+  
+      console.log(newObj);
+    };
+  
   const handleBack = () => {
     setStep((cs) => cs - 1);
   };

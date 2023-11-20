@@ -12,10 +12,6 @@ const FirstStep = ({ setStep, setUserInfo }) => {
       .string()
       .min(4, { message: "رمز عبور حداقل 4 کاراکتر دارد" })
       .max(15, { message: "رمز عبور حداکثر 15 کاراکتر دارد" }),
-    verifyCode: z
-      .string()
-      .min(4, { message: "رمز عبور حداقل 4 کاراکتر دارد" })
-      .max(15, { message: "رمز عبور حداکثر 15 کاراکتر دارد" }),
   });
 
   const {
@@ -26,19 +22,21 @@ const FirstStep = ({ setStep, setUserInfo }) => {
     resolver: zodResolver(formSchema),
   });
 
+  const [timerText, setTimerText] = useState("دریافت کد");
+
+  const [loading , setLoading] = useState(false)
+  
   const onSubmit = (values) => {
     const newObj = [values.phoneNumber];
     setUserInfo(...newObj);
-    setStep((cs) => cs + 1);
-  };
 
-  const [timerText, setTimerText] = useState("دریافت کد");
+    setLoading(true);
 
-  const verifyTimer = (seconds) => {
-    setTimerText(seconds);
+    setTimerText(10);
     const interval = setInterval(() => {
       setTimerText((prevCounter) => {
         if (prevCounter <= 1) {
+          setLoading(false);
           clearInterval(interval);
           return "دریافت مجدد";
         } else {
@@ -46,6 +44,8 @@ const FirstStep = ({ setStep, setUserInfo }) => {
         }
       });
     }, 1000);
+
+    console.log(newObj , timerText)
   };
 
   return (
@@ -81,10 +81,11 @@ const FirstStep = ({ setStep, setUserInfo }) => {
         )}
 
         <button
-          onClick={() => verifyTimer(10)}
+        disabled={loading}
           className="
                 bg-[#505050] cursor-pointer rounded-[50px] text-[18px] text-white w-[35%] p-[10px_0] transition hover:bg-[#626262] mb-[20px]
                 dark:bg-gray-600 dark:hover:bg-[rgb(87,98,115)]
+                disabled:cursor-default disabled:hover:bg-[#505050]
                  
                 max-[700px]:p-[7px_0]"
           type="submit"

@@ -17,32 +17,30 @@ const Auth = () => {
   const handleAnimate = () => {
     register.start({
       x: "400px",
-      transition: { duration: 0.3 },
-      opacity: "0",
+      transition: { duration: 1.4 },
+      // opacity: "0",
+      zIndex: "999"
     });
     log.start({
       x: "-400px",
-      transition: { duration: 0.3 },
-      opacity: "0",
+      transition: { duration: 0.7 },
     });
 
-    setTimeout(() => setShow(true) , 300)
+    setTimeout(() => setShow(true) , 900)
   };
 
   const loginHandleAnimate = () => {
     login.start({
       x: "-400px",
-      transition: { duration: 0.3 },
-      opacity: "0",
+      transition: { duration: 0.7 },
+      zIndex: "999"
     });
     reg.start({
       x: "400px",
-      transition: { duration: 0.3 },
-      opacity: "0",
+      transition: { duration: 0.7 },
     });
 
-    setTimeout(() => setShow(false) , 300)
-
+    setTimeout(() => setShow(false) , 900)
   }
 
   return (
