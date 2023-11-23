@@ -2,11 +2,11 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "../../../libs/utils";
-import { Link } from "react-router-dom";
 import { VerifyCode } from "./first-step-verify";
 import { useState } from "react";
+import { sendVerifyMessage } from "../../core/services/api/auth";
 
-const FirstStep = ({ setStep, setUserInfo }) => {
+const FirstStep = ({ setStep, setSaveUser, saveUser }) => {
   const formSchema = z.object({
     phoneNumber: z
       .string()
@@ -24,11 +24,34 @@ const FirstStep = ({ setStep, setUserInfo }) => {
 
   const [timerText, setTimerText] = useState("دریافت کد");
 
-  const [loading , setLoading] = useState(false)
-  
-  const onSubmit = (values) => {
-    const newObj = [values.phoneNumber];
-    setUserInfo(...newObj);
+  const [loading, setLoading] = useState(false);
+
+  // const onSubmit = (values) => {
+  //   const newObj = [values.phoneNumber];
+  //   setUserInfo(...newObj);
+
+  //   setLoading(true);
+
+  //   setTimerText(10);
+  //   const interval = setInterval(() => {
+  //     setTimerText((prevCounter) => {
+  //       if (prevCounter <= 1) {
+  //         setLoading(false);
+  //         clearInterval(interval);
+  //         return "دریافت مجدد";
+  //       } else {
+  //         return prevCounter - 1;
+  //       }
+  //     });
+  //   }, 1000);
+
+  //   console.log(newObj , timerText)
+  // };
+
+  const onSubmit = async (values) => {
+    setSaveUser({ phoneNumber: values.phoneNumber });
+
+    const sendVerifyMessageAPI = await sendVerifyMessage(values);
 
     setLoading(true);
 
@@ -45,21 +68,22 @@ const FirstStep = ({ setStep, setUserInfo }) => {
       });
     }, 1000);
 
-    console.log(newObj , timerText)
+    console.log(sendVerifyMessageAPI)
   };
 
   return (
     <>
       <form
-        className="w-[100%] flex flex-col"
+        className="w-[100%] flex flex-col relative"
         onSubmit={handleSubmit(onSubmit)}
       >
         <input
           type="text"
+          value={saveUser.phoneNumber}
           placeholder="شماره موبایل"
           className={cn(
             `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
-                  dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50
+                  dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50 dark:text-white
                   
                 max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
             errors.phoneNumber &&
@@ -81,11 +105,11 @@ const FirstStep = ({ setStep, setUserInfo }) => {
         )}
 
         <button
-        disabled={loading}
+          disabled={loading}
           className="
-                bg-[#505050] cursor-pointer rounded-[50px] text-[18px] text-white w-[35%] p-[10px_0] transition hover:bg-[#626262] mb-[20px]
+            bg-[#505050] cursor-pointer rounded-[50px] text-[17px] text-white w-[35%] p-[10px_0] transition hover:bg-[#626262] mb-[20px] absolute top-[85px] left-[0] h-[55px]
                 dark:bg-gray-600 dark:hover:bg-[rgb(87,98,115)]
-                disabled:cursor-default disabled:hover:bg-[#505050]
+                disabled:cursor-default disabled:hover:bg-[#505050] disabled:text-[20px] 
                  
                 max-[700px]:p-[7px_0]"
           type="submit"
@@ -94,7 +118,7 @@ const FirstStep = ({ setStep, setUserInfo }) => {
         </button>
       </form>
 
-      <VerifyCode setStep={setStep} setUserInfo={setUserInfo} />
+      <VerifyCode setStep={setStep} saveUser={saveUser} />
     </>
   );
 };

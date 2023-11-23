@@ -29,7 +29,7 @@ body,
 }
 
 .leaflet-layer{
-  filter: brightness(0.644) invert(1) contrast(3.4) hue-rotate(10deg) saturate(0.7);
+  /* filter: brightness(0.644) invert(1) contrast(3.4) hue-rotate(10deg) saturate(0.7); */
 }
 
 .leaflet-touch .leaflet-control-layers,
