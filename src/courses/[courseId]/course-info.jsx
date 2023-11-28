@@ -31,6 +31,7 @@ import { Slider } from "./slider";
 
 import defaultCourseThumbnail from "../../assets/default-course-thumbnail.png";
 import toast from "react-hot-toast";
+import { cn } from "../../../libs/utils";
 
 export const CourseInfo = () => {
   const {
@@ -50,14 +51,14 @@ export const CourseInfo = () => {
   const [teacher, setTeacher] = useState(null);
   const [isPending, setIsPending] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-  // const [dissLikeCount, setDisLikeCount] = useState(0);
+  const [dissLikeCount, setDisLikeCount] = useState(0);
 
   useMemo(() => {
     if (isSuccess) {
       getTeacherById(course?.teacherId).then((res) => setTeacher(res));
       setLikeCount(course?.likeCount);
-      // unComment this when disslike is available
-      // setDisLikeCount(course?.dissLikeCount);
+      setDisLikeCount(course?.dissLikeCount);
+      setIsBookMarked(course?.isUserFavorite);
     }
   }, [isSuccess, course?.teacherId, course?.likeCount]);
 
@@ -215,21 +216,21 @@ export const CourseInfo = () => {
       setIsPending(false);
     }
   };
-  // const handleDisLike = async () => {
-  //   try {
-  //     if (!userData.user) return onOpen("unauthorizedModal");
-  //     setIsPending(true);
-  //     await likeCourse(course?.courseId).then(() => {
-  //       setDisLikeCount((c) => c + 1);
-  //       toast.success("نظر پسندیده شد");
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error("مشکلی پیش آمده دوباره امتحان کنید");
-  //   } finally {
-  //     setIsPending(false);
-  //   }
-  // };
+  const handleDisLike = async () => {
+    try {
+      if (!userData.user) return onOpen("unauthorizedModal");
+      setIsPending(true);
+      await likeCourse(course?.courseId).then(() => {
+        setDisLikeCount((c) => c + 1);
+        toast.success("نظر پسندیده شد");
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش آمده دوباره امتحان کنید");
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
     <div className="max-w-[1700px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5 pt-20">
@@ -259,7 +260,7 @@ export const CourseInfo = () => {
               دسته بندی
             </h5>
             <h5 className="text-sm text-gray-600/80 dark:text-gray-300/80">
-              {course?.category}
+              {course?.techs.join(",")}
             </h5>
           </span>
         </div>
@@ -286,23 +287,29 @@ export const CourseInfo = () => {
           <button
             onClick={handleLike}
             disabled={isPending}
-            className="flex items-center justify-center gap-x-2"
+            className="flex items-center justify-center gap-x-2  dark:text-dark-primary text-primary hover:text-primary/80 dark:hover:text-dark-primary/80 transition"
           >
-            <ThumbsUp className="h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-primary text-primary hover:text-primary/80 dark:hover:text-dark-primary/80 transition " />
-            <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
+            <ThumbsUp
+              className={cn(
+                "h-7 w-7 md:h-5 md:w-5",
+                +course?.currentUserLike &&
+                  "fill-primary dark:fill-dark-primary"
+              )}
+            />
+            <p className="text-2xl md:text-lg dark:text-gray-300 text-gray-500">
               {getPersianNumbers(likeCount)}
             </p>
           </button>
-          {/* <button
+          <button
             onClick={handleDisLike}
             disabled={isPending}
-            className="flex items-center justify-center gap-x-2"
+            className="flex items-center justify-center gap-x-2 dark:text-dark-destructive text-destructive hover:text-destructive/80 dark:hover:text-dark-destructive/80 transition"
           >
-            <ThumbsDown className="h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-destructive text-destructive hover:text-destructive/80 dark:hover:text-dark-destructive/80 transition " />
-            <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
+            <ThumbsDown className="h-7 w-7 md:h-5 md:w-5" />
+            <p className="text-2xl md:text-lg dark:text-gray-300 text-gray-500">
               {getPersianNumbers(dissLikeCount)}
             </p>
-          </button> */}
+          </button>
         </div>
       </div>
 

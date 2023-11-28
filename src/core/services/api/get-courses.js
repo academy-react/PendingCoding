@@ -6,6 +6,8 @@ const getTopCourses = async (count) =>
 const getAllCourses = async (params) =>
   await apiCall("/Home/GetCoursesWithPagination", { params });
 
+const getCategories = async () => await apiCall("/Home/GetTechnologies");
+
 const getCourseById = async (id) =>
   await apiCall(`/Home/GetCourseDetails?CourseId=${id}`);
 
@@ -29,6 +31,7 @@ const likeComment = async (commentId) => {
   formData.append("CourseCommandId", commentId);
   await apiCall("/Course/AddCourseCommentLike", formData);
 };
+
 const disLikeComment = async (commentId) => {
   const formData = new FormData();
   formData.append("CourseCommandId", commentId);
@@ -47,6 +50,7 @@ const getCommentReplies = async (courseId, commentId) =>
 export {
   getTopCourses,
   getAllCourses,
+  getCategories,
   getCourseById,
   likeCourse,
   deleteCourseLike,

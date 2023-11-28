@@ -88,20 +88,24 @@ export const Description = ({ details, selected }) => {
               </div>
             ) : (
               <>
-                {count === details?.courses?.length ? (
-                  <button
-                    onClick={handleReset}
-                    className="text-gray-100 dark:text-gray-200 bg-primary dark:bg-dark-primary hover:text-gray-100/80 dark:hover:text-gray-200/80 hover:bg-primary/80 dark:hover:bg-dark-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
-                  >
-                    نمایش کمتر
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleMore}
-                    className="text-gray-100 dark:text-gray-200 bg-primary dark:bg-dark-primary hover:text-gray-100/80 dark:hover:text-gray-200/80 hover:bg-primary/80 dark:hover:bg-dark-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
-                  >
-                    نمایش بیشتر
-                  </button>
+                {details?.courses?.length !== 6 && (
+                  <>
+                    {count === details?.courses?.length ? (
+                      <button
+                        onClick={handleReset}
+                        className="text-gray-100 dark:text-gray-200 bg-primary dark:bg-dark-primary hover:text-gray-100/80 dark:hover:text-gray-200/80 hover:bg-primary/80 dark:hover:bg-dark-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
+                      >
+                        نمایش کمتر
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleMore}
+                        className="text-gray-100 dark:text-gray-200 bg-primary dark:bg-dark-primary hover:text-gray-100/80 dark:hover:text-gray-200/80 hover:bg-primary/80 dark:hover:bg-dark-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
+                      >
+                        نمایش بیشتر
+                      </button>
+                    )}
+                  </>
                 )}
               </>
             )}
@@ -135,20 +139,24 @@ export const Description = ({ details, selected }) => {
               </div>
             ) : (
               <>
-                {count === details?.courses?.length ? (
-                  <button
-                    onClick={handleReset}
-                    className="text-gray-100 dark:text-gray-200 bg-primary dark:bg-dark-primary hover:text-gray-100/80 dark:hover:text-gray-200/80 hover:bg-primary/80 dark:hover:bg-dark-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
-                  >
-                    نمایش کمتر
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleMore}
-                    className="text-gray-100 dark:text-gray-200 bg-primary dark:bg-dark-primary hover:text-gray-100/80 dark:hover:text-gray-200/80 hover:bg-primary/80 dark:hover:bg-dark-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
-                  >
-                    نمایش بیشتر
-                  </button>
+                {details?.courses?.length !== 6 && (
+                  <>
+                    {count === details?.courses?.length ? (
+                      <button
+                        onClick={handleReset}
+                        className="text-gray-100 dark:text-gray-200 bg-primary dark:bg-dark-primary hover:text-gray-100/80 dark:hover:text-gray-200/80 hover:bg-primary/80 dark:hover:bg-dark-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
+                      >
+                        نمایش کمتر
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleMore}
+                        className="text-gray-100 dark:text-gray-200 bg-primary dark:bg-dark-primary hover:text-gray-100/80 dark:hover:text-gray-200/80 hover:bg-primary/80 dark:hover:bg-dark-primary/80 transition px-7 py-2 rounded-full self-center mt-8 mb-3"
+                      >
+                        نمایش بیشتر
+                      </button>
+                    )}
+                  </>
                 )}
               </>
             )}

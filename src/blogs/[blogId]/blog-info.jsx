@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { Bookmark, ThumbsUp, User } from "lucide-react";
+import { Bookmark, Heart, User } from "lucide-react";
 
 import { getBlogById, likeBlog } from "../../core/services/api/get-blogs";
 import { useModal } from "../../hooks/use-modal-store";
@@ -143,11 +143,11 @@ export const BlogInfo = () => {
 
   return (
     <div className="max-w-[1900px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5 pt-20">
-      <div className="flex mx-auto md:mx-0 justify-center items-center">
+      <div className="flex  justify-center items-center">
         <NavigatorTracer />
       </div>
       {/* BookMark and Teacher Pic */}
-      <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-10 mt-5 mb-10">
+      <div className="w-11/12 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-10 mt-5 mb-10">
         <div className="flex justify-center items-center gap-x-2">
           {isBookMarked ? (
             <Bookmark
@@ -192,21 +192,22 @@ export const BlogInfo = () => {
             </h5>
           </span>
         </div>
-        <div className="flex justify-center items-center gap-x-3 self-end">
+        <div className="flex justify-center items-center gap-x-3 self-end md:self-center">
           <button
             onClick={handleLike}
             disabled={isPending || blog?.detailsNewsDto.currentUserIsLike}
             className="flex items-center justify-center gap-x-1 dark:text-gray-300 text-gray-500 hover:text-primary dark:hover:text-dark-primary transition disabled:opacity-50 dark:disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            <ThumbsUp
-              className={cn(
-                "h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-primary text-primary hover:text-primary/80 dark:hover:text-dark-primary/80 transition",
-                blog?.detailsNewsDto.currentUserIsLike && "fill-primary"
-              )}
-            />
-            <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
+            <p className="text-2xl dark:text-gray-300 text-gray-500">
               {getPersianNumbers(likeCount)}
             </p>
+            <Heart
+              className={cn(
+                "h-7 w-7 dark:text-dark-destructive text-destructive hover:text-destructive/80 dark:hover:text-dark-destructive/80 transition",
+                blog?.detailsNewsDto.currentUserIsLike &&
+                  "fill-destructive dark:fill-dark-destructive"
+              )}
+            />
           </button>
           {/* <button
             onClick={handleDisLike}

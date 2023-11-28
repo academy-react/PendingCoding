@@ -3,7 +3,7 @@ import { BookX, Grid2x2, Menu, Rows } from "lucide-react";
 import { useQuery } from "react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { getAllCourses } from "../core/services/api/get-courses";
+import { getAllCourses, getCategories } from "../core/services/api/get-courses";
 
 import NavigatorTracer from "../components/navigator-tracer";
 import { Seperator } from "../components/seperator";
@@ -43,7 +43,7 @@ const orderBy = [
 ];
 
 export const Courses = () => {
-  const [values, setValues] = useState([20, 450000]);
+  const [values, setValues] = useState([20, 2500000]);
   const [isVertical, setIsVertical] = useState(true);
   const { onOpen } = useModal();
 
@@ -61,10 +61,15 @@ export const Courses = () => {
     queryFn: () => getAllCourses(),
     staleTime: 5000,
   });
-
-  if (isLoading) return <Loading />;
-
-  if (isError) return <Error />;
+  const {
+    data: categories,
+    isLoading: categoryLoading,
+    isError: categoryError,
+  } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getCategories(),
+    staleTime: 5000,
+  });
 
   let filteredData = data?.courseFilterDtos?.filter((course) => {
     if (!course_name && !categoryId && !isFinished && !teacher_name) {
@@ -89,6 +94,14 @@ export const Courses = () => {
         )
     ) {
       if (course.cost >= values[0] && course.cost <= values[1]) return course;
+    } else if (
+      course?.technologyList
+        .replace(/ /g, "")
+        .replace("آ", "ا")
+        .toLowerCase()
+        .includes(categoryId?.replace(/ /g, "").replace("آ", "ا").toLowerCase())
+    ) {
+      if (course.cost >= values[0] && course.cost <= values[1]) return course;
     }
   });
 
@@ -103,6 +116,9 @@ export const Courses = () => {
 
     filteredData = newArray;
   }
+
+  if (isLoading || categoryLoading) return <Loading />;
+  if (isError || categoryError) return <Error />;
 
   return (
     <div className="max-w-[1700px] bg-gra mx-auto flex flex-col items-start justify-center gap-y-10 p-10 2xl:p-20">
@@ -120,7 +136,7 @@ export const Courses = () => {
         )}
       >
         {/* Filter div */}
-        <Filter values={values} setValues={setValues} />
+        <Filter categories={categories} values={values} setValues={setValues} />
         <MobileFilter values={values} setValues={setValues} />
         <button
           onClick={() => onOpen("filterDialog")}

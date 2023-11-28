@@ -11,6 +11,7 @@ import { VerticalCard } from "./vertical-card";
 import { Select } from "../components/select";
 import { HorizontalCard } from "./horizontal-card";
 import { cn } from "../../libs/utils";
+import { scrollToTop } from "../../libs/scroll-to-top";
 
 const filters = [
   { id: 1, label: 6, value: 6 },
@@ -27,6 +28,7 @@ export const BlogCards = ({ courses, itemsPerPage, isVertical }) => {
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % courses?.length;
     setItemOffset(newOffset);
+    scrollToTop(0);
   };
 
   return (

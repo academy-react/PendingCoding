@@ -2,9 +2,12 @@ import * as z from "zod";
 import { motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 import { CommentCard } from "./comment-card";
 import { Banner } from "../../components/banner";
+import { useState } from "react";
+import { scrollToTop } from "../../../libs/scroll-to-top";
 
 const backdrop = {
   hidden: {
@@ -28,6 +31,7 @@ const formSchema = z.object({
 });
 
 export const Description = ({ details, selected }) => {
+  const [count, setCount] = useState(0);
   let Info;
 
   const form = useForm({
@@ -41,6 +45,13 @@ export const Description = ({ details, selected }) => {
 
   const onSubmit = async (values) => {
     console.log(values);
+  };
+
+  const handleMore = () => {
+    if (count >= details.comments?.length) {
+      scrollToTop(900);
+      setCount(4);
+    } else setCount((c) => c + 4);
   };
 
   if (selected === details.label && details.label === "توضیحات") {
@@ -65,9 +76,35 @@ export const Description = ({ details, selected }) => {
         className="flex flex-col items-center justify-center gap-y-10"
       >
         <div className="w-full border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl">
-          {details.comments.map((comment) => (
-            <CommentCard key={comment.id} comment={comment} />
-          ))}
+          {details.comments?.length > 0 ? (
+            <>
+              {details.comments?.slice(0, count).map((comment) => (
+                <CommentCard key={comment.id} comment={comment} />
+              ))}
+              <div className="w-full flex items-center justify-center mt-2">
+                <button
+                  onClick={handleMore}
+                  className="flex items-center justify-center gap-x-2 text-gray-500 hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-900 transition bg-gray-300/40 hover:bg-gray-300/60 dark:bg-gray-300 dark:hover:bg-gray-300/80 hover:shadow-md px-4 py-3 rounded-xl"
+                >
+                  {count >= comments?.length ? (
+                    <>
+                      نمایش کمتر
+                      <ChevronUp className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                    </>
+                  ) : (
+                    <>
+                      نمایش بیشتر
+                      <ChevronDown className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </>
+          ) : (
+            <p className="text-lg text-gray-500 dark:text-gray-300">
+              نظری برای این دوره تاکنون ثبت نشده است
+            </p>
+          )}
         </div>
         <div className="w-full flex flex-col justify-center mt-8 mb-5 items-start gap-y-7">
           <Banner

@@ -39,25 +39,22 @@ const orderBy = [
 ];
 
 export const Blogs = () => {
+  let filteredData = [];
   const [isVertical, setIsVertical] = useState(true);
-
   const [searchParams] = useSearchParams();
-
   const { data, isLoading, isError } = useQuery({
     queryKey: ["blogs"],
     queryFn: () => getAllBlogs(),
     staleTime: 5000,
   });
-
-  if (isLoading) return <Loading />;
-
-  if (isError) return <Error />;
-
   const blog_name = searchParams.get("blog_name");
   const blogFilterBy = searchParams.get("blogFilterBy");
   const itemsPerPage = parseInt(searchParams.get("items-per-page"));
 
-  let filteredData = data?.news.filter((blog) => {
+  if (isLoading) return <Loading />;
+  if (isError) return <Error />;
+
+  filteredData = data?.news.filter((blog) => {
     if (!blog_name) return blog;
     else if (
       blog?.title

@@ -125,11 +125,14 @@ export const MobileFilter = ({ values, setValues }) => {
               onClick={onClose}
             />
             <div className="flex flex-col items-center justify-center gap-y-5">
-              <div className="w-full flex items-start justify-between gap-x-16">
-                <div className="flex flex-col justify-start items-start">
+              <div className="w-full flex flex-col items-start justify-between gap-x-16 gap-y-3">
+                <div className="w-full flex items-center justify-between">
                   <h1 className="text-base text-gray-500 dark:text-gray-300/90 mb-2">
                     دسته بندی
                   </h1>
+                  <div className="w-5 border border-gray-500 dark:border-gray-300/80 self-center" />
+                </div>
+                <div className="grid grid-cols-3 gap-3">
                   {categories.map((category) => (
                     <CategoryItem
                       key={category.id}
@@ -138,14 +141,16 @@ export const MobileFilter = ({ values, setValues }) => {
                     />
                   ))}
                 </div>
-                <div className="w-5 border border-gray-500 mt-3" />
               </div>
               <Seperator />
-              <div className="w-full flex items-start justify-between gap-x-16">
-                <div className="flex flex-col justify-start items-start">
-                  <h1 className="text-base text-gray-500 dark:text-gray-300/90 mb-2">
+              <div className="w-full flex flex-col justify-start items-start gap-y-3">
+                <div className="w-full flex items-center justify-between">
+                  <h1 className="text-base text-gray-500 dark:text-gray-300/90">
                     ظرفیت
                   </h1>
+                  <div className="w-5 border border-gray-500 dark:border-gray-300/80" />
+                </div>
+                <div className="flex items-center justify-center gap-4">
                   {capacities.map((capacity) => (
                     <CapacityItems
                       key={capacity.id}
@@ -154,7 +159,6 @@ export const MobileFilter = ({ values, setValues }) => {
                     />
                   ))}
                 </div>
-                <div className="w-5 border border-gray-500 mt-3" />
               </div>
 
               <Seperator />
