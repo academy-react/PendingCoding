@@ -6,17 +6,32 @@ const getTopCourses = async (count) =>
 const getAllCourses = async (params) =>
   await apiCall("/Home/GetCoursesWithPagination", { params });
 
+const getCategories = async () => await apiCall("/Home/GetTechnologies");
+
 const getCourseById = async (id) =>
   await apiCall(`/Home/GetCourseDetails?CourseId=${id}`);
 
 const getCourseComments = async (courseId) =>
   await apiCall(`/Course/GetCourseCommnets/${courseId}`);
 
+const likeCourse = async (courseId) => {
+  const formData = new FormData();
+  formData.append("CourseId", courseId);
+  await apiCall.post("/Course/AddCourseLike", formData);
+};
+
+const deleteCourseLike = async (course_like_id) => {
+  const formData = new FormData();
+  formData.append("CourseLikeId", course_like_id);
+  await apiCall.delete("/Course/DeleteCourseLike", formData);
+};
+
 const likeComment = async (commentId) => {
   const formData = new FormData();
   formData.append("CourseCommandId", commentId);
   await apiCall("/Course/AddCourseCommentLike", formData);
 };
+
 const disLikeComment = async (commentId) => {
   const formData = new FormData();
   formData.append("CourseCommandId", commentId);
@@ -35,7 +50,10 @@ const getCommentReplies = async (courseId, commentId) =>
 export {
   getTopCourses,
   getAllCourses,
+  getCategories,
   getCourseById,
+  likeCourse,
+  deleteCourseLike,
   getCourseComments,
   likeComment,
   disLikeComment,

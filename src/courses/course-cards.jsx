@@ -7,8 +7,10 @@ import { getPersianNumbers } from "../../libs/get-persian-numbers";
 import { VerticalCard } from "./vertical-card";
 import { Select } from "../components/select";
 import { HorizontalCard } from "./horizontal-card";
+
 import { cn } from "../../libs/utils";
 import { persianPagination } from "../../libs/get-persian-numbers";
+import { scrollToTop } from "../../libs/scroll-to-top";
 
 const filters = [
   { id: 1, label: 6, value: 6 },
@@ -25,6 +27,7 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % courses?.length;
     setItemOffset(newOffset);
+    scrollToTop(0);
   };
 
   return (
@@ -53,8 +56,8 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
         <div className="flex items-center justify-center text-gray-400">
           <h1>
             {`نمایش ${getPersianNumbers(itemOffset + 1)} تا ${getPersianNumbers(
-              endOffset > courses.length ? courses.length + 1 : endOffset + 1
-            )} از ${getPersianNumbers(courses?.length + 1)} نتیجه`}
+              endOffset > courses.length ? courses.length : endOffset
+            )} از ${getPersianNumbers(courses?.length)} نتیجه`}
           </h1>
         </div>
         <ReactPaginate

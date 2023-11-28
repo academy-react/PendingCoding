@@ -67,7 +67,7 @@ export const TeacherCards = ({ teachers, itemsPerPage, isVertical }) => {
         <div className="flex items-center justify-center text-gray-400">
           <h1>
             {`نمایش ${getPersianNumbers(itemOffset + 1)} تا ${getPersianNumbers(
-              endOffset > teachers.length ? teachers.length + 1 : endOffset
+              endOffset > teachers.length ? teachers.length : endOffset
             )} از ${getPersianNumbers(teachers?.length)} نتیجه`}
           </h1>
         </div>

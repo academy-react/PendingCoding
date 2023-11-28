@@ -1,11 +1,14 @@
 import * as z from "zod";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "react-query";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { useModal } from "../../hooks/use-modal-store";
+import { scrollToTop } from "../../../libs/scroll-to-top";
 
 import { CommentCard } from "./comment-card";
 import { Banner } from "../../components/banner";
@@ -40,6 +43,7 @@ const formSchema = z.object({
 export const Description = ({ teacher, details, selected }) => {
   const { id: courseId } = useParams();
   const { onOpen } = useModal();
+  const [count, setCount] = useState(4);
 
   let Info;
 
@@ -66,6 +70,13 @@ export const Description = ({ teacher, details, selected }) => {
     queryFn: () => getCourseComments(courseId),
     staleTime: 5000,
   });
+
+  const handleMore = () => {
+    if (count >= comments?.length) {
+      scrollToTop(900);
+      setCount(4);
+    } else setCount((c) => c + 4);
+  };
 
   if (selected === details.label && details.label === "توضیحات") {
     Info = (
@@ -172,9 +183,27 @@ export const Description = ({ teacher, details, selected }) => {
             <>
               {comments?.length > 0 ? (
                 <>
-                  {comments?.map((comment) => (
+                  {comments?.slice(0, count).map((comment) => (
                     <CommentCard key={comment.id} comment={comment} />
                   ))}
+                  <div className="w-full flex items-center justify-center mt-2">
+                    <button
+                      onClick={handleMore}
+                      className="flex items-center justify-center gap-x-2 text-gray-500 hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-900 transition bg-gray-300/40 hover:bg-gray-300/60 dark:bg-gray-300 dark:hover:bg-gray-300/80 hover:shadow-md px-4 py-3 rounded-xl"
+                    >
+                      {count >= comments?.length ? (
+                        <>
+                          نمایش کمتر
+                          <ChevronUp className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                        </>
+                      ) : (
+                        <>
+                          نمایش بیشتر
+                          <ChevronDown className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </>
               ) : (
                 <p className="text-lg text-gray-500 dark:text-gray-300">
