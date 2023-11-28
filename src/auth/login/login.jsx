@@ -11,7 +11,7 @@ import { useState } from "react";
 import { loginAPI } from "../../core/services/api/auth";
 import { setItem } from "../../core/services/common/storage.services";
 
-const Login = ({ login }) => {
+const Login = ({ login, dataLogin }) => {
   const formSchema = z.object({
     email: z
       .string()
@@ -72,7 +72,8 @@ const Login = ({ login }) => {
        
       max-[700px]:w-[500px] max-[700px]:h-[500px]"
     >
-      <div
+      <motion.div
+        animate={dataLogin}
         className="w-[350px] h-[460px] flex justify-center items-center flex-col      flex-nowrap
          
          max-[700px]:w-[275px]"
@@ -93,7 +94,7 @@ const Login = ({ login }) => {
             placeholder="پست الکترونیکی"
             className={cn(
               `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
-              dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50
+              dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50 dark:text-white
                  
               max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
               errors.email &&
@@ -120,7 +121,7 @@ const Login = ({ login }) => {
             placeholder="رمز عبور"
             className={cn(
               `focus:outline-none focus:border-[#989898]  block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
-              dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50
+              dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50 dark:text-gray-50
                  
               max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
               errors.password &&
@@ -179,7 +180,9 @@ const Login = ({ login }) => {
           <button
             className="
             bg-[#505050] cursor-pointer rounded-[50px] text-[18px] text-white w-[100%] p-[10px_0] transition hover:bg-[#626262]
+            disabled:bg-[#5e5e5e] disabled:cursor-no-drop
             dark:bg-gray-600 dark:hover:bg-[rgb(87,98,115)]
+            dark:disabled:bg-[rgb(67,76,91)]
                  
             max-[700px]:p-[7px_0]"
             type="submit"
@@ -188,7 +191,7 @@ const Login = ({ login }) => {
             ورود{" "}
           </button>
         </form>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };

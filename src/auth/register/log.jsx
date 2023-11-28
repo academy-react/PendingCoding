@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const Log = ({log , handleAnimate}) => {
+const Log = ({log , handleAnimate , dataLog}) => {
   return (
     <motion.div
      animate={log}
@@ -12,7 +12,9 @@ const Log = ({log , handleAnimate}) => {
      max-[700px]:w-[500px] max-[700px]:h-[500px] max-[700px]:mt-[-150px]"
     >
 
-      <div className="w-[380px] mr-[30px] flex flex-col flex-wrap gap-[15px] items-center max-[1110px]:m-[100px_0_0_0]">
+      <motion.div
+      animate={dataLog}
+       className="w-[380px] mr-[30px] flex flex-col flex-wrap gap-[15px] items-center max-[1110px]:m-[100px_0_0_0]">
         <h1 className="text-[24px]"> قبلا ثبت نام کرده اید؟</h1>
         <p className="text-[14px]">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و .با استفاده از طراحان گرافیک است</p>
         <p className="text-[14px] w-[310px]"> لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و .با استفاده از طراحان گرافیک است </p>
@@ -27,7 +29,7 @@ const Log = ({log , handleAnimate}) => {
         > ورود 
 
         </button>
-      </div>
+      </motion.div>
     </motion.div>
   )
 }

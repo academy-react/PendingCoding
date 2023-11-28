@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const Reg = ({reg , loginHandleAnimate}) => {
+const Reg = ({reg , loginHandleAnimate , dataReg}) => {
   return (
     <motion.div
       animate={reg}
@@ -13,7 +13,8 @@ const Reg = ({reg , loginHandleAnimate}) => {
     >
       {" "}
       {/* {style.reg} */}
-      <div
+      <motion.div
+      animate={dataReg}
         className="w-[380px] ml-[30px] flex flex-col flex-wrap gap-[25px] items-center max-[1110px]:m-[100px_0_0_0]
       
       max-[700px]:gap-[15px]"
@@ -57,7 +58,7 @@ const Reg = ({reg , loginHandleAnimate}) => {
           ></Link> */}
           ثبت نام
         </button>{" "}
-      </div>
+      </motion.div>
     </motion.div>
   );
 };

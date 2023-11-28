@@ -35,13 +35,18 @@ body,
 .leaflet-touch .leaflet-control-layers,
 .leaflet-touch .leaflet-bar{
   border:none;
+  border-radius:7px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  gap:7px;
+  transform: scale(1.4);
+  margin: 25px 17px;
 }
 
 .leaflet-bar a {
   background:#5c55c9;
-  border-radius:2px;
-  transform: scale(1.4);
-  margin:5px 0 20px 5px;
+  border-radius:7px;
   border:none;
   color: white;
 }

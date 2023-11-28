@@ -8,42 +8,62 @@ import { useState } from "react";
 const Auth = () => {
   const [show, setShow] = useState(false);
 
-  const register = useAnimationControls();
+  const signIn = useAnimationControls();
   const log = useAnimationControls();
+  const dataRegister = useAnimationControls();
+  const dataLog = useAnimationControls();
 
   const login = useAnimationControls();
   const reg = useAnimationControls();
+  const dataLogin = useAnimationControls();
+  const dataReg = useAnimationControls();
+  
 
   const handleAnimate = () => {
-    register.start({
+    signIn.start({
       x: "400px",
-      transition: { duration: 0.3 },
-      opacity: "0",
+      transition: { duration: 1.7 },
+      zIndex: "999",
     });
     log.start({
       x: "-400px",
-      transition: { duration: 0.3 },
-      opacity: "0",
+      transition: { duration: 0.95 },
     });
 
-    setTimeout(() => setShow(true) , 300)
+    dataRegister.start({
+      opacity: "0",
+      transition: { duration: 0.9 },
+    });
+    dataLog.start({
+      opacity: "0",
+      transition: { duration: 0.9 },
+    });
+
+    setTimeout(() => setShow(true), 1000);
   };
 
   const loginHandleAnimate = () => {
     login.start({
       x: "-400px",
-      transition: { duration: 0.3 },
-      opacity: "0",
+      transition: { duration: 0.7 },
+      zIndex: "999",
     });
     reg.start({
       x: "400px",
-      transition: { duration: 0.3 },
-      opacity: "0",
+      transition: { duration: 0.7 },
     });
 
-    setTimeout(() => setShow(false) , 300)
+    dataReg.start({
+      opacity: "0",
+      transition: { duration: 0.9 },
+    });
+    dataLogin.start({
+      opacity: "0",
+      transition: { duration: 0.9 },
+    });
 
-  }
+    setTimeout(() => setShow(false), 1000);
+  };
 
   return (
     <div className="flex items-center justify-center w-full h-full p-[50px_0_100px] select-none">
@@ -55,13 +75,17 @@ const Auth = () => {
       >
         {!show ? (
           <>
-            <Register register={register} />
-            <Log log={log} handleAnimate={handleAnimate} />
+            <Register signIn={signIn} dataRegister={dataRegister} />
+            <Log log={log} handleAnimate={handleAnimate} dataLog={dataLog} />
           </>
         ) : (
           <>
-            <Login login={login} />
-            <Reg reg={reg} loginHandleAnimate={loginHandleAnimate} />
+            <Login login={login} dataLogin={dataLogin} />
+            <Reg
+              reg={reg}
+              loginHandleAnimate={loginHandleAnimate}
+              dataReg={dataReg}
+            />
           </>
         )}
       </div>
