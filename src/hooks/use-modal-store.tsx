@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { Coruse } from "../../types";
 
 export type ModalType =
   | "navDialog"
@@ -12,11 +13,8 @@ export type ModalType =
   | "unauthorizedModal";
 
 type ModalData = {
-  user?: {
-    id: string;
-    name: string;
-    image: string;
-  };
+  course?: Coruse;
+  reserveId?: string;
 };
 
 type ModalStore = {

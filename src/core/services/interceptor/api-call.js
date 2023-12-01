@@ -17,18 +17,18 @@ const onError = (err) => {
   if (err.response.status === 401) removeItem("token");
 
   if (err.response.status >= 400 && err.response.status < 500) {
-    console.log(err.message)
+    console.log(err.message);
   }
 
   return Promise.reject(err);
 };
 
 apiCall.interceptors.response.use(onSuccess, onError);
-
 apiCall.interceptors.request.use((opt) => {
   const token = getItem("token");
 
   if (token) opt.headers.Authorization = "Bearer " + token;
+
   return opt;
 });
 

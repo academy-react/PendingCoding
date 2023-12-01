@@ -1,16 +1,33 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Clock, Tags, User2 } from "lucide-react";
+import { Clock, Tags, ThumbsUp, ThumbsDown, BookOpen } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import { cn } from "../../../libs/utils";
 
-import { StarRate } from "../../components/starRate";
+import { useUser } from "../../hooks/use-user";
+import { useModal } from "../../hooks/use-modal-store";
 
-import defaultProfile from "../../assets/my-profile.jpg";
-import defaultCourseImage from "../../assets/python.jpg";
+import { StarRate } from "../../components/starRate";
 import { TooTip } from "../../components/tool-tip";
 
-export const CourseCard = ({ course, index }) => {
+import defaultCourseImage from "../../assets/python.jpg";
+import {
+  deleteCourseLike,
+  dissLikeCourse,
+  likeCourse,
+} from "../../core/services/api/get-courses";
+
+const status = {
+  "درحال برگذاری": <BookOpen className="text-gray-600 dark:text-gray-300" />,
+};
+
+export const CourseCard = ({ course, index, updateFn }) => {
+  const [isPending, setIsPending] = useState(false);
+  const { userData } = useUser();
+  const { onOpen } = useModal();
+
   const lastUpdate = new Date(course?.lastUpdate)
     .toLocaleDateString("fa-IR-u-nu-latn")
     .split("/");
@@ -28,6 +45,44 @@ export const CourseCard = ({ course, index }) => {
     "بهمن",
     "اسفند",
   ];
+
+  const handleLike = async () => {
+    try {
+      if (!userData.user) return onOpen("unauthorizedModal");
+      setIsPending(true);
+      if (course?.userIsLiked)
+        await deleteCourseLike(course?.courseId).then(() => {
+          toast.success("لایک پس گرفته شد");
+          updateFn();
+        });
+      else
+        await likeCourse(course?.courseId).then(() => {
+          toast.success("دوره لایک شد");
+          updateFn();
+        });
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش آمده دوباره امتحان کنید");
+    } finally {
+      setIsPending(false);
+    }
+  };
+  const handleDisLike = async () => {
+    try {
+      if (!userData.user) return onOpen("unauthorizedModal");
+      setIsPending(true);
+      await dissLikeCourse(course?.courseId).then(() => {
+        toast.success("دوره دیسلایک شد");
+        updateFn();
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش آمده دوباره امتحان کنید");
+    } finally {
+      setIsPending(false);
+    }
+  };
+
   return (
     <div className={index === 1 && "2xl:mt-24"}>
       <div className="w-[400px] mx-auto flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 dark:shadow-gray-700 dark:shadow-lg shadow-lg rounded-t-3xl rounded-b-lg overflow-hidden">
@@ -42,10 +97,37 @@ export const CourseCard = ({ course, index }) => {
           </h1>
         </div>
         <div className="w-full px-5 flex justify-between items-center">
-          <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
-            <User2 className="h-4 w-4 text-primary dark:text-gray-200/80" />
-            {getPersianNumbers(course?.currentRegistrants)}
-          </span>
+          <button
+            onClick={handleLike}
+            disabled={isPending}
+            className="flex items-center justify-center gap-x-2  dark:text-dark-primary text-primary hover:text-primary/80 dark:hover:text-dark-primary/80 transition"
+          >
+            <ThumbsUp
+              className={cn(
+                "h-7 w-7 md:h-5 md:w-5",
+                +course?.userIsLiked && "fill-primary dark:fill-dark-primary"
+              )}
+            />
+            <p className="text-2xl md:text-lg dark:text-gray-300 text-gray-500">
+              {getPersianNumbers(course?.likeCount)}
+            </p>
+          </button>
+          <button
+            onClick={handleDisLike}
+            disabled={isPending}
+            className="flex items-center justify-center gap-x-2 dark:text-dark-destructive text-destructive hover:text-destructive/80 dark:hover:text-dark-destructive/80 transition"
+          >
+            <ThumbsDown
+              className={cn(
+                "h-7 w-7 md:h-5 md:w-5",
+                +course?.userIsDissLiked &&
+                  "fill-destructive dark:fill-dark-destructive"
+              )}
+            />
+            <p className="text-2xl md:text-lg dark:text-gray-300 text-gray-500">
+              {getPersianNumbers(course?.dissLikeCount)}
+            </p>
+          </button>
           <TooTip name="آخرین بروزرسانی">
             <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
               <Clock className="h-4 w-4 text-primary dark:text-gray-200/80" />
@@ -59,11 +141,7 @@ export const CourseCard = ({ course, index }) => {
           </span>
         </div>
         <div className="flex justify-start w-full items-center px-3 py-2">
-          <img
-            src={course?.teacherAvatar || defaultProfile}
-            className="w-14 h-14 rounded-full object-cover"
-            alt="TeacherProfile"
-          />
+          {status[course?.statusName]}
           <span className="flex flex-col justify-center items-start gap-y-1 px-3 py-1">
             <h2 className="text-gray-600 dark:text-gray-200/80 text-base">
               {course?.teacherName}

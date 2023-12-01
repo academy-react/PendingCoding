@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useQuery } from "react-query";
 import { X } from "lucide-react";
+import { useQuery } from "react-query";
 
 import { useModal } from "../hooks/use-modal-store";
 import { useUser } from "../hooks/use-user";
@@ -23,14 +23,19 @@ const backdrop = {
 };
 
 export const ConfirmModal = () => {
-  const { isOpen, onClose, type } = useModal();
+  const { isOpen, onClose, type, data } = useModal();
   const { addToCart } = useUser();
-  const { data } = useQuery({
-    queryKey: ["courseId"],
-    enabled: false,
-  });
 
   const isModalOpen = isOpen && type === "confirmModal";
+  const { course } = data;
+
+  const { refetch } = useQuery({
+    queryKey: ["course_id", course?.courseId],
+  });
+
+  const handleConfirm = () => {
+    addToCart(course).then(() => refetch());
+  };
 
   return (
     isModalOpen && (
@@ -61,7 +66,7 @@ export const ConfirmModal = () => {
               </h1>
               <div className="w-full flex items-center justify-start gap-x-3 px-5 py-2">
                 <button
-                  onClick={() => addToCart(data?.data)}
+                  onClick={handleConfirm}
                   className="px-5 py-2 text-lg bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/90 rounded-xl"
                 >
                   تائید

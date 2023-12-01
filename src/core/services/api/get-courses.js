@@ -14,38 +14,61 @@ const getCourseById = async (id) =>
 const getCourseComments = async (courseId) =>
   await apiCall(`/Course/GetCourseCommnets/${courseId}`);
 
-const likeCourse = async (courseId) => {
+const likeCourse = async (courseId) =>
+  await apiCall.post(`/Course/AddCourseLike?CourseId=${courseId}`);
+
+const deleteCourseLike = async (user_like_id) => {
   const formData = new FormData();
-  formData.append("CourseId", courseId);
-  await apiCall.post("/Course/AddCourseLike", formData);
+  formData.append("CourseLikeId", user_like_id);
+  return await apiCall.delete("/Course/DeleteCourseLike", { data: formData });
 };
 
-const deleteCourseLike = async (course_like_id) => {
-  const formData = new FormData();
-  formData.append("CourseLikeId", course_like_id);
-  await apiCall.delete("/Course/DeleteCourseLike", formData);
+const addCourseToFavorites = async (courseId) => {
+  const body = { courseId };
+  return await apiCall.post("/Course/AddCourseFavorite", body);
 };
 
-const likeComment = async (commentId) => {
+const deleteCourseFavorite = async (user_favorite_id) => {
   const formData = new FormData();
-  formData.append("CourseCommandId", commentId);
-  await apiCall("/Course/AddCourseCommentLike", formData);
+  formData.append("CourseFavoriteId", user_favorite_id);
+  return await apiCall.delete("/Course/DeleteCourseFavorite", {
+    data: formData,
+  });
 };
 
-const disLikeComment = async (commentId) => {
+const dissLikeCourse = async (courseId) =>
+  apiCall.post(`/Course/AddCourseDissLike?CourseId=${courseId}`);
+
+const likeComment = async (params) => {
+  return await apiCall.post("/Course/AddCourseCommentLike", {}, { params });
+};
+
+const disLikeComment = async (params) =>
+  await apiCall.post("/Course/AddCourseCommentDissLike", {}, { params });
+
+const addComment = async (obj) => {
   const formData = new FormData();
-  formData.append("CourseCommandId", commentId);
-  await apiCall("/Course/AddCourseCommentDissLike", formData);
+  for (const key in obj) formData.append(key, obj[key]);
+  return await apiCall.post("/Course/AddCommentCourse", formData);
+};
+
+const editComment = async (obj) => {
+  const formData = new FormData();
+  for (const key in obj) formData.append(key, obj[key]);
+  return await apiCall.put("/Course/UpdateCourseComment", formData);
 };
 
 const replyComment = async (body) => {
   const formData = new FormData();
   for (const attr in body) formData.append(attr, body[attr]);
-  await apiCall("/Course/AddReplyCourseComment", formData);
+  return await apiCall.post("/Course/AddReplyCourseComment", formData);
 };
 
 const getCommentReplies = async (courseId, commentId) =>
   await apiCall(`/Course/GetCourseReplyCommnets/${courseId}/${commentId}`);
+
+const rateCourse = async (params) =>
+  await apiCall.post(`/Course/SetCourseRating`, {}, { params });
 
 export {
   getTopCourses,
@@ -54,9 +77,15 @@ export {
   getCourseById,
   likeCourse,
   deleteCourseLike,
+  dissLikeCourse,
+  addCourseToFavorites,
+  deleteCourseFavorite,
   getCourseComments,
   likeComment,
   disLikeComment,
+  addComment,
+  editComment,
   replyComment,
   getCommentReplies,
+  rateCourse,
 };

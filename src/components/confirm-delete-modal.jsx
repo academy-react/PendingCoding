@@ -24,18 +24,15 @@ const backdrop = {
 };
 
 export const ConfirmDeleteModal = () => {
-  const { isOpen, onClose, type } = useModal();
+  const { isOpen, onClose, type, data } = useModal();
   const { removeFromCart } = useUser();
-  const { data } = useQuery({
-    queryKey: ["courseId"],
-    enabled: false,
-  });
 
   const isModalOpen = isOpen && type === "confirmDeleteModal";
 
+  const { course, reserveId } = data;
+
   const handleDelete = () => {
-    removeFromCart(data?.data.id);
-    toast.success("دوره با موفقیت حذف شد");
+    removeFromCart(course?.courseId, reserveId);
     onClose();
   };
 

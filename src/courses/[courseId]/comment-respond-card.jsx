@@ -66,11 +66,9 @@ const formSchema = z.object({
       message: `پاسختان باید کمتر از ${getPersianNumbers(100)} کلمه باشد`,
     }),
 });
-export const CommentRespondCard = ({ respond }) => {
+export const CommentRespondCard = ({ respond, updateFn }) => {
   const { onOpen } = useModal();
   const { userData } = useUser();
-  const [likeCount, setLikeCount] = useState(respond?.likeCount);
-  const [disLikeCount, setDisLikeCount] = useState(respond?.disslikeCount);
   const [isLoading, setIsLoading] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [isAnswering, setIsAnswering] = useState(false);
@@ -82,11 +80,9 @@ export const CommentRespondCard = ({ respond }) => {
     resolver: zodResolver(formSchema),
   });
 
-  const differenceInDays = getPersianNumbers(
-    Math.round(
-      (new Date().getTime() - new Date(respond.insertDate).getTime()) /
-        (1000 * 3600 * 24)
-    )
+  const differenceInDays = Math.round(
+    (new Date().getTime() - new Date(respond?.insertDate).getTime()) /
+      (1000 * 3600 * 24)
   );
   const postDate = new Date(respond.insertDate)
     .toLocaleDateString("fa-IR-u-nu-latn")
@@ -110,9 +106,13 @@ export const CommentRespondCard = ({ respond }) => {
     try {
       if (!userData.user) return onOpen("unauthorizedModal");
       setIsLoading(true);
-      await likeComment(respond.id).then(() => {
-        setLikeCount((c) => c + 1);
-        toast.success("نظر پسندیده شد");
+      const params = {
+        CourseCommandId: respond?.id,
+      };
+      await likeComment(params).then((res) => {
+        updateFn();
+        if (res.success) toast.success("نظر پسندیده شد");
+        else toast.error(res.message);
       });
     } catch (error) {
       console.log(error);
@@ -125,9 +125,13 @@ export const CommentRespondCard = ({ respond }) => {
     try {
       if (!userData.user) return onOpen("unauthorizedModal");
       setIsLoading(true);
-      await disLikeComment(respond.id).then(() => {
-        setDisLikeCount((c) => c + 1);
-        toast.success("نظر پسندیده شد");
+      const params = {
+        CourseCommandId: respond?.id,
+      };
+      await disLikeComment(params).then((res) => {
+        updateFn();
+        if (res.success) toast.success("نظر نقد شد");
+        else toast.error(res.message);
       });
     } catch (error) {
       console.log(error);
@@ -192,21 +196,33 @@ export const CommentRespondCard = ({ respond }) => {
               <button
                 onClick={handleLike}
                 disabled={isLoading}
-                className="flex items-center justify-center gap-x-1 dark:text-gray-300 text-gray-500 hover:text-primary dark:hover:text-dark-primary transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center gap-x-1 dark:text-dark-primary text-primary hover:text-primary dark:hover:text-dark-primary transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <ThumbsUp className="h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-primary text-primary hover:text-primary/80 dark:hover:text-dark-primary/80 transition " />
+                <ThumbsUp
+                  className={cn(
+                    "h-7 w-7 md:h-5 md:w-5 mt-2",
+                    respond?.currentUserEmotion === "LIKED" &&
+                      "fill-primary dark:fill-dark-primary"
+                  )}
+                />
                 <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
-                  {getPersianNumbers(likeCount)}
+                  {getPersianNumbers(respond?.likeCount)}
                 </p>
               </button>
               <button
                 onClick={handleDisLike}
                 disabled={isLoading}
-                className="flex items-center justify-center gap-x-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center gap-x-1 dark:text-dark-destructive text-destructive hover:text-destructive/80 dark:hover:text-dark-destructive/80 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <ThumbsDown className="h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-destructive text-destructive hover:text-destructive/80 dark:hover:text-dark-destructive/80 transition " />
+                <ThumbsDown
+                  className={cn(
+                    "h-7 w-7 md:h-5 md:w-5 mt-2",
+                    respond?.currentUserEmotion === "DISSLIKED" &&
+                      "fill-destructive dark:fill-dark-destructive"
+                  )}
+                />
                 <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
-                  {getPersianNumbers(disLikeCount)}
+                  {getPersianNumbers(respond?.disslikeCount)}
                 </p>
               </button>
             </div>
@@ -308,7 +324,9 @@ export const CommentRespondCard = ({ respond }) => {
             <span className="flex gap-x-1">
               <Clock className="text-gray-500 dark:text-gray-300" />
               <p className="dark:text-gray-300 text-gray-500">
-                {`${differenceInDays} روز پیش`}
+                {differenceInDays === 0
+                  ? "لحظه‌ای پیش"
+                  : `${getPersianNumbers(differenceInDays)} روز پیش`}
               </p>
             </span>
           </div>

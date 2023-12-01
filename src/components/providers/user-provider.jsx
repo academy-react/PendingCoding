@@ -2,6 +2,14 @@ import { createContext, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 
 import { useModal } from "../../hooks/use-modal-store";
+import {
+  reserveCourse,
+  deleteReservedCourse,
+} from "../../core/services/api/user";
+import {
+  addCourseToFavorites,
+  deleteCourseFavorite,
+} from "../../core/services/api/get-courses";
 
 export const UserContext = createContext(null);
 
@@ -19,27 +27,45 @@ function UserProvider({ children }) {
     }
   );
 
-  const addToCart = (course) => {
-    const newObj = {
-      ...userData,
-      cart: userData.cart.find((cartItem) => cartItem.id === course.id)
-        ? [...userData.cart]
-        : [...userData.cart, { ...course }],
-    };
-    setUserData(newObj);
-    localStorage.setItem("user", JSON.stringify(newObj));
-    toast.success("دوره به سبدتون اضافه شد");
-    onClose();
+  const addToCart = async (course) => {
+    try {
+      await reserveCourse(course?.courseId).then(() => {
+        const newObj = {
+          ...userData,
+          cart: userData.cart.find((c) => c.courseId === course?.courseId)
+            ? [...userData.cart]
+            : [...userData.cart, { ...course }],
+        };
+        setUserData(newObj);
+        localStorage.setItem("user", JSON.stringify(newObj));
+        toast.success("دوره به سبدتون اضافه شد");
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
+    } finally {
+      onClose();
+    }
   };
 
-  const removeFromCart = (id) => {
-    const newObj = {
-      ...userData,
-      cart: userData.cart.filter((cartItem) => cartItem.id !== id),
-    };
-    setUserData(newObj);
-    userData.cart.length === 1 && onClose();
-    localStorage.setItem("user", JSON.stringify(newObj));
+  const removeFromCart = async (courseId, reserveId) => {
+    try {
+      await deleteReservedCourse(reserveId).then(() => {
+        const newObj = {
+          ...userData,
+          cart: userData.cart.filter((c) => c.courseId !== courseId),
+        };
+        setUserData(newObj);
+        userData.cart.length === 1 && onClose();
+        localStorage.setItem("user", JSON.stringify(newObj));
+        toast.success("دوره با موفقیت حذف شد");
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
+    } finally {
+      onClose();
+    }
   };
 
   const checkout = (course) => {
@@ -80,24 +106,38 @@ function UserProvider({ children }) {
   //   localStorage.setItem("user", JSON.stringify(newObj));
   // };
 
-  const addToFavorites = (course) => {
-    const newObj = {
-      ...userData,
-      favorites: [...userInfo.favorites, { ...course }],
-    };
-    localStorage.setItem("user", JSON.stringify(newObj));
-    toast.success("به علاقه مندی اضافه شد");
+  const addToFavorites = async (courseId) => {
+    try {
+      await addCourseToFavorites(courseId).then(() => {
+        const newObj = {
+          ...userData,
+          favorites: [...userInfo.favorites, { courseId }],
+        };
+        setUserData(newObj);
+        localStorage.setItem("user", JSON.stringify(newObj));
+        toast.success("به علاقه مندی اضافه شد");
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
+    }
   };
 
-  const removeFromFavorites = (course) => {
-    const favorites = userInfo?.favorites.filter((f) => f.id !== course.id);
-
-    const newObj = {
-      ...userData,
-      favorites,
-    };
-    localStorage.setItem("user", JSON.stringify(newObj));
-    toast.success("از لیست علاقه مندی ها حذف شد");
+  const removeFromFavorites = async (courseId, user_favorite_id) => {
+    try {
+      await deleteCourseFavorite(user_favorite_id).then(() => {
+        const newObj = {
+          ...userData,
+          favorites: userInfo?.favorites.filter((f) => f.courseId !== courseId),
+        };
+        setUserData(newObj);
+        localStorage.setItem("user", JSON.stringify(newObj));
+        toast.success("از لیست علاقه مندی ها حذف شد");
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
+    }
   };
 
   return (

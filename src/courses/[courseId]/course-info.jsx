@@ -12,9 +12,15 @@ import {
   User2,
   Users2,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
-import { getCourseById, likeCourse } from "../../core/services/api/get-courses";
+import {
+  deleteCourseLike,
+  dissLikeCourse,
+  getCourseById,
+  likeCourse,
+} from "../../core/services/api/get-courses";
 import { getTeacherById } from "../../core/services/api/get-teacher";
 
 import { useModal } from "../../hooks/use-modal-store";
@@ -23,44 +29,43 @@ import { useUser } from "../../hooks/use-user";
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
 import NavigatorTracer from "../../components/navigator-tracer";
+import { NewCourseCard } from "../../components/new-course-card";
+import { Banner } from "../../components/banner";
 import { Header } from "./header";
 import { Description } from "./description";
-import { Banner } from "../../components/banner";
-import { NewCourseCard } from "../../components/new-course-card";
 import { Slider } from "./slider";
 
 import defaultCourseThumbnail from "../../assets/default-course-thumbnail.png";
-import toast from "react-hot-toast";
 import { cn } from "../../../libs/utils";
+import { StarRate } from "../../components/starRate";
 
 export const CourseInfo = () => {
-  const {
-    data: course,
-    isLoading,
-    isError,
-    isSuccess,
-  } = useQuery({
-    queryKey: ["course_id"],
-    queryFn: () => getCourseById(id),
-    staleTime: 5000,
-  });
   const { id } = useParams();
   const { isOpen, onOpen } = useModal();
   const { userData, addToFavorites, removeFromFavorites } = useUser();
   const [isBookMarked, setIsBookMarked] = useState(false);
   const [teacher, setTeacher] = useState(null);
   const [isPending, setIsPending] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [dissLikeCount, setDisLikeCount] = useState(0);
 
+  const {
+    data: course,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["course_id", id],
+    queryFn: () => getCourseById(id),
+    staleTime: 5000,
+    enabled: false,
+  });
   useMemo(() => {
-    if (isSuccess) {
-      getTeacherById(course?.teacherId).then((res) => setTeacher(res));
-      setLikeCount(course?.likeCount);
-      setDisLikeCount(course?.dissLikeCount);
-      setIsBookMarked(course?.isUserFavorite);
-    }
-  }, [isSuccess, course?.teacherId, course?.likeCount]);
+    getTeacherById(course?.teacherId).then((res) => setTeacher(res));
+    setLikeCount(course?.likeCount);
+    setDisLikeCount(course?.dissLikeCount);
+  }, [course?.teacherId, course?.likeCount, course?.dissLikeCount]);
 
   const details = [
     {
@@ -157,20 +162,25 @@ export const CourseInfo = () => {
   const [selected, setSelected] = useState(details[0].label);
 
   const isInCart = useMemo(
-    () => userData?.cart.some((c) => c.id === id),
-    [userData.cart, id]
+    () => userData?.cart.some((c) => c.courseId === id),
+    [id, userData?.cart]
   );
   const isPurchased = useMemo(
-    () => userData?.myCourses.some((c) => c.id === id),
-    [userData.myCourses, id]
+    () => +course?.isCourseUser,
+    [course?.isCourseUser]
   );
 
   useEffect(() => {
-    setIsBookMarked(userData?.favorites.some((c) => c.id === course?.id));
-  }, [course?.id, userData.favorites]);
+    if (!isMounted) {
+      setIsMounted(true);
+      refetch();
+    }
+  }, [isMounted, refetch]);
 
-  if (isLoading && !teacher) return <Loading />;
-  if (isError) return <Error />;
+  useEffect(() => {
+    const isBookMarked = userData?.favorites.some((c) => c.courseId === id);
+    setIsBookMarked(isBookMarked);
+  }, [id, userData?.favorites]);
 
   const startDate = new Date(course?.startTime)
     .toLocaleDateString("fa-IR-u-nu-latn")
@@ -194,21 +204,35 @@ export const CourseInfo = () => {
   ];
   const registered = course?.currentRegistrants;
 
-  const handleBookmark = () => {
-    if (userData.user) {
-      addToFavorites(course?.data);
-      setIsBookMarked(true);
-    } else onOpen("unauthorizedModal");
+  const handleBookmark = async () => {
+    try {
+      if (!userData.user) return onOpen("unauthorizedModal");
+      setIsPending(true);
+      if (isBookMarked)
+        removeFromFavorites(course?.courseId, course?.userFavoriteId);
+      else addToFavorites(course?.courseId).then(() => refetch());
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش آمده دوباره امتحان کنید");
+    } finally {
+      setIsPending(false);
+    }
   };
 
   const handleLike = async () => {
     try {
       if (!userData.user) return onOpen("unauthorizedModal");
       setIsPending(true);
-      await likeCourse(course?.id).then(() => {
-        setLikeCount((c) => c + 1);
-        toast.success("نظر پسندیده شد");
-      });
+      if (+course?.currentUserLike)
+        await deleteCourseLike(course?.userLikeId).then(() => {
+          toast.success("لایک پس گرفته شد");
+          refetch();
+        });
+      else
+        await likeCourse(course?.courseId).then(() => {
+          toast.success("دوره پسندیده شد");
+          refetch();
+        });
     } catch (error) {
       console.log(error);
       toast.error("مشکلی پیش آمده دوباره امتحان کنید");
@@ -220,9 +244,9 @@ export const CourseInfo = () => {
     try {
       if (!userData.user) return onOpen("unauthorizedModal");
       setIsPending(true);
-      await likeCourse(course?.courseId).then(() => {
-        setDisLikeCount((c) => c + 1);
-        toast.success("نظر پسندیده شد");
+      await dissLikeCourse(course?.courseId).then(() => {
+        toast.success("دوره نقد شد");
+        refetch();
       });
     } catch (error) {
       console.log(error);
@@ -232,29 +256,25 @@ export const CourseInfo = () => {
     }
   };
 
+  if (!isMounted) return null;
+  if (isLoading && !teacher) return <Loading />;
+  if (isError) return <Error />;
+
   return (
-    <div className="max-w-[1700px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 md:px-28 py-5 pt-20">
+    <div className="max-w-[1700px] mx-auto flex flex-col justify-center items-start gap-y-10 px-5 py-5 pt-20">
       <div>
         <NavigatorTracer />
       </div>
       {/* BookMark and Teacher Pic */}
       <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-10 mt-5 mb-10">
         <div className="flex justify-center items-center gap-x-2">
-          {isBookMarked ? (
-            <Bookmark
-              onClick={() => {
-                removeFromFavorites(course?.data);
-                setIsBookMarked(false);
-              }}
-              className="h-9 w-9 text-primary cursor-pointer"
-              fill="#5c55c9"
-            />
-          ) : (
-            <Bookmark
-              onClick={handleBookmark}
-              className="h-9 w-9 text-primary hover:text-primary/80 transition cursor-pointer"
-            />
-          )}
+          <Bookmark
+            onClick={handleBookmark}
+            className={cn(
+              "h-9 w-9 text-primary hover:text-primary/80 dark:text-dark-primary dark:hover:text-dark-primary/80 transition cursor-pointer",
+              isBookMarked && "fill-primary dark:fill-dark-primary"
+            )}
+          />
           <span className="flex flex-col justify-center items-start gap-y-2">
             <h5 className="text-sm text-gray-400 dark:text-gray-300">
               دسته بندی
@@ -287,7 +307,7 @@ export const CourseInfo = () => {
           <button
             onClick={handleLike}
             disabled={isPending}
-            className="flex items-center justify-center gap-x-2  dark:text-dark-primary text-primary hover:text-primary/80 dark:hover:text-dark-primary/80 transition"
+            className="flex items-center justify-center gap-x-2  dark:text-dark-primary text-primary hover:text-primary/80 dark:hover:text-dark-primary/80 transition disabled:opacity-70 disabled:cursor-not-allowed"
           >
             <ThumbsUp
               className={cn(
@@ -303,13 +323,20 @@ export const CourseInfo = () => {
           <button
             onClick={handleDisLike}
             disabled={isPending}
-            className="flex items-center justify-center gap-x-2 dark:text-dark-destructive text-destructive hover:text-destructive/80 dark:hover:text-dark-destructive/80 transition"
+            className="flex items-center justify-center gap-x-2 dark:text-dark-destructive text-destructive hover:text-destructive/80 dark:hover:text-dark-destructive/80 transition disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            <ThumbsDown className="h-7 w-7 md:h-5 md:w-5" />
+            <ThumbsDown
+              className={cn(
+                "h-7 w-7 md:h-5 md:w-5",
+                +course?.currentUserDissLike &&
+                  "fill-destructive dark:fill-dark-destructive"
+              )}
+            />
             <p className="text-2xl md:text-lg dark:text-gray-300 text-gray-500">
               {getPersianNumbers(dissLikeCount)}
             </p>
           </button>
+          <StarRate data={course} queryKey="course_id" />
         </div>
       </div>
 
@@ -327,7 +354,11 @@ export const CourseInfo = () => {
             <button
               onClick={() =>
                 onOpen(
-                  userData.user ? "confirmDeleteModal" : "unauthorizedModal"
+                  userData.user ? "confirmDeleteModal" : "unauthorizedModal",
+                  {
+                    course: course && course,
+                    reserveId: course?.courseReseveId,
+                  }
                 )
               }
               className="w-full px-20 py-2 bg-destructive dark:bg-dark-destructive hover:bg-destructive/80 dark:hover:bg-dark-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/80 disabled:cursor-not-allowed transition rounded-full "
@@ -341,7 +372,9 @@ export const CourseInfo = () => {
           ) : (
             <button
               onClick={() =>
-                onOpen(userData.user ? "confirmModal" : "unauthorizedModal")
+                onOpen(userData.user ? "confirmModal" : "unauthorizedModal", {
+                  course: course && course,
+                })
               }
               className="w-full px-20 py-2 bg-primary dark:bg-dark-primary hover:bg-primary/80 dark:hover:bg-dark-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/80 disabled:cursor-not-allowed transition rounded-full "
             >
@@ -439,7 +472,7 @@ export const CourseInfo = () => {
               </h5>
             </span>
           </div>
-          <div className="flex flex-col justify-center items-start w-1/4 2xl:w-full">
+          <div className="flex flex-col justify-center items-start w-1/4 xl:w-full">
             <Banner
               title="جدید ترین دوره ها"
               className="text-xl"

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "react-query";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 import { useModal } from "../../hooks/use-modal-store";
 import { scrollToTop } from "../../../libs/scroll-to-top";
@@ -15,9 +16,14 @@ import { Banner } from "../../components/banner";
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
 
-import { getCourseComments } from "../../core/services/api/get-courses";
+import {
+  addComment,
+  getCourseComments,
+} from "../../core/services/api/get-courses";
 
 import defaultProfileImage from "../../assets/my-profile.jpg";
+import { getPersianNumbers } from "../../../libs/get-persian-numbers";
+import { cn } from "../../../libs/utils";
 
 const backdrop = {
   hidden: {
@@ -37,7 +43,22 @@ const backdrop = {
 };
 
 const formSchema = z.object({
-  message: z.string().min(1, { message: "پیام خود را وارد کنید" }),
+  subject: z
+    .string()
+    .min(5, {
+      message: `عنوان باید بیشتر از ${getPersianNumbers(1)} حرف باشد`,
+    })
+    .max(20, {
+      message: `عنوان باید کمتر از ${getPersianNumbers(20)} کلمه باشد`,
+    }),
+  message: z
+    .string()
+    .min(10, {
+      message: `پاسختان باید بیشتر از ${getPersianNumbers(1)} حرف باشد`,
+    })
+    .max(100, {
+      message: `پاسختان باید کمتر از ${getPersianNumbers(100)} کلمه باشد`,
+    }),
 });
 
 export const Description = ({ teacher, details, selected }) => {
@@ -49,6 +70,7 @@ export const Description = ({ teacher, details, selected }) => {
 
   const form = useForm({
     defaultValues: {
+      subject: "",
       message: "",
     },
     resolver: zodResolver(formSchema),
@@ -57,19 +79,39 @@ export const Description = ({ teacher, details, selected }) => {
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values) => {
-    console.log(values);
+    try {
+      const Obj = {
+        CourseId: courseId,
+        Title: values.subject,
+        Describe: values.message,
+      };
+      await addComment(Obj).then(() => {
+        refetch();
+        form.reset();
+        scrollToTop(900);
+        toast.success("نظرتان ثبت شد");
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش آمده دوباره امتحان کنید");
+    }
   };
-
+  
   //fetch Comments
   const {
     data: comments,
     isLoading,
     isError,
+    refetch,
   } = useQuery({
     queryKey: ["comments"],
     queryFn: () => getCourseComments(courseId),
     staleTime: 5000,
   });
+
+  const filteredData = comments?.sort(
+    (a, b) => new Date(b.insertDate) - new Date(a.insertDate)
+  );
 
   const handleMore = () => {
     if (count >= comments?.length) {
@@ -183,8 +225,12 @@ export const Description = ({ teacher, details, selected }) => {
             <>
               {comments?.length > 0 ? (
                 <>
-                  {comments?.slice(0, count).map((comment) => (
-                    <CommentCard key={comment.id} comment={comment} />
+                  {filteredData?.slice(0, count).map((comment) => (
+                    <CommentCard
+                      key={comment.id}
+                      comment={comment}
+                      updateFn={refetch}
+                    />
                   ))}
                   <div className="w-full flex items-center justify-center mt-2">
                     <button
@@ -222,22 +268,62 @@ export const Description = ({ teacher, details, selected }) => {
           />
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full flex flex-col items-center justify-center gap-y-3"
+            className="w-full flex flex-col gap-y-2"
           >
+            <label
+              htmlFor="respond"
+              className="text-sm text-gray-500 dark:text-gray-300 px-1"
+            >
+              عنوان
+            </label>
+            <input
+              className={cn(
+                "resize-none w-full max-w-sm disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-9 py-3 duration-200 border-gray-300 focus:border-gray-400",
+                form.formState.errors.subject &&
+                  "border-destructive dark:border-dark-destructive focus:border-destructive dark:focus:border-dark-destructive"
+              )}
+              placeholder="عنوان پیام"
+              {...form.register("subject")}
+            />
+            <p
+              className={cn(
+                "opacity-0 text-destructive dark:text-dark-destructive",
+                form.formState.errors.subject && "opacity-100"
+              )}
+            >
+              {form.formState.errors.subject
+                ? form.formState.errors.subject.message
+                : "ss"}
+            </p>
+            <label
+              htmlFor="respond"
+              className="text-sm text-gray-500 dark:text-gray-300 px-1"
+            >
+              پاسخ
+            </label>
             <textarea
-              className="resize-none h-60 w-full disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400"
-              placeholder="متن پیام ..."
+              className={cn(
+                "resize-none w-full h-40 disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400",
+                form.formState.errors.message &&
+                  "border-destructive dark:border-dark-destructive focus:border-destructive dark:focus:border-dark-destructive"
+              )}
+              placeholder="متن پیام"
               {...form.register("message")}
             />
-            {form.formState.errors.message && (
-              <p className="text-rose-600/90 mr-5 text-base">
-                {form.formState.errors.message.message}
-              </p>
-            )}
+            <p
+              className={cn(
+                "opacity-0 text-destructive dark:text-dark-destructive",
+                form.formState.errors.message && "opacity-100"
+              )}
+            >
+              {form.formState.errors.message
+                ? form.formState.errors.message.message
+                : "ss"}
+            </p>
             <button
               type="submit"
               disabled={isSubmitting || !isValid}
-              className="text-white hover:text-white/80 bg-[#505050] hover:bg-[#505050]/80 disabled:bg-[#505050]/80 disabled:text-white/80 py-2 text-lg self-start my-4 mr-5 px-10 rounded-xl transition"
+              className="text-white hover:text-white/80 bg-[#505050] hover:bg-[#505050]/80 disabled:bg-[#505050]/80 disabled:text-white/80 disabled:cursor-not-allowed py-2 text-lg self-start my-4 mr-5 px-10 rounded-xl transition"
             >
               ارسال پیام
             </button>

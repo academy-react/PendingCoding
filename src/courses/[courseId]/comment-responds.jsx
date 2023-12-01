@@ -37,6 +37,7 @@ export const CommentResponds = ({ commentId }) => {
     data: responds,
     isLoading,
     isError,
+    refetch,
   } = useQuery({
     queryKey: ["course_comment_responds", commentId],
     queryFn: () => getCommentReplies(id, commentId),
@@ -54,7 +55,11 @@ export const CommentResponds = ({ commentId }) => {
       exit="hidden"
     >
       {responds?.map((respond) => (
-        <CommentRespondCard key={respond.id} respond={respond} />
+        <CommentRespondCard
+          key={respond.id}
+          respond={respond}
+          updateFn={refetch}
+        />
       ))}
     </motion.div>
   );

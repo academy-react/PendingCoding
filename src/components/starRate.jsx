@@ -5,11 +5,13 @@ import { useQuery } from "react-query";
 
 import { useUser } from "../hooks/use-user";
 
-import { apiCall } from "../core/services/interceptor/api-call";
 import { useTheme } from "./providers/theme-provider";
+import { rateCourse } from "../core/services/api/get-courses";
 
 export const StarRate = ({ data, queryKey }) => {
-  const [rating, setRating] = useState(data?.likeCount | null);
+  const [rating, setRating] = useState(
+    data?.currentUserRateNumber || data?.currentRate
+  );
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { isDarkTheme } = useTheme();
@@ -21,32 +23,32 @@ export const StarRate = ({ data, queryKey }) => {
   const isAllowed = isLoading || !userData.user;
 
   const onClick = async (currentRate) => {
-    if (currentRate === 1) {
-      if (isChecked) {
-        setRating(currentRate - 1);
-        setIsChecked(false);
+    try {
+      if (currentRate === 1) {
+        if (isChecked) {
+          setRating(currentRate - 1);
+          setIsChecked(false);
+        } else {
+          setRating(currentRate);
+          setIsChecked(true);
+        }
       } else {
         setRating(currentRate);
-        setIsChecked(true);
+        setIsChecked(false);
       }
-    } else {
-      setRating(currentRate);
-      setIsChecked(false);
-    }
-
-    try {
+      const params = {
+        CourseId: data?.courseId,
+        RateNumber: parseFloat(currentRate),
+      };
       setIsLoading(true);
-      await apiCall
-        .put(`/items/${data.id}`, {
-          ...data,
-          stars: currentRate,
-        })
-        .then(() => {
-          refetch();
-          toast.success("امتیاز شما ثبت شد");
-        });
+      await rateCourse(params).then(() => {
+        toast.success("امتیاز شما ثبت شد");
+        setRating(currentRate);
+        refetch();
+      });
     } catch {
       toast.error("بعداٌ دوباره تلاش کنید");
+      setRating(data?.likeCount);
     } finally {
       setIsLoading(false);
     }
