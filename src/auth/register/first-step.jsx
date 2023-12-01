@@ -5,7 +5,6 @@ import { cn } from "../../../libs/utils";
 import { VerifyCode } from "./first-step-verify";
 import { useState } from "react";
 import { sendVerifyMessage } from "../../core/services/api/auth";
-import { Captcha } from "./captcha";
 import toast from "react-hot-toast";
 import { TestCaptcha } from "./test-captcha";
 
