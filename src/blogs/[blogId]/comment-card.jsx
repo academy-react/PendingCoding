@@ -2,18 +2,19 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import {
   ChevronDown,
   ChevronUp,
   Clock,
-  // ThumbsDown,
+  ThumbsDown,
   ThumbsUp,
   User,
+  Pencil,
 } from "lucide-react";
 
-import { likeComment, replyComment } from "../../core/services/api/get-blogs";
+import { editComment, likeComment } from "../../core/services/api/get-blogs";
+import { disLikeComment } from "../../core/services/api/get-courses";
 
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import { cn } from "../../../libs/utils";
@@ -21,40 +22,10 @@ import { cn } from "../../../libs/utils";
 import { useModal } from "../../hooks/use-modal-store";
 import { useUser } from "../../hooks/use-user";
 
-import { CommentRespond } from "./comment-respond";
-
-const backdrop = {
-  hidden: {
-    opacity: 0,
-    scale: 0.75,
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      ease: "easeOut",
-      duration: 0.3,
-    },
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.75,
-    transition: {
-      ease: "easeIn",
-      duration: 0.3,
-    },
-  },
-};
+import { AnswerForm } from "./answer-form";
+import { CommentResponds } from "./comment-responds";
 
 const formSchema = z.object({
-  subject: z
-    .string()
-    .min(10, {
-      message: `عنوان باید بیشتر از ${getPersianNumbers(1)} حرف باشد`,
-    })
-    .max(20, {
-      message: `عنوان باید کمتر از ${getPersianNumbers(20)} کلمه باشد`,
-    }),
   message: z
     .string()
     .min(15, {
@@ -65,29 +36,28 @@ const formSchema = z.object({
     }),
 });
 
-export const CommentCard = ({ comment }) => {
+export const CommentCard = ({ comment, updateFn, user }) => {
   const { onOpen } = useModal();
   const { userData } = useUser();
-  const [likeCount, setLikeCount] = useState(comment?.commentLike);
-  // const [disLikeCount, setDisLikeCount] = useState(comment?.disslikeCount);
   const [isLoading, setIsLoading] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [isAnswering, setIsAnswering] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const fullName = `${user?.fName}-${user?.lName}`;
 
   const form = useForm({
     defaultValues: {
-      subject: "",
-      message: "",
+      message: comment?.describe,
     },
     resolver: zodResolver(formSchema),
   });
-  const differenceInDays = getPersianNumbers(
-    Math.round(
-      (new Date().getTime() - new Date(comment?.insertDate).getTime()) /
-        (1000 * 3600 * 24)
-    )
+
+  const differenceInDays = Math.round(
+    (new Date().getTime() - new Date(comment?.inserDate).getTime()) /
+      (1000 * 3600 * 24)
   );
-  const postDate = new Date(comment?.insertDate)
+  const postDate = new Date(comment?.inserDate)
     .toLocaleDateString("fa-IR-u-nu-latn")
     .split("/");
   const months = [
@@ -105,13 +75,37 @@ export const CommentCard = ({ comment }) => {
     "اسفند",
   ];
 
+  const onSubmit = async (values) => {
+    try {
+      const Obj = {
+        id: comment?.id,
+        newsId: comment?.newsId,
+        title: comment?.title,
+        describe: values?.message,
+        accept: true,
+      };
+      await editComment(Obj).then(() => {
+        updateFn();
+        toast.success("نظرتان ویرایش شد");
+        setIsEditing(false);
+      });
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش آمده دوباره امتحان کنید");
+    }
+  };
+
   const handleLike = async () => {
     try {
       if (!userData.user) return onOpen("unauthorizedModal");
       setIsLoading(true);
-      await likeComment(comment?.id).then(() => {
-        setLikeCount((c) => c + 1);
-        toast.success("نظر پسندیده شد");
+      const params = {
+        CourseCommandId: comment.id,
+      };
+      await likeComment(params).then((res) => {
+        updateFn();
+        if (res.success) toast.success("نظر پسندیده شد");
+        else toast.error(res.message);
       });
     } catch (error) {
       console.log(error);
@@ -120,34 +114,18 @@ export const CommentCard = ({ comment }) => {
       setIsLoading(false);
     }
   };
-  // const handleDisLike = async () => {
-  //   try {
-  // if (!userData.user) return onOpen("unauthorizedModal");
-  //     setIsLoading(true);
-  //     await likeComment(comment?.courseId).then(() => {
-  //       setDisLikeCount((c) => c + 1);
-  //       toast.success("نظر پسندیده شد");
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error("مشکلی پیش آمده دوباره امتحان کنید");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  const onSubmit = async (values) => {
+  const handleDisLike = async () => {
     try {
+      if (!userData.user) return onOpen("unauthorizedModal");
       setIsLoading(true);
-      const Obj = {
-        newsId: comment?.newsId,
-        userIpAddress: comment?.userIpAddress,
-        title: values.subject,
-        describe: values.message,
-        userId: userData?.user.id,
-        parentId: comment?.userId,
+      const params = {
+        CourseCommandId: comment?.id,
       };
-      await replyComment(Obj).then(() => toast.success("نظرتان ثبت شد"));
+      await disLikeComment(params).then((res) => {
+        updateFn();
+        if (res.success) toast.success("نظر نقد شد");
+        else toast.error(res.message);
+      });
     } catch (error) {
       console.log(error);
       toast.error("مشکلی پیش آمده دوباره امتحان کنید");
@@ -156,14 +134,19 @@ export const CommentCard = ({ comment }) => {
     }
   };
 
-  const handleClose = () => {
-    setIsAnswering(false);
-    form.reset();
-  };
-
   const handleAnswer = () => {
     if (userData.user) setIsAnswering(true);
     else onOpen("unauthorizedModal");
+  };
+
+  const handleEdit = () => {
+    if (userData.user) setIsEditing(true);
+    else onOpen("unauthorizedModal");
+  };
+
+  const handleClose = () => {
+    form.reset();
+    setIsEditing(false);
   };
 
   return (
@@ -171,132 +154,128 @@ export const CommentCard = ({ comment }) => {
       <div className="flex flex-col lg:flex-row justify-center items-center py-2 gap-x-10">
         <div className="shadow-md dark:shadow-gray-600 bg-gray-300/20 dark:bg-gray-700 rounded-lg w-full flex flex-col justify-center items-start px-4 py-2">
           {/* Title and Author div */}
-          <div className="flex justify-start items-center gap-x-5 py-5 border-b-2 border-gray-400/50 dark:border-gray-400 rounded-xl w-full">
+          <div className="flex justify-between items-center gap-x-5 py-5 border-b-2 border-gray-400/50 dark:border-gray-400 rounded-xl w-full">
             <span className="flex gap-x-3">
-              <User className="dark:text-gray-300 text-gray-500" />
+              {comment?.pictureAddress ? (
+                <img
+                  className="w-12 h-12 object-cover rounded-full"
+                  src={comment?.pictureAddress}
+                  alt="asda"
+                />
+              ) : (
+                <User className="dark:text-gray-300 text-gray-500" />
+              )}
               <h2 className="text-gray-600 dark:text-gray-200">
-                {comment?.author}
+                {comment?.autor}
               </h2>
             </span>
-            <h4 className="text-gray-600 dark:text-gray-200">{`عنوان : ${comment?.title}`}</h4>
+            <h4 className="text-gray-600 dark:text-gray-200 ml-5">{`عنوان : ${comment?.title}`}</h4>
           </div>
           <div className="w-full my-2">
             {/* Comment,likes,dislikes */}
             <div className="flex items-center justify-between py-2 pb-7 px-4">
               <div>
-                <p className="dark:text-gray-300 text-gray-500">
-                  {comment?.describe}
-                </p>
-              </div>
-              <div className="flex items-center justify-center gap-x-3">
-                <button
-                  onClick={handleLike}
-                  disabled={isLoading}
-                  className="flex items-center justify-center gap-x-1 dark:text-gray-300 text-gray-500 hover:text-primary dark:hover:text-dark-primary transition disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <ThumbsUp className="h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-primary text-primary hover:text-primary/80 dark:hover:text-dark-primary/80 transition " />
-                  <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
-                    {getPersianNumbers(likeCount)}
+                {isEditing ? (
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="w-full"
+                  >
+                    <div className="flex items-center justify-start gap-x-5">
+                      <input
+                        id="message"
+                        name="message"
+                        className={cn(
+                          "resize-none w-full max-w-sm disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-9 py-3 duration-200 border-gray-300 focus:border-gray-400",
+                          form.formState.errors.message &&
+                            "border-destructive dark:border-dark-destructive focus:border-destructive dark:focus:border-dark-destructive"
+                        )}
+                        placeholder="عنوان پیام"
+                        {...form.register("message")}
+                      />
+                      <button
+                        type="submit"
+                        className="bg-primary text-gray-100 hover:bg-primary/80 hover:text-gray-100/80 disabled:bg-primary/80 disabled:text-gray-100/80 disabled:cursor-not-allowed rounded-lg px-3 py-2"
+                      >
+                        ذخیره
+                      </button>
+                      <button
+                        onClick={handleClose}
+                        className="bg-gray-300 text-gray-600 hover:bg-gray-300/80 hover:text-gray-600/80 shadow-lg px-3 py-2 rounded-lg"
+                      >
+                        لغو
+                      </button>
+                    </div>
+
+                    <p
+                      className={cn(
+                        "opacity-0 text-destructive dark:text-dark-destructive",
+                        form.formState.errors.message && "opacity-100"
+                      )}
+                    >
+                      {form.formState.errors.message
+                        ? form.formState.errors.message.message
+                        : "ss"}
+                    </p>
+                  </form>
+                ) : (
+                  <p className="dark:text-gray-300 text-gray-500">
+                    {comment?.describe}
                   </p>
-                </button>
-                {/* <button
-                  onClick={handleDisLike}
-                  disabled={isLoading}
-                  className="flex items-center justify-center gap-x-1 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <ThumbsDown className="h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-destructive text-destructive hover:text-destructive/80 dark:hover:text-dark-destructive/80 transition " />
-                  <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
-                    {getPersianNumbers(disLikeCount)}
-                  </p>
-                </button> */}
+                )}
               </div>
+              {!isAnswering && !isEditing && (
+                <div className="flex items-center justify-center gap-x-3">
+                  <button
+                    onClick={handleLike}
+                    disabled={isLoading}
+                    className="flex items-center justify-center gap-x-1 dark:text-gray-300 text-gray-500 hover:text-primary dark:hover:text-dark-primary transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <ThumbsUp className="h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-primary text-primary hover:text-primary/80 dark:hover:text-dark-primary/80 transition " />
+                    <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
+                      {getPersianNumbers(comment?.likeCount)}
+                    </p>
+                  </button>
+                  <button
+                    onClick={handleDisLike}
+                    disabled={isLoading}
+                    className="flex items-center justify-center gap-x-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <ThumbsDown className="h-7 w-7 md:h-5 md:w-5 mt-2 dark:text-dark-destructive text-destructive hover:text-destructive/80 dark:hover:text-dark-destructive/80 transition " />
+                    <p className="text-2xl md:text-lg mt-2 dark:text-gray-300 text-gray-500">
+                      {getPersianNumbers(comment?.dissLikeCount)}
+                    </p>
+                  </button>
+                </div>
+              )}
             </div>
-            {isAnswering ? (
-              <motion.div
-                variants={backdrop}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                className="w-full border-y-2 border-gray-300 dark:border-gray-400 rounded-lg px-4 py-2"
-              >
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="flex flex-col gap-y-2"
+            {isAnswering && (
+              <AnswerForm
+                comment={comment}
+                setIsAnswering={setIsAnswering}
+                updateFn={updateFn}
+                user={user}
+              />
+            )}
+            {!isAnswering && !isEditing && (
+              <div className="w-full flex items-center justify-between">
+                {fullName === comment?.autor ? (
+                  <button
+                    onClick={handleEdit}
+                    className="flex justify-center items-center gap-x-2 text-sm text-gray-700 bg-gray-300 hover:bg-gray-300/80 hover:text-gray-500/80 transition rounded-lg px-3 py-3"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    ویرایش
+                  </button>
+                ) : (
+                  <div></div>
+                )}
+                <button
+                  onClick={handleAnswer}
+                  className="text-sm text-gray-700 bg-gray-300 hover:bg-gray-300/80 hover:text-gray-500/80 transition rounded-lg px-4 py-3"
                 >
-                  <label
-                    htmlFor="respond"
-                    className="text-sm text-gray-500 dark:text-gray-300 px-1"
-                  >
-                    عنوان
-                  </label>
-                  <input
-                    className={cn(
-                      "resize-none w-full max-w-sm disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-9 py-3 duration-200 border-gray-300 focus:border-gray-400",
-                      form.formState.errors.subject &&
-                        "border-destructive dark:border-dark-destructive focus:border-destructive dark:focus:border-dark-destructive"
-                    )}
-                    placeholder="عنوان پیام"
-                    {...form.register("subject")}
-                  />
-                  <p
-                    className={cn(
-                      "opacity-0 text-destructive dark:text-dark-destructive",
-                      form.formState.errors.subject && "opacity-100"
-                    )}
-                  >
-                    {form.formState.errors.subject
-                      ? form.formState.errors.subject.message
-                      : "ss"}
-                  </p>
-                  <label
-                    htmlFor="respond"
-                    className="text-sm text-gray-500 dark:text-gray-300 px-1"
-                  >
-                    پاسخ
-                  </label>
-                  <textarea
-                    className={cn(
-                      "resize-none w-full h-40 disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400",
-                      form.formState.errors.message &&
-                        "border-destructive dark:border-dark-destructive focus:border-destructive dark:focus:border-dark-destructive"
-                    )}
-                    placeholder="متن پیام"
-                    {...form.register("message")}
-                  />
-                  <p
-                    className={cn(
-                      "opacity-0 text-destructive dark:text-dark-destructive",
-                      form.formState.errors.message && "opacity-100"
-                    )}
-                  >
-                    {form.formState.errors.message
-                      ? form.formState.errors.message.message
-                      : "ss"}
-                  </p>
-                  <div className="mr-auto flex justify-center items-center gap-x-3">
-                    <button
-                      type="submit"
-                      disabled={isLoading || !form.formState.isValid}
-                      className="bg-primary text-gray-100 hover:bg-primary/80 hover:text-gray-100/80 disabled:bg-primary/80 disabled:text-gray-100/80 disabled:cursor-not-allowed rounded-lg px-3 py-2"
-                    >
-                      ارسال
-                    </button>
-                    <button
-                      onClick={handleClose}
-                      className="bg-gray-300 text-gray-600 hover:bg-gray-300/80 hover:text-gray-600/80 shadow-lg px-3 py-2 rounded-lg"
-                    >
-                      لغو
-                    </button>
-                  </div>
-                </form>
-              </motion.div>
-            ) : (
-              <button
-                onClick={handleAnswer}
-                className="text-sm text-gray-700 bg-gray-300 hover:bg-gray-300/80 hover:text-gray-500/80 transition rounded-lg px-4 py-3"
-              >
-                پاسخ
-              </button>
+                  پاسخ
+                </button>
+              </div>
             )}
             {/* post_date */}
             <div className="flex flex-row-reverse items-center justify-between mt-5">
@@ -308,7 +287,9 @@ export const CommentCard = ({ comment }) => {
               <span className="flex gap-x-1">
                 <Clock className="text-gray-500 dark:text-gray-300" />
                 <p className="dark:text-gray-300 text-gray-500">
-                  {`${differenceInDays} روز پیش`}
+                  {differenceInDays === 0
+                    ? "لحظه‌ای پیش"
+                    : `${getPersianNumbers(differenceInDays)} روز پیش`}
                 </p>
               </span>
             </div>
@@ -325,7 +306,7 @@ export const CommentCard = ({ comment }) => {
                         : comment.replyCount === 1 && "پنهان کردن پاسخ‌"}
                       <ChevronUp className="h-4 w-4 mt-[2px]" />
                     </button>
-                    <CommentRespond commentId={comment.id} />
+                    <CommentResponds commentId={comment.id} />
                   </>
                 ) : (
                   <button

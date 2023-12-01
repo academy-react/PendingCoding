@@ -10,6 +10,7 @@ import {
   addCourseToFavorites,
   deleteCourseFavorite,
 } from "../../core/services/api/get-courses";
+import { addBlogToFavorite } from "../../core/services/api/get-blogs";
 
 export const UserContext = createContext(null);
 
@@ -106,34 +107,34 @@ function UserProvider({ children }) {
   //   localStorage.setItem("user", JSON.stringify(newObj));
   // };
 
-  const addToFavorites = async (courseId) => {
+  const addToFavorites = async (id, isBlog) => {
     try {
-      await addCourseToFavorites(courseId).then(() => {
-        const newObj = {
-          ...userData,
-          favorites: [...userInfo.favorites, { courseId }],
-        };
-        setUserData(newObj);
-        localStorage.setItem("user", JSON.stringify(newObj));
-        toast.success("به علاقه مندی اضافه شد");
-      });
+      if (isBlog) await addBlogToFavorite(id);
+      else await addCourseToFavorites(id);
+
+      const newObj = {
+        ...userData,
+        favorites: [...userInfo.favorites, { id }],
+      };
+      setUserData(newObj);
+      localStorage.setItem("user", JSON.stringify(newObj));
+      toast.success("به علاقه مندی اضافه شد");
     } catch (error) {
       console.log(error);
       toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
     }
   };
 
-  const removeFromFavorites = async (courseId, user_favorite_id) => {
+  const removeFromFavorites = async (id, user_favorite_id) => {
     try {
-      await deleteCourseFavorite(user_favorite_id).then(() => {
-        const newObj = {
-          ...userData,
-          favorites: userInfo?.favorites.filter((f) => f.courseId !== courseId),
-        };
-        setUserData(newObj);
-        localStorage.setItem("user", JSON.stringify(newObj));
-        toast.success("از لیست علاقه مندی ها حذف شد");
-      });
+      await deleteCourseFavorite(user_favorite_id);
+      const newObj = {
+        ...userData,
+        favorites: userInfo?.favorites.filter((f) => f.id !== id),
+      };
+      setUserData(newObj);
+      localStorage.setItem("user", JSON.stringify(newObj));
+      toast.success("از لیست علاقه مندی ها حذف شد");
     } catch (error) {
       console.log(error);
       toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");

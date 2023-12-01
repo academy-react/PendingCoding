@@ -14,18 +14,22 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
-import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import {
   deleteCourseLike,
   dissLikeCourse,
   getCourseById,
   likeCourse,
+  rateCourse,
 } from "../../core/services/api/get-courses";
 import { getTeacherById } from "../../core/services/api/get-teacher";
+
+import { getPersianNumbers } from "../../../libs/get-persian-numbers";
+import { cn } from "../../../libs/utils";
 
 import { useModal } from "../../hooks/use-modal-store";
 import { useUser } from "../../hooks/use-user";
 
+import { StarRate } from "../../components/starRate";
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
 import NavigatorTracer from "../../components/navigator-tracer";
@@ -36,8 +40,6 @@ import { Description } from "./description";
 import { Slider } from "./slider";
 
 import defaultCourseThumbnail from "../../assets/default-course-thumbnail.png";
-import { cn } from "../../../libs/utils";
-import { StarRate } from "../../components/starRate";
 
 export const CourseInfo = () => {
   const { id } = useParams();
@@ -178,7 +180,7 @@ export const CourseInfo = () => {
   }, [isMounted, refetch]);
 
   useEffect(() => {
-    const isBookMarked = userData?.favorites.some((c) => c.courseId === id);
+    const isBookMarked = userData?.favorites.some((c) => c.id === id);
     setIsBookMarked(isBookMarked);
   }, [id, userData?.favorites]);
 
@@ -210,7 +212,7 @@ export const CourseInfo = () => {
       setIsPending(true);
       if (isBookMarked)
         removeFromFavorites(course?.courseId, course?.userFavoriteId);
-      else addToFavorites(course?.courseId).then(() => refetch());
+      else addToFavorites(course?.courseId, false).then(() => refetch());
     } catch (error) {
       console.log(error);
       toast.error("مشکلی پیش آمده دوباره امتحان کنید");
@@ -336,7 +338,14 @@ export const CourseInfo = () => {
               {getPersianNumbers(dissLikeCount)}
             </p>
           </button>
-          <StarRate data={course} queryKey="course_id" />
+          <div className="flex flex-row-reverse items-start justify-center">
+            <StarRate
+              id="CourseId"
+              data={course}
+              queryKey="course_id"
+              rateFn={rateCourse}
+            />
+          </div>
         </div>
       </div>
 

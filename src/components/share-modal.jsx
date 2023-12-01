@@ -2,7 +2,7 @@ import { Copy, CopyCheck, X } from "lucide-react";
 import { useModal } from "../hooks/use-modal-store";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { TooTip } from "./tool-tip";
+import { ToolTip } from "./tool-tip";
 
 const backdrop = {
   hidden: {
@@ -75,9 +75,9 @@ export const ShareModal = () => {
                     onClick={handleCopy}
                   />
                 ) : (
-                  <TooTip name=" کپی شد">
+                  <ToolTip name=" کپی شد">
                     <CopyCheck className="h-7 w-7" />
-                  </TooTip>
+                  </ToolTip>
                 )}
               </div>
             </div>

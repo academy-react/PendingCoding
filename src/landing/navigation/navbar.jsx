@@ -75,7 +75,7 @@ const Navbar = () => {
         scrolled && "border-b border-gray-200 dark:border-gray-600 shadow-md"
       )}
     >
-      <div className="flex w-full items-center justify-between mx-auto">
+      <div className="flex w-full items-center justify-between mx-auto ">
         <div className="flex justify-center items-center gap-x-2 lg:gap-x-6">
           <ThemeToggle />
           {routes.map((route) => (
@@ -103,7 +103,7 @@ const Navbar = () => {
             </div>
           ))}
         </div>
-        <div className="hidden md:flex items-center justify-center gap-x-1 lg:gap-x-6">
+        <div className="hidden md:flex items-center justify-center gap-x-4 lg:gap-x-6">
           {userData.user ? (
             <div
               ref={dropDownRef}

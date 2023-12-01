@@ -10,13 +10,14 @@ import { useUser } from "../../hooks/use-user";
 import { useModal } from "../../hooks/use-modal-store";
 
 import { StarRate } from "../../components/starRate";
-import { TooTip } from "../../components/tool-tip";
+import { ToolTip } from "../../components/tool-tip";
 
 import defaultCourseImage from "../../assets/python.jpg";
 import {
   deleteCourseLike,
   dissLikeCourse,
   likeCourse,
+  rateCourse,
 } from "../../core/services/api/get-courses";
 
 const status = {
@@ -85,11 +86,11 @@ export const CourseCard = ({ course, index, updateFn }) => {
 
   return (
     <div className={index === 1 && "2xl:mt-24"}>
-      <div className="w-[400px] mx-auto flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 dark:shadow-gray-700 dark:shadow-lg shadow-lg rounded-t-3xl rounded-b-lg overflow-hidden">
+      <div className="w-[400px] mx-auto flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 dark:shadow-gray-700 dark:shadow-lg shadow-lg rounded-t-3xl rounded-b-lg">
         <img
           src={course?.tumbImageAddress || defaultCourseImage}
           alt="CourseImage"
-          className="w-full"
+          className="object-cover rounded-t-xl"
         />
         <div className="self-start">
           <h1 className="text-lg text-gray-600 dark:text-gray-200 mr-5">
@@ -128,20 +129,27 @@ export const CourseCard = ({ course, index, updateFn }) => {
               {getPersianNumbers(course?.dissLikeCount)}
             </p>
           </button>
-          <TooTip name="آخرین بروزرسانی">
+          <ToolTip name="آخرین بروزرسانی">
             <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
               <Clock className="h-4 w-4 text-primary dark:text-gray-200/80" />
               {`${getPersianNumbers(lastUpdate?.[2], true)} ${
                 months[lastUpdate?.[1] - 1]
               } ${getPersianNumbers(lastUpdate?.[0], true)}`}
             </span>
-          </TooTip>
+          </ToolTip>
           <span className="flex flex-row-reverse items-center justify-center gap-x-1">
-            <StarRate data={course} queryKey="courses" />
+            <StarRate
+              data={course}
+              queryKey="courses"
+              id="CourseId"
+              rateFn={rateCourse}
+            />
           </span>
         </div>
         <div className="flex justify-start w-full items-center px-3 py-2">
-          {status[course?.statusName]}
+          <ToolTip name={course?.statusName}>
+            {status[course?.statusName]}
+          </ToolTip>
           <span className="flex flex-col justify-center items-start gap-y-1 px-3 py-1">
             <h2 className="text-gray-600 dark:text-gray-200/80 text-base">
               {course?.teacherName}

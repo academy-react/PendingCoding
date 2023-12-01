@@ -1,10 +1,11 @@
-import { Calendar, LayoutDashboard, MoveLeft, User2 } from "lucide-react";
+import { Calendar, LayoutDashboard, MoveLeft, PenTool } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { getPersianNumbers } from "../../libs/get-persian-numbers";
 
 import { StarRate } from "../components/starRate";
-import { TooTip } from "../components/tool-tip";
+import { ToolTip } from "../components/tool-tip";
+import { rateBlog } from "../core/services/api/get-blogs";
 
 export const VerticalCard = ({ blog }) => {
   const updateDate = new Date(blog?.updateDate)
@@ -26,7 +27,7 @@ export const VerticalCard = ({ blog }) => {
   ];
 
   return (
-    <div className="max-w-[380px] flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg">
+    <div className="max-w-[380px] flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg mx-auto 2xl:mx-0 ">
       <div className="w-[380px] rounded-lg overflow-hidden">
         <img
           loading="lazy"
@@ -41,22 +42,27 @@ export const VerticalCard = ({ blog }) => {
         </h1>
       </div>
       <div className="w-full px-5 flex justify-between items-center">
-        <TooTip name={blog.addUserFullName}>
+        <ToolTip name={blog.addUserFullName}>
           <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
-            <User2 className="h-4 w-4 text-primary dark:text-gray-200/80" />
+            <PenTool className="h-5 w-5 text-primary dark:text-gray-200/80" />
             {`...${blog.addUserFullName.slice(0, 10)}`}
           </span>
-        </TooTip>
-        <TooTip name="آخرین بروزرسانی">
+        </ToolTip>
+        <ToolTip name="آخرین بروزرسانی">
           <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
             <Calendar className="h-4 w-4 text-primary dark:text-gray-200/80" />
             {`${getPersianNumbers(updateDate?.[2], true)} ${
               months[updateDate?.[1] - 1]
             } ${getPersianNumbers(updateDate?.[0], true)}`}
           </span>
-        </TooTip>
+        </ToolTip>
         <span className="flex flex-row-reverse items-center justify-center gap-x-1">
-          <StarRate data={blog} queryKey="courses" />
+          <StarRate
+            data={blog}
+            queryKey="courses"
+            id="NewsId"
+            rateFn={rateBlog}
+          />
         </span>
       </div>
       <div className="flex justify-start w-full items-center px-3 py-2">

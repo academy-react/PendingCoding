@@ -5,19 +5,23 @@ import {
   LayoutDashboard,
   MessagesSquare,
   Tags,
-  ThumbsDown,
   ThumbsUp,
   User2,
+  BookOpen,
+  ThumbsDown,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+
+import { ToolTip } from "../components/tool-tip";
 
 import { getPersianNumbers } from "../../libs/get-persian-numbers";
 import { useUser } from "../hooks/use-user";
 
 import defaultCourseImage from "../assets/python.jpg";
-import defaultImageProfile from "../assets/my-profile.jpg";
-import { TooTip } from "../components/tool-tip";
 
+const status = {
+  "درحال برگذاری": <BookOpen className="text-gray-600 dark:text-gray-300" />,
+};
 export const HorizontalCard = ({ course }) => {
   const { userData } = useUser();
 
@@ -69,14 +73,14 @@ export const HorizontalCard = ({ course }) => {
             <LayoutDashboard className="h-5 w-5 text-primary dark:text-gray-200/80" />
             {course.technologyList}
           </span>
-          <TooTip name="آخرین بروزرسانی">
+          <ToolTip name="آخرین بروزرسانی">
             <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
               <Clock className="h-4 w-4 text-primary dark:text-gray-200/80" />
               {`${getPersianNumbers(lastUpdate?.[2], true)} ${
                 months[lastUpdate?.[1] - 1]
               } ${getPersianNumbers(lastUpdate?.[0], true)}`}
             </span>
-          </TooTip>
+          </ToolTip>
           <span className="flex items-center justify-center gap-x-1 text-gray-500 dark:text-gray-200/80">
             <MessagesSquare className="h-5 w-5 text-primary dark:text-gray-200/80" />
             {getPersianNumbers(course.commandCount, false)}
@@ -85,10 +89,10 @@ export const HorizontalCard = ({ course }) => {
             <ThumbsUp className="h-5 w-5 text-primary dark:text-gray-200/80" />
             {getPersianNumbers(course.likeCount, false)}
           </span>
-          {/* <span className="flex items-center justify-center gap-x-1 text-gray-500 dark:text-gray-200/80">
+          <span className="flex items-center justify-center gap-x-1 text-gray-500 dark:text-gray-200/80">
             <ThumbsDown className="h-5 w-5 text-primary dark:text-gray-200/80" />
-            {getPersianNumbers(course.dislikes, false)}
-          </span> */}
+            {getPersianNumbers(course.dissLikeCount, false)}
+          </span>
         </div>
         <span className="w-full">
           <p className="text-gray-500 dark:text-gray-200/80 text-right line-clamp-2">
@@ -96,12 +100,9 @@ export const HorizontalCard = ({ course }) => {
           </p>
         </span>
         <div className="flex flex-col md:flex-row justify-start w-full items-center px-3 py-2">
-          <img
-            loading="lazy"
-            src={course.teacherAvatar || defaultImageProfile}
-            className="w-14 h-14 rounded-full"
-            alt="TeacherProfile"
-          />
+          <ToolTip name={course?.statusName}>
+            {status[course?.statusName]}
+          </ToolTip>
           <span className="flex flex-col justify-center items-start gap-y-1 px-3 py-1">
             <h2 className="text-gray-600 dark:text-gray-200 text-base">
               {course.teacherName}

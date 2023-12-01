@@ -2,9 +2,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import { useQuery } from "react-query";
 import {
   ChevronDown,
   ChevronUp,
@@ -12,13 +10,13 @@ import {
   ThumbsDown,
   ThumbsUp,
   Pencil,
+  User,
 } from "lucide-react";
 
 import {
   disLikeComment,
   editComment,
   likeComment,
-  replyComment,
 } from "../../core/services/api/get-courses";
 
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
@@ -28,31 +26,7 @@ import { useModal } from "../../hooks/use-modal-store";
 import { useUser } from "../../hooks/use-user";
 
 import { CommentResponds } from "./comment-responds";
-import { getUserProfile } from "../../core/services/api/user";
 import { AnswerForm } from "./answer-form";
-
-const backdrop = {
-  hidden: {
-    opacity: 0,
-    scale: 0.75,
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      ease: "easeOut",
-      duration: 0.3,
-    },
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.75,
-    transition: {
-      ease: "easeIn",
-      duration: 0.3,
-    },
-  },
-};
 
 const formSchema = z.object({
   message: z
@@ -65,19 +39,15 @@ const formSchema = z.object({
     }),
 });
 
-export const CommentCard = ({ comment, updateFn }) => {
+export const CommentCard = ({ comment, updateFn, user }) => {
   const { onOpen } = useModal();
   const { userData } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [isAnswering, setIsAnswering] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const { data } = useQuery({
-    queryKey: ["user_info"],
-    queryFn: () => getUserProfile(),
-  });
 
-  const fullName = `${data?.fName}-${data?.lName}`;
+  const fullName = `${user?.fName}-${user?.lName}`;
 
   const form = useForm({
     defaultValues: {
@@ -188,11 +158,15 @@ export const CommentCard = ({ comment, updateFn }) => {
           {/* Title and Author div */}
           <div className="flex justify-between items-center gap-x-5 py-5 border-b-2 border-gray-400/50 dark:border-gray-400 rounded-xl w-full">
             <span className="flex items-center justify-center gap-x-3">
-              <img
-                className="w-12 h-12 object-cover rounded-full"
-                src={comment?.pictureAddress}
-                alt="asda"
-              />
+              {comment?.pictureAddress ? (
+                <img
+                  className="w-12 h-12 object-cover rounded-full"
+                  src={comment?.pictureAddress}
+                  alt="asda"
+                />
+              ) : (
+                <User className="dark:text-gray-300 text-gray-500" />
+              )}
               <h2 className="text-gray-600 dark:text-gray-200">
                 {comment?.author}
               </h2>

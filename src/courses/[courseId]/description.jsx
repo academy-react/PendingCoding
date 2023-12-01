@@ -9,21 +9,23 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 import { useModal } from "../../hooks/use-modal-store";
+
+import { getPersianNumbers } from "../../../libs/get-persian-numbers";
+import { cn } from "../../../libs/utils";
 import { scrollToTop } from "../../../libs/scroll-to-top";
+
+import {
+  addComment,
+  getCourseComments,
+} from "../../core/services/api/get-courses";
+import { getUserProfile } from "../../core/services/api/user";
 
 import { CommentCard } from "./comment-card";
 import { Banner } from "../../components/banner";
 import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
 
-import {
-  addComment,
-  getCourseComments,
-} from "../../core/services/api/get-courses";
-
 import defaultProfileImage from "../../assets/my-profile.jpg";
-import { getPersianNumbers } from "../../../libs/get-persian-numbers";
-import { cn } from "../../../libs/utils";
 
 const backdrop = {
   hidden: {
@@ -96,7 +98,7 @@ export const Description = ({ teacher, details, selected }) => {
       toast.error("مشکلی پیش آمده دوباره امتحان کنید");
     }
   };
-  
+
   //fetch Comments
   const {
     data: comments,
@@ -112,6 +114,11 @@ export const Description = ({ teacher, details, selected }) => {
   const filteredData = comments?.sort(
     (a, b) => new Date(b.insertDate) - new Date(a.insertDate)
   );
+  //fetch User
+  const { data } = useQuery({
+    queryKey: ["user_info"],
+    queryFn: () => getUserProfile(),
+  });
 
   const handleMore = () => {
     if (count >= comments?.length) {
@@ -229,6 +236,7 @@ export const Description = ({ teacher, details, selected }) => {
                     <CommentCard
                       key={comment.id}
                       comment={comment}
+                      user={data}
                       updateFn={refetch}
                     />
                   ))}

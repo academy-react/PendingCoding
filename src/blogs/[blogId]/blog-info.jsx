@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Bookmark, Heart, User } from "lucide-react";
@@ -21,12 +21,23 @@ import toast from "react-hot-toast";
 import { cn } from "../../../libs/utils";
 
 export const BlogInfo = () => {
+  const { id } = useParams();
+
+  const { isOpen, onOpen } = useModal();
+
+  const { userData, addToFavorites, removeFromFavorites } = useUser();
+  const [isBookMarked, setIsBookMarked] = useState(false);
+  const [isPending, setIsPending] = useState(false);
+  // const [likeCount, setLikeCount] = useState(0);
+  // const [dissLikeCount, setDisLikeCount] = useState(0);
+
   const {
     data: blog,
     isLoading,
     isError,
+    refetch,
   } = useQuery({
-    queryKey: ["blogId"],
+    queryKey: ["blog_id", id],
     queryFn: () => getBlogById(id),
     staleTime: 5000,
   });
@@ -40,7 +51,9 @@ export const BlogInfo = () => {
     {
       id: 2,
       label: "نظرات",
-      comments: blog?.commentDtos,
+      comments: blog?.commentDtos.filter(
+        (c) => c.parentId === "00000000-0000-0000-0000-000000000000"
+      ),
     },
   ];
   // [
@@ -79,44 +92,43 @@ export const BlogInfo = () => {
   //     ],
   //   },
   // ],
-  const { id } = useParams();
   const [selected, setSelected] = useState(details[0].label);
-  const { isOpen, onOpen } = useModal();
 
-  const { userData, addToFavorites, removeFromFavorites } = useUser();
-  const [isBookMarked, setIsBookMarked] = useState(false);
-  const [isPending, setIsPending] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-  // const [dissLikeCount, setDisLikeCount] = useState(0);
-
-  useMemo(() => {
-    setIsBookMarked(
-      userData.favorites.some((f) => f.id === blog?.detailsNewsDto.id)
-    );
-    setLikeCount(blog?.detailsNewsDto.currentLikeCount);
-  }, [
-    blog?.detailsNewsDto.id,
-    userData.favorites,
-    blog?.detailsNewsDto.currentLikeCount,
-  ]);
+  useEffect(() => {
+    const isBookMarked = userData?.favorites.some((c) => c.id === id);
+    setIsBookMarked(isBookMarked);
+  }, [id, userData?.favorites]);
 
   if (isLoading) return <Loading />;
   if (isError) return <Error />;
 
-  const handleBookmark = () => {
-    if (userData.user !== "") {
-      addToFavorites(blog?.detailsNewsDto);
-      setIsBookMarked(true);
-    } else onOpen("unauthorizedModal");
+  const handleBookmark = async () => {
+    try {
+      if (!userData.user) return onOpen("unauthorizedModal");
+      setIsPending(true);
+      if (isBookMarked)
+        removeFromFavorites(
+          blog?.detailsNewsDto.id,
+          blog?.detailsNewsDto.currentUserFavoriteId
+        );
+      else addToFavorites(blog?.detailsNewsDto.id, true).then(() => refetch());
+    } catch (error) {
+      console.log(error);
+      toast.error("مشکلی پیش آمده دوباره امتحان کنید");
+    } finally {
+      setIsPending(false);
+    }
   };
 
   const handleLike = async () => {
     try {
       if (!userData.user) return onOpen("unauthorizedModal");
       setIsPending(true);
-      await likeBlog(blog?.detailsNewsDto.id).then(() => {
-        setLikeCount((c) => c + 1);
-        toast.success("نظر پسندیده شد");
+      await likeBlog(blog?.detailsNewsDto.id).then((res) => {
+        if (res.success) {
+          toast.success("نظر پسندیده شد");
+          refetch();
+        } else toast.error(res.message);
       });
     } catch (error) {
       console.log(error);
@@ -149,21 +161,13 @@ export const BlogInfo = () => {
       {/* BookMark and Teacher Pic */}
       <div className="w-11/12 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-10 mt-5 mb-10">
         <div className="flex justify-center items-center gap-x-2">
-          {isBookMarked ? (
-            <Bookmark
-              onClick={() => {
-                removeFromFavorites(blog?.detailsNewsDto);
-                setIsBookMarked(false);
-              }}
-              className="h-9 w-9 text-primary dark:text-dark-primary cursor-pointer"
-              fill="#5c55c9"
-            />
-          ) : (
-            <Bookmark
-              onClick={handleBookmark}
-              className="h-9 w-9 text-primary hover:text-primary/80 transition cursor-pointer"
-            />
-          )}
+          <Bookmark
+            onClick={handleBookmark}
+            className={cn(
+              "h-9 w-9 text-primary hover:text-primary/80 dark:text-dark-primary dark:hover:text-dark-primary/80 transition cursor-pointer",
+              isBookMarked && "fill-primary dark:fill-dark-primary"
+            )}
+          />
           <span className="flex flex-col justify-center items-center gap-y-2">
             <h5 className="text-sm text-gray-400 dark:text-gray-300">
               دسته بندی
@@ -195,11 +199,11 @@ export const BlogInfo = () => {
         <div className="flex justify-center items-center gap-x-3 self-end md:self-center">
           <button
             onClick={handleLike}
-            disabled={isPending || blog?.detailsNewsDto.currentUserIsLike}
+            disabled={isPending}
             className="flex items-center justify-center gap-x-1 dark:text-gray-300 text-gray-500 hover:text-primary dark:hover:text-dark-primary transition disabled:opacity-50 dark:disabled:opacity-70 disabled:cursor-not-allowed"
           >
             <p className="text-2xl dark:text-gray-300 text-gray-500">
-              {getPersianNumbers(likeCount)}
+              {getPersianNumbers(blog?.detailsNewsDto.currentLikeCount)}
             </p>
             <Heart
               className={cn(
@@ -252,6 +256,7 @@ export const BlogInfo = () => {
                 key={detail.id}
                 details={detail}
                 selected={selected}
+                updateFn={refetch}
               />
             ))}
           </div>

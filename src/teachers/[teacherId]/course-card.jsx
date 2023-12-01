@@ -6,7 +6,7 @@ import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 
 import { StarRate } from "../../components/starRate";
 import { useUser } from "../../hooks/use-user";
-import { TooTip } from "../../components/tool-tip";
+import { ToolTip } from "../../components/tool-tip";
 
 export const CourseCard = ({ course }) => {
   const { userData } = useUser();
@@ -54,14 +54,14 @@ export const CourseCard = ({ course }) => {
           <User2 className="h-4 w-4 text-primary dark:text-gray-200/80" />
           {getPersianNumbers(course.currentRegistrants, false)}
         </span>
-        <TooTip name="آخرین بروزرسانی">
+        <ToolTip name="آخرین بروزرسانی">
           <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
             <Clock className="h-4 w-4 text-primary dark:text-gray-200/80" />
             {`${getPersianNumbers(lastUpdate?.[2], true)} ${
               months[lastUpdate?.[1] - 1]
             } ${getPersianNumbers(lastUpdate?.[0], true)}`}
           </span>
-        </TooTip>
+        </ToolTip>
         <span className="flex flex-row-reverse items-center justify-center gap-x-1">
           <StarRate data={course} queryKey="courses" />
         </span>

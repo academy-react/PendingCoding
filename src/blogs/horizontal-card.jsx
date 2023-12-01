@@ -1,20 +1,18 @@
 import {
   Calendar,
-  Clock,
   LayoutDashboard,
-  MessagesSquare,
   MoveLeft,
-  ThumbsDown,
+  PenTool,
+  Eye,
   ThumbsUp,
-  User2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { getPersianNumbers } from "../../libs/get-persian-numbers";
-import { TooTip } from "../components/tool-tip";
+import { ToolTip } from "../components/tool-tip";
 
 export const HorizontalCard = ({ blog }) => {
-  const updateDate = new Date(blog?.updateDate)
+  const insertDate = new Date(blog?.insertDate)
     .toLocaleDateString("fa-IR-u-nu-latn")
     .split("/");
   const months = [
@@ -41,28 +39,36 @@ export const HorizontalCard = ({ blog }) => {
         className="xl:h-1/3 xl:w-1/3 object-contain rounded-xl"
       />
       <div className="flex flex-col justify-start items-center gap-y-10 w-full px-10">
-        <div className="self-center xl:self-start mt-5 xl:mt-0">
+        <div className="self-start xl:self-start mt-5 xl:mt-0">
           <h1 className="text-lg text-gray-600 dark:text-gray-200 mr-5">
             {blog.title}
           </h1>
         </div>
         <div className="w-full px-5 flex flex-col md:flex-row justify-between items-center gap-y-5">
           <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
-            <User2 className="h-5 w-5 text-primary dark:text-gray-200/80" />
+            <PenTool className="h-5 w-5 text-primary dark:text-gray-200/80" />
             {blog.addUserFullName}
           </span>
           <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
             <LayoutDashboard className="h-5 w-5 text-primary dark:text-gray-200/80" />
-            {blog.newsCatregoryName ? "مقالات" : "خبر "}
+            {blog.newsCatregoryName}
           </span>
-          <TooTip name="آخرین بروزرسانی">
+          <ToolTip name="تاریخ انتشار">
             <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
               <Calendar className="h-4 w-4 text-primary dark:text-gray-200/80" />
-              {`${getPersianNumbers(updateDate?.[2], true)} ${
-                months[updateDate?.[1] - 1]
-              } ${getPersianNumbers(updateDate?.[0], true)}`}
+              {`${getPersianNumbers(insertDate?.[2], true)} ${
+                months[insertDate?.[1] - 1]
+              } ${getPersianNumbers(insertDate?.[0], true)}`}
             </span>
-          </TooTip>
+          </ToolTip>
+          <span className="flex items-center justify-center gap-x-1 text-gray-500 dark:text-gray-200/80">
+            <Eye className="h-5 w-5 text-primary dark:text-gray-200/80" />
+            {getPersianNumbers(blog.currentView, false)}
+          </span>
+          <span className="flex items-center justify-center gap-x-1 text-gray-500 dark:text-gray-200/80">
+            <ThumbsUp className="h-5 w-5 text-primary dark:text-gray-200/80" />
+            {getPersianNumbers(blog.currentLikeCount, false)}
+          </span>
         </div>
         <span className="w-full">
           <p className="text-gray-500 dark:text-gray-200/80 text-justify line-clamp-6">
@@ -74,7 +80,7 @@ export const HorizontalCard = ({ blog }) => {
           to={`/blogs/${blog.id}`}
           className="flex justify-center items-center gap-x-2 text-primary hover:text-primary/80 dark:text-gray-200 dark:hover:text-gray-200/80 transition mr-auto"
         >
-          مشاهده {blog.isBlog ? "مقاله" : "خبر"}
+          مشاهده بلاگ
           <MoveLeft />
         </Link>
       </div>

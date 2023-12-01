@@ -6,11 +6,10 @@ import { useQuery } from "react-query";
 import { useUser } from "../hooks/use-user";
 
 import { useTheme } from "./providers/theme-provider";
-import { rateCourse } from "../core/services/api/get-courses";
 
-export const StarRate = ({ data, queryKey }) => {
+export const StarRate = ({ id, data, queryKey, rateFn }) => {
   const [rating, setRating] = useState(
-    data?.currentUserRateNumber || data?.currentRate
+    data?.courseRate || data?.currentRate || 0
   );
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,18 +36,23 @@ export const StarRate = ({ data, queryKey }) => {
         setIsChecked(false);
       }
       const params = {
-        CourseId: data?.courseId,
+        [id]: data?.courseId || data?.id,
         RateNumber: parseFloat(currentRate),
       };
       setIsLoading(true);
-      await rateCourse(params).then(() => {
-        toast.success("امتیاز شما ثبت شد");
-        setRating(currentRate);
-        refetch();
+      await rateFn(params).then((res) => {
+        if (res.success) {
+          toast.success("امتیاز شما ثبت شد");
+          setRating(currentRate);
+          refetch();
+        } else {
+          setRating(data?.courseRate);
+          toast.error(res.message);
+        }
       });
     } catch {
       toast.error("بعداٌ دوباره تلاش کنید");
-      setRating(data?.likeCount);
+      setRating(data?.courseRate);
     } finally {
       setIsLoading(false);
     }

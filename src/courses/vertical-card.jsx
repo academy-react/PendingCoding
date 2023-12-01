@@ -1,15 +1,21 @@
 import { useMemo } from "react";
-import { Clock, Eye, Tags, User2 } from "lucide-react";
+import { Clock, Eye, Tags, User2, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import { rateCourse } from "../core/services/api/get-courses";
+
 import { getPersianNumbers } from "../../libs/get-persian-numbers";
+
 import { useUser } from "../hooks/use-user";
 
 import { StarRate } from "../components/starRate";
-import { TooTip } from "../components/tool-tip";
+import { ToolTip } from "../components/tool-tip";
 
 import defaultCourseImage from "../assets/python.jpg";
-import defaultImageProfile from "../assets/my-profile.jpg";
+
+const status = {
+  "درحال برگذاری": <BookOpen className="text-gray-600 dark:text-gray-300" />,
+};
 
 export const VerticalCard = ({ course }) => {
   const { userData } = useUser();
@@ -40,12 +46,12 @@ export const VerticalCard = ({ course }) => {
   ];
 
   return (
-    <div className="w-[320px] flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg overflow-hidden self-center justify-self-center">
+    <div className="w-[320px] flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg self-center justify-self-center">
       <img
         loading="lazy"
         src={course.tumbImageAddress || defaultCourseImage}
         alt="CourseImage"
-        className="w-full"
+        className="object-cover rounded-t-xl"
       />
       <div className="self-start">
         <h1 className="text-lg text-gray-600 dark:text-gray-200 mr-5">
@@ -57,25 +63,27 @@ export const VerticalCard = ({ course }) => {
           <User2 className="h-4 w-4 text-primary dark:text-gray-200/80" />
           {getPersianNumbers(course.currentRegistrants, false)}
         </span>
-        <TooTip name="آخرین بروزرسانی">
+        <ToolTip name="آخرین بروزرسانی">
           <span className="text-gray-500 dark:text-gray-200/80 text-sm flex items-center justify-center gap-x-1">
             <Clock className="h-4 w-4 text-primary dark:text-gray-200/80" />
             {`${getPersianNumbers(lastUpdate?.[2], true)} ${
               months[lastUpdate?.[1] - 1]
             } ${getPersianNumbers(lastUpdate?.[0], true)}`}
           </span>
-        </TooTip>
+        </ToolTip>
         <span className="flex flex-row-reverse items-center justify-center gap-x-1">
-          <StarRate data={course} queryKey="courses" />
+          <StarRate
+            id="CourseId"
+            data={course}
+            queryKey="courses"
+            rateFn={rateCourse}
+          />
         </span>
       </div>
       <div className="flex justify-start w-full items-center px-3 py-2">
-        <img
-          loading="lazy"
-          src={course.teacherAvatar || defaultImageProfile}
-          className="w-14 h-14 rounded-full"
-          alt="TeacherProfile"
-        />
+        <ToolTip name={course?.statusName}>
+          {status[course?.statusName]}
+        </ToolTip>
         <span className="flex flex-col justify-center items-start gap-y-1 px-3 py-1">
           <h2 className="text-gray-600 dark:text-gray-200/80 text-base">
             {course.teacherName}

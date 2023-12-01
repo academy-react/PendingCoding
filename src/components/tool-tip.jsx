@@ -1,4 +1,4 @@
-export const TooTip = ({ name, children }) => {
+export const ToolTip = ({ name, children }) => {
   return (
     <div
       data-tip={`${name}`}
