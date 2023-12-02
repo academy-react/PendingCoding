@@ -16,6 +16,8 @@ import { ContactUs } from "../../contact_us/contact_us";
 import { About } from "../../about/about";
 import { Terms } from "../../auth/terms_and_conditions";
 import { Auth } from "../../auth";
+import { ForgetHolder } from "../../auth/resetPassword/forget-holder";
+import { ResetHolder } from "../../auth/resetPassword/reset-holder";
 
 const routes = [
   {
@@ -98,6 +100,14 @@ const routers = [
       {
         path: "/terms-and-conditions",
         element: <Terms />,
+      },
+      {
+        path: "/resetPassword/:id",
+        element: <ResetHolder />,
+      },
+      {
+        path: "/forgetPassword",
+        element: <ForgetHolder />,
       },
     ],
   },
