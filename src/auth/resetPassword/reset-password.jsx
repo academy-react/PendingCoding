@@ -41,11 +41,12 @@ const ResetPassword = () => {
   const [apiData, setApiData] = useState({});
 
   const confirmValue = async () => {
-    const confirmValueAPI = await resetConfirmValue(id);
-    console.log(confirmValueAPI);
-    setApiData({
-      userId: confirmValueAPI.id,
-      resetValue: confirmValueAPI.message,
+    await resetConfirmValue(id).then((res) => {
+      setApiData({
+        userId: res.id,
+        resetValue: res.message,
+      });
+      console.log(res);
     });
   };
   useEffect(() => {
@@ -66,7 +67,7 @@ const ResetPassword = () => {
       toast.success(resetPassword.message);
       setTimeout(() => {
         navigate("/auth");
-      }, 500);
+      }, 1000);
     } else {
       toast.error(resetPassword.message);
     }
