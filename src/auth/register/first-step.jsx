@@ -8,7 +8,7 @@ import { sendVerifyMessage } from "../../core/services/api/auth";
 import toast from "react-hot-toast";
 import { TestCaptcha } from "./test-captcha";
 
-const FirstStep = ({ setStep, setSaveUser, saveUser }) => {
+const FirstStep = ({ setStep, setSaveUser, saveUser, step }) => {
   const formSchema = z.object({
     phoneNumber: z
       .string()
@@ -82,7 +82,7 @@ const FirstStep = ({ setStep, setSaveUser, saveUser }) => {
   };
 
   return (
-    <>
+    <div className={cn(`block`, step === 2 && `hidden`)}>
       <form
         className="w-[100%] flex flex-col relative"
         onSubmit={handleSubmit(onSubmit)}
@@ -93,7 +93,7 @@ const FirstStep = ({ setStep, setSaveUser, saveUser }) => {
           onChange={(e) => {
             const obj = { ...saveUser, phoneNumber: e.target.value };
             setSaveUser(obj);
-            console.log(obj , saveUser)
+            console.log(obj, saveUser);
           }}
           placeholder="شماره موبایل"
           className={cn(
@@ -137,7 +137,7 @@ const FirstStep = ({ setStep, setSaveUser, saveUser }) => {
       {/* <Captcha /> */}
 
       <TestCaptcha />
-    </>
+    </div>
   );
 };
 

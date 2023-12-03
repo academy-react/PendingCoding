@@ -32,7 +32,6 @@ const TestCaptcha = () => {
     const timeOut = setTimeout(() => {
       const data = e.target.value;
       const len = data.length;
-      console.log(data);
       if (captcha === data && len === 4) {
         setCheck(true);
         setIsValid(true);
@@ -46,7 +45,7 @@ const TestCaptcha = () => {
         setImg(null);
         setIsValid(false);
       }
-    }, 1000);
+    }, 700);
 
     ref.current = timeOut;
   };

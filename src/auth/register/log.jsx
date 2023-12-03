@@ -5,11 +5,11 @@ const Log = ({log , handleAnimate , dataLog}) => {
   return (
     <motion.div
      animate={log}
-     className="w-[700px] h-[700px] rounded-[100%] bg-[#505050] flex justify-start   items-center text-[#fff] text-center float-right mt-[-700px] transition
+     className="w-[700px] h-[700px] rounded-[100%] bg-[#505050] flex justify-start   items-center text-[#fff] text-center transition
      dark:bg-gray-600 dark:text-white
      
      max-[1110px]:mt-[-200px] max-[1110px]:justify-center
-     max-[700px]:w-[500px] max-[700px]:h-[500px] max-[700px]:mt-[-150px]"
+     max-[700px]:w-[500px] max-[700px]:h-[500px]"
     >
 
       <motion.div

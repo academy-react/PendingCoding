@@ -9,7 +9,7 @@ import { loginAPI, registerAPI } from "../../core/services/api/auth";
 import { useState } from "react";
 // import { useUser } from "../../hooks/use-user";
 
-const SecondStep = ({ setStep, saveUser }) => {
+const SecondStep = ({ setStep, saveUser , step }) => {
   const formSchema = z
     .object({
       email: z
@@ -88,7 +88,7 @@ const SecondStep = ({ setStep, saveUser }) => {
 
     setTimeout(() => {
       navigate("/");
-    }, 500);
+    }, 700);
 
     console.log(lastStepRegisterAPI, loginApi);
   };
@@ -100,7 +100,8 @@ const SecondStep = ({ setStep, saveUser }) => {
   return (
     <>
       <form
-        className="w-[100%] flex flex-col"
+        className={cn(`hidden` , 
+        step === 2 && `w-[100%] flex flex-col`)}
         onSubmit={handleSubmit(onSubmit)}
       >
         <input

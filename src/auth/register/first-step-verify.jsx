@@ -41,7 +41,7 @@ const VerifyCode = ({ setStep, saveUser }) => {
       toast.success(verifyMessageAPI.message);
     }
 
-    // if (verifyMessageAPI.success === false) {
+    // if (verifyMessageAPI.success === true) {
       setStep((cs) => cs + 1);
     // }
   };
