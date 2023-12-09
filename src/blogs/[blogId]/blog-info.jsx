@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Bookmark, Heart, User } from "lucide-react";
 
-import { getBlogById, likeBlog } from "../../core/services/api/get-blogs";
+import {
+  addBlogToFavorite,
+  getBlogById,
+  likeBlog,
+} from "../../core/services/api/get-blogs";
 import { useModal } from "../../hooks/use-modal-store";
 import { useUser } from "../../hooks/use-user";
 
@@ -19,13 +23,14 @@ import { Slider } from "./slider";
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import toast from "react-hot-toast";
 import { cn } from "../../../libs/utils";
+import { setItem } from "../../core/services/common/storage.services";
 
 export const BlogInfo = () => {
   const { id } = useParams();
 
   const { isOpen, onOpen } = useModal();
 
-  const { userData, addToFavorites, removeFromFavorites } = useUser();
+  const { userData, setUserData, removeFromFavorites } = useUser();
   const [isBookMarked, setIsBookMarked] = useState(false);
   const [isPending, setIsPending] = useState(false);
   // const [likeCount, setLikeCount] = useState(0);
@@ -94,10 +99,9 @@ export const BlogInfo = () => {
   // ],
   const [selected, setSelected] = useState(details[0].label);
 
-  useEffect(() => {
-    const isBookMarked = userData?.favorites.some((c) => c.id === id);
-    setIsBookMarked(isBookMarked);
-  }, [id, userData?.favorites]);
+  useMemo(() => {
+    setIsBookMarked(blog?.detailsNewsDto.isCurrentUserFavorite);
+  }, [blog?.detailsNewsDto.isCurrentUserFavorite]);
 
   if (isLoading) return <Loading />;
   if (isError) return <Error />;
@@ -106,12 +110,12 @@ export const BlogInfo = () => {
     try {
       if (!userData.user) return onOpen("unauthorizedModal");
       setIsPending(true);
-      if (isBookMarked)
-        removeFromFavorites(
-          blog?.detailsNewsDto.id,
-          blog?.detailsNewsDto.currentUserFavoriteId
-        );
-      else addToFavorites(blog?.detailsNewsDto.id, true).then(() => refetch());
+      if (isBookMarked) return;
+      else {
+        await addBlogToFavorite(blog?.detailsNewsDto.id).then(() => {
+          refetch(() => toast.success("به علاقه مندی اضافه شد"));
+        });
+      }
     } catch (error) {
       console.log(error);
       toast.error("مشکلی پیش آمده دوباره امتحان کنید");

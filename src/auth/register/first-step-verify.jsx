@@ -32,18 +32,13 @@ const VerifyCode = ({ setStep, saveUser }) => {
     };
 
     const verifyMessageAPI = await verifyMessage(obj);
+    setStep((cs) => cs + 1);
 
     console.log(verifyMessageAPI);
 
-    if (verifyMessageAPI.success === false) {
-      toast.error(verifyMessageAPI.message);
-    } else {
-      toast.success(verifyMessageAPI.message);
-    }
-
-    // if (verifyMessageAPI.success === false) {
-      setStep((cs) => cs + 1);
-    // }
+    if(verifyMessageAPI.success === false){
+      toast.error(verifyMessageAPI.message)
+    } else {toast.success(verifyMessageAPI.message)}
   };
 
   return (

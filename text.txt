@@ -113,3 +113,162 @@ function UserProvider({ children }) {
 }
 
 export { UserProvider, useUser };
+
+
+            <div className="flex flex-col justify-start items-center gap-y-10">
+              <input
+                id="lastName"
+                name="lastName"
+                type="text"
+                placeholder="فامیلی خود را وارد کنید"
+                className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
+                {...form.register("lastName")}
+              />
+              {form.formState.errors?.lastName && (
+                <p className="text-destructive">
+                  {form.formState.errors.lastName.message}
+                </p>
+              )}
+              <div className="w-full flex items-center justify-start">
+                <label htmlFor="recieveMessage">اعلان</label>
+                <input
+                  id="recieveMessage"
+                  name="recieveMessage"
+                  type="checkbox"
+                  className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
+                  {...form.register("recieveMessage")}
+                />
+              </div>
+              {form.formState.errors?.recieveMessage && (
+                <p className="text-destructive">
+                  {form.formState.errors.recieveMessage.message}
+                </p>
+              )}
+              <input
+                id="longitude"
+                name="longitude"
+                type="text"
+                placeholder="فامیلی خود را وارد کنید"
+                className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
+                {...form.register("longitude")}
+              />
+              {form.formState.errors?.longitude && (
+                <p className="text-destructive">
+                  {form.formState.errors.longitude.message}
+                </p>
+              )}
+              <textarea
+                className={cn(
+                  "resize-none w-full h-40 disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400",
+                  form.formState.errors?.biography &&
+                    "border-destructive dark:border-dark-destructive focus:border-destructive dark:focus:border-dark-destructive"
+                )}
+                placeholder="درباره من"
+                {...form.register("biography")}
+              />
+              <p
+                className={cn(
+                  "opacity-0 text-destructive dark:text-dark-destructive",
+                  form.formState.errors?.biography && "opacity-100"
+                )}
+              >
+                {form.formState.errors?.biography
+                  ? form.formState.errors.biography.message
+                  : "ss"}
+              </p>
+            </div>
+            <div className="flex flex-col justify-start items-center gap-y-10">
+              <DatePicker
+                value={date}
+                onChange={setSelectedDay}
+                inputPlaceholder="روز تولد..."
+                maximumDate={maximumDate}
+                colorPrimary="#5c55c9"
+                inputClassName="w-[300px] text-start disabled:cursor-not-allowed outline-none text-[15px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
+                shouldHighlightWeekends
+                locale="fa"
+              />
+              {form.formState.errors?.birthDate && (
+                <p className="text-destructive">
+                  {form.formState.errors.birthDate.message}
+                </p>
+              )}
+
+              <input
+                id="linkdinProfile"
+                name="linkdinProfile"
+                type="text"
+                placeholder="فامیلی خود را وارد کنید"
+                className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
+                {...form.register("linkdinProfile")}
+              />
+              {form.formState.errors?.linkdinProfile && (
+                <p className="text-destructive">
+                  {form.formState.errors.linkdinProfile.message}
+                </p>
+              )}
+              <input
+                id="latitude"
+                name="latitude"
+                type="text"
+                placeholder="فامیلی خود را وارد کنید"
+                className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
+                {...form.register("latitude")}
+              />
+              {form.formState.errors?.latitude && (
+                <p className="text-destructive">
+                  {form.formState.errors.latitude.message}
+                </p>
+              )}
+              <input
+                id="telegramLink"
+                name="telegramLink"
+                type="text"
+                placeholder="فامیلی خود را وارد کنید"
+                className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
+                {...form.register("telegramLink")}
+              />
+              {form.formState.errors?.telegramLink && (
+                <p className="text-destructive">
+                  {form.formState.errors.telegramLink.message}
+                </p>
+              )}
+
+              <SelectInput
+                presSelected={user?.gender}
+                name="gender"
+                label="جنسیت"
+                errors={form.formState.errors}
+                options={genderOptions}
+              />
+            </div>
+
+<div className="w-full flex flex-col justify-center items-center">
+  <div className="w-full flex flex-col justify-center items-center gap-y-2">
+    <label
+      htmlFor="biography"
+      className="mr-8 text-lg dark:text-gray-400 self-start"
+    >
+      آدرس
+    </label>
+    <textarea
+      className={cn(
+        "resize-none w-full h-40 disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400",
+        form.formState.errors?.biography &&
+          "border-destructive dark:border-dark-destructive focus:border-destructive dark:focus:border-dark-destructive"
+      )}
+      placeholder="درباره من"
+      {...form.register("biography")}
+    />
+  </div>
+  <p
+    className={cn(
+      "opacity-0 text-destructive dark:text-dark-destructive",
+      form.formState.errors?.biography && "opacity-100"
+    )}
+  >
+    {form.formState.errors?.biography
+      ? form.formState.errors.biography.message
+      : "ss"}
+  </p>
+</div>

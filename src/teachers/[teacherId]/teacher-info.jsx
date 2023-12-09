@@ -21,7 +21,7 @@ export const TeacherInfo = () => {
     isLoading: isTeacherLoading,
     isError: isTeacherError,
   } = useQuery({
-    queryKey: ["teacher_id"],
+    queryKey: ["teacher_id", id],
     queryFn: () => getTeacherById(id),
     staleTime: 5000,
   });

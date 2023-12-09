@@ -1,9 +1,14 @@
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useQuery } from "react-query";
+import { toast } from "react-hot-toast";
+import { useParams } from "react-router-dom";
 
 import { useModal } from "../hooks/use-modal-store";
 import { useUser } from "../hooks/use-user";
+import { setItem } from "../core/services/common/storage.services";
+import { reserveCourse } from "../core/services/api/user";
 
 const backdrop = {
   hidden: {
@@ -23,18 +28,38 @@ const backdrop = {
 };
 
 export const ConfirmModal = () => {
-  const { isOpen, onClose, type, data } = useModal();
-  const { addToCart } = useUser();
+  const { id } = useParams();
+  const { isOpen, onClose, type } = useModal();
+  const { userData, setUserData } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
 
   const isModalOpen = isOpen && type === "confirmModal";
-  const { course } = data;
-
   const { refetch } = useQuery({
-    queryKey: ["course_id", course?.courseId],
+    queryKey: ["course_id", id],
   });
 
-  const handleConfirm = () => {
-    addToCart(course).then(() => refetch());
+  const handleConfirm = async () => {
+    try {
+      setIsLoading(true);
+      await reserveCourse(id).then(() => {
+        refetch().then((res) => {
+          const newObj = {
+            ...userData,
+            cart: userData.cart.find((c) => c.courseId === id)
+              ? [...userData.cart]
+              : [...userData.cart, { ...res.data }],
+          };
+          setUserData(newObj);
+          setItem("user", newObj);
+          toast.success("دوره به سبدتون اضافه شد");
+        });
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+      onClose();
+    }
   };
 
   return (
@@ -66,14 +91,16 @@ export const ConfirmModal = () => {
               </h1>
               <div className="w-full flex items-center justify-start gap-x-3 px-5 py-2">
                 <button
+                  disabled={isLoading}
                   onClick={handleConfirm}
-                  className="px-5 py-2 text-lg bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/90 rounded-xl"
+                  className="px-5 py-2 text-lg bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/90 disabled:cursor-not-allowed rounded-xl"
                 >
                   تائید
                 </button>
                 <button
+                  disabled={isLoading}
                   onClick={onClose}
-                  className="px-5 py-2 text-lg bg-destructive hover:bg-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/90 rounded-xl"
+                  className="px-5 py-2 text-lg bg-destructive hover:bg-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/90 disabled:cursor-not-allowed rounded-xl"
                 >
                   لغو
                 </button>

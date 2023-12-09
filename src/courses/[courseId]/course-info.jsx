@@ -15,6 +15,8 @@ import {
 import toast from "react-hot-toast";
 
 import {
+  addCourseToFavorites,
+  deleteCourseFavorite,
   deleteCourseLike,
   dissLikeCourse,
   getCourseById,
@@ -44,7 +46,7 @@ import defaultCourseThumbnail from "../../assets/default-course-thumbnail.png";
 export const CourseInfo = () => {
   const { id } = useParams();
   const { isOpen, onOpen } = useModal();
-  const { userData, addToFavorites, removeFromFavorites } = useUser();
+  const { userData } = useUser();
   const [isBookMarked, setIsBookMarked] = useState(false);
   const [teacher, setTeacher] = useState(null);
   const [isPending, setIsPending] = useState(false);
@@ -56,6 +58,7 @@ export const CourseInfo = () => {
     data: course,
     isLoading,
     isError,
+    isSuccess,
     refetch,
   } = useQuery({
     queryKey: ["course_id", id],
@@ -64,10 +67,13 @@ export const CourseInfo = () => {
     enabled: false,
   });
   useMemo(() => {
-    getTeacherById(course?.teacherId).then((res) => setTeacher(res));
-    setLikeCount(course?.likeCount);
-    setDisLikeCount(course?.dissLikeCount);
-  }, [course?.teacherId, course?.likeCount, course?.dissLikeCount]);
+    if (isSuccess) {
+      getTeacherById(course?.teacherId).then((res) => setTeacher(res));
+      setLikeCount(course?.likeCount);
+      setDisLikeCount(course?.dissLikeCount);
+      setIsBookMarked;
+    }
+  }, [isSuccess, course?.teacherId, course?.likeCount, course?.dissLikeCount]);
 
   const details = [
     {
@@ -164,8 +170,8 @@ export const CourseInfo = () => {
   const [selected, setSelected] = useState(details[0].label);
 
   const isInCart = useMemo(
-    () => userData?.cart.some((c) => c.courseId === id),
-    [id, userData?.cart]
+    () => course?.courseReseveId !== "00000000-0000-0000-0000-000000000000",
+    [course?.courseReseveId]
   );
   const isPurchased = useMemo(
     () => +course?.isCourseUser,
@@ -179,10 +185,11 @@ export const CourseInfo = () => {
     }
   }, [isMounted, refetch]);
 
-  useEffect(() => {
-    const isBookMarked = userData?.favorites.some((c) => c.id === id);
+  useMemo(() => {
+    const isBookMarked =
+      course?.userFavoriteId !== "00000000-0000-0000-0000-000000000000";
     setIsBookMarked(isBookMarked);
-  }, [id, userData?.favorites]);
+  }, [course?.userFavoriteId]);
 
   const startDate = new Date(course?.startTime)
     .toLocaleDateString("fa-IR-u-nu-latn")
@@ -211,8 +218,18 @@ export const CourseInfo = () => {
       if (!userData.user) return onOpen("unauthorizedModal");
       setIsPending(true);
       if (isBookMarked)
-        removeFromFavorites(course?.courseId, course?.userFavoriteId);
-      else addToFavorites(course?.courseId, false).then(() => refetch());
+        await deleteCourseFavorite(course?.userFavoriteId).then((res) => {
+          if (res.success)
+            refetch().then(() => toast.success("از علاقه مندی حذف شد"));
+          else toast.error("مشکلی پیش آمده دوباره امتحان کنید");
+        });
+      else {
+        await addCourseToFavorites(course?.courseId).then((res) => {
+          if (res.success)
+            refetch().then(() => toast.success("به علاقه مندی اضافه شد"));
+          else toast.error("مشکلی پیش آمده دوباره امتحان کنید");
+        });
+      }
     } catch (error) {
       console.log(error);
       toast.error("مشکلی پیش آمده دوباره امتحان کنید");
@@ -270,13 +287,18 @@ export const CourseInfo = () => {
       {/* BookMark and Teacher Pic */}
       <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-10 mt-5 mb-10">
         <div className="flex justify-center items-center gap-x-2">
-          <Bookmark
+          <button
+            disabled={isPending}
             onClick={handleBookmark}
-            className={cn(
-              "h-9 w-9 text-primary hover:text-primary/80 dark:text-dark-primary dark:hover:text-dark-primary/80 transition cursor-pointer",
-              isBookMarked && "fill-primary dark:fill-dark-primary"
-            )}
-          />
+            className="text-primary hover:text-primary/80 dark:text-dark-primary dark:hover:text-dark-primary/80 disabled:text-primary/70 dark:disabled:text-dark-primary/70 disabled:cursor-not-allowed  transition cursor-pointer"
+          >
+            <Bookmark
+              className={cn(
+                "h-9 w-9",
+                isBookMarked && "fill-primary dark:fill-dark-primary"
+              )}
+            />
+          </button>
           <span className="flex flex-col justify-center items-start gap-y-2">
             <h5 className="text-sm text-gray-400 dark:text-gray-300">
               دسته بندی

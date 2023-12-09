@@ -102,6 +102,10 @@ export const Description = ({ details, updateFn, selected }) => {
     } else setCount((c) => c + 4);
   };
 
+  const filteredData = details?.comments?.sort(
+    (a, b) => new Date(b.inserDate) - new Date(a.inserDate)
+  );
+
   if (selected === details.label && details.label === "توضیحات") {
     Info = (
       <motion.p
@@ -124,9 +128,9 @@ export const Description = ({ details, updateFn, selected }) => {
         className="flex flex-col items-center justify-center gap-y-10"
       >
         <div className="w-full border-2 border-gray-300 dark:border-gray-500 px-5 py-4 rounded-xl">
-          {details.comments?.length > 0 ? (
+          {filteredData?.length > 0 ? (
             <>
-              {details.comments?.slice(0, count).map((comment) => (
+              {filteredData?.slice(0, count).map((comment) => (
                 <CommentCard
                   key={comment.id}
                   comment={comment}
@@ -139,7 +143,7 @@ export const Description = ({ details, updateFn, selected }) => {
                   onClick={handleMore}
                   className="flex items-center justify-center gap-x-2 text-gray-500 hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-900 transition bg-gray-300/40 hover:bg-gray-300/60 dark:bg-gray-300 dark:hover:bg-gray-300/80 hover:shadow-md px-4 py-3 rounded-xl"
                 >
-                  {count >= details?.comments?.length ? (
+                  {count >= filteredData?.length ? (
                     <>
                       نمایش کمتر
                       <ChevronUp className="w-5 h-5 text-gray-400 dark:text-gray-500" />

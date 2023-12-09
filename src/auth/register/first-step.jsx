@@ -5,8 +5,8 @@ import { cn } from "../../../libs/utils";
 import { VerifyCode } from "./first-step-verify";
 import { useState } from "react";
 import { sendVerifyMessage } from "../../core/services/api/auth";
+import { Captcha } from "./captcha";
 import toast from "react-hot-toast";
-import { TestCaptcha } from "./test-captcha";
 
 const FirstStep = ({ setStep, setSaveUser, saveUser }) => {
   const formSchema = z.object({
@@ -51,6 +51,7 @@ const FirstStep = ({ setStep, setSaveUser, saveUser }) => {
   // };
 
   const onSubmit = async (values) => {
+    
     setSaveUser({ phoneNumber: values.phoneNumber });
 
     const sendVerifyMessageAPI = await sendVerifyMessage(values);
@@ -74,9 +75,11 @@ const FirstStep = ({ setStep, setSaveUser, saveUser }) => {
 
     if (sendVerifyMessageAPI.success === false) {
       toast.error(sendVerifyMessageAPI.message);
-    } else if (sendVerifyMessageAPI.message === "درخواست نامعتبر") {
+    }
+    else if(sendVerifyMessageAPI.message === "درخواست نامعتبر"){
       toast.error(sendVerifyMessageAPI.message);
-    } else {
+    }
+    else{
       toast.success(sendVerifyMessageAPI.message);
     }
   };
@@ -90,11 +93,6 @@ const FirstStep = ({ setStep, setSaveUser, saveUser }) => {
         <input
           type="text"
           value={saveUser.phoneNumber}
-          onChange={(e) => {
-            const obj = { ...saveUser, phoneNumber: e.target.value };
-            setSaveUser(obj);
-            console.log(obj , saveUser)
-          }}
           placeholder="شماره موبایل"
           className={cn(
             `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px]
@@ -110,7 +108,7 @@ const FirstStep = ({ setStep, setSaveUser, saveUser }) => {
 
         {/* {errors.phoneNumber && ()} */}
         <div
-          className="text-[#ff1f1f] p-[2.5px_13px_0_0]
+          className="text-[#ff1f1f] right-[10px] p-[2.5px_13px_0_0]
                   dark:text-red-500 h-[33px] 
                   
               max-[700px]:text-[13px]"
@@ -134,9 +132,7 @@ const FirstStep = ({ setStep, setSaveUser, saveUser }) => {
 
       <VerifyCode setStep={setStep} saveUser={saveUser} />
 
-      {/* <Captcha /> */}
-
-      <TestCaptcha />
+      <Captcha />
     </>
   );
 };

@@ -111,9 +111,9 @@ export const Description = ({ teacher, details, selected }) => {
     staleTime: 5000,
   });
 
-  const filteredData = comments?.sort(
-    (a, b) => new Date(b.insertDate) - new Date(a.insertDate)
-  );
+  const filteredData = comments
+    ?.sort((a, b) => new Date(b.insertDate) - new Date(a.insertDate))
+    .filter((c) => c.accept);
   //fetch User
   const { data } = useQuery({
     queryKey: ["user_info"],

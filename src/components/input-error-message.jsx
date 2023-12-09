@@ -5,9 +5,7 @@ export const InputErrorMessage = ({ errors, name }) => {
     <ErrorMessage
       errors={errors}
       name={name}
-      render={({ message }) => (
-        <p className="text-danger text-lg dark:text-danger/70">{message}</p>
-      )}
+      render={({ message }) => <p className="form__error">{message}</p>}
     />
   );
 };

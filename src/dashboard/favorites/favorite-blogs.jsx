@@ -1,34 +1,32 @@
 import { useMemo, useState } from "react";
-import toast from "react-hot-toast";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   ChevronDown,
   ChevronUp,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { Link, useSearchParams } from "react-router-dom";
+import toast from "react-hot-toast";
 import ReactPaginate from "react-paginate";
-
-import { deleteCourseFavorite } from "../../core/services/api/get-courses";
 
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import { persianPagination } from "../../../libs/get-persian-numbers";
 import { scrollToTop } from "../../../libs/scroll-to-top";
 
-export const FavoriteCourses = ({ courses }) => {
+export const FavoriteBlogs = ({ blogs }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [filteredCourses, setfilteredCourses] = useState([]);
+  const [filteredBlogs, setfilteredBlogs] = useState([]);
   const [isAsc, setIsAsc] = useState(false);
   const [searchParams] = useSearchParams();
   const product_name = searchParams.get("product_name");
 
   const [itemOffset, setItemOffset] = useState(0);
   const endOffset = itemOffset + 6;
-  const pageCount = Math.ceil(filteredCourses?.length / 6);
+  const pageCount = Math.ceil(filteredBlogs?.length / 6);
 
   useMemo(() => {
     if (product_name) {
-      const newData = courses?.filter((c) =>
+      const newData = blogs?.filter((c) =>
         c?.courseName
           .replace(/ /g, "")
           .replace("آ", "ا")
@@ -37,19 +35,18 @@ export const FavoriteCourses = ({ courses }) => {
             product_name?.replace(/ /g, "").replace("آ", "ا").toLowerCase()
           )
       );
-      setfilteredCourses(newData);
-    } else setfilteredCourses(courses);
-  }, [courses, product_name]);
+      setfilteredBlogs(newData);
+    } else setfilteredBlogs(blogs);
+  }, [blogs, product_name]);
 
   const currentItems = useMemo(
-    () => filteredCourses?.slice(itemOffset, endOffset),
-    [filteredCourses, itemOffset, endOffset]
+    () => filteredBlogs?.slice(itemOffset, endOffset),
+    [filteredBlogs, itemOffset, endOffset]
   );
 
-  const updateDate = (course) =>
-    new Date(course.lastUpdate)
-      .toLocaleDateString("fa-IR-u-nu-latn")
-      .split("/");
+  const updateDate = (blog) =>
+    new Date(blog.updateDate).toLocaleDateString("fa-IR-u-nu-latn").split("/");
+
   const months = [
     "فروردين",
     "ارديبهشت",
@@ -65,17 +62,18 @@ export const FavoriteCourses = ({ courses }) => {
     "اسفند",
   ];
 
-  const handleDelete = async (course) => {
+  const handleDelete = (blog) => {
     try {
       setIsLoading(true);
-      await deleteCourseFavorite(course?.favoriteId).then((res) => {
-        if (res.success) {
-          let newArray = [...filteredCourses];
-          newArray = newArray.filter((f) => f.courseId !== course?.courseId);
-          setfilteredCourses(newArray);
-          toast.success("از لیست علاقه مندی ها حذف شد");
-        }
-      });
+
+      // api Call for Delete FavBlo
+
+      let newArray = [...filteredBlogs];
+      newArray = newArray.filter((b) => b.newsId !== blog?.newsId);
+      setTimeout(() => {
+        setfilteredBlogs(newArray);
+        toast.success("از علاقه‌‌مندی حذف شد");
+      }, 800);
     } catch (error) {
       toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
       console.log(error.message);
@@ -83,14 +81,15 @@ export const FavoriteCourses = ({ courses }) => {
       setIsLoading(false);
     }
   };
+
   const handleFilter = (event) => {
-    let newItems = [...filteredCourses];
+    let newItems = [...filteredBlogs];
     const input = event.target.innerHTML;
 
     if (input === "نام") {
       newItems = newItems.sort((a, b) => {
-        const nameA = a.courseTitle.toLowerCase();
-        const nameB = b.courseTitle.toLowerCase();
+        const nameA = a.title.toLowerCase();
+        const nameB = b.title.toLowerCase();
         if (nameA < nameB) {
           const returnValue = isAsc ? 1 : -1;
           setIsAsc(!isAsc);
@@ -103,26 +102,10 @@ export const FavoriteCourses = ({ courses }) => {
         }
         return 0;
       });
-    } else if (input === "نام استاد") {
+    } else if (input === "آخرین بروزرسانی") {
       newItems = newItems.sort((a, b) => {
-        const nameA = a.teacheName.toLowerCase();
-        const nameB = b.teacheName.toLowerCase();
-        if (nameA < nameB) {
-          const returnValue = isAsc ? 1 : -1;
-          setIsAsc(!isAsc);
-          return returnValue;
-        }
-        if (nameA > nameB) {
-          const returnValue = isAsc ? -1 : 1;
-          setIsAsc(!isAsc);
-          return returnValue;
-        }
-        return 0;
-      });
-    } else if (input === "اخرین بروزرسانی") {
-      newItems = newItems.sort((a, b) => {
-        let dateA = new Date(a.lastUpdate);
-        let dateB = new Date(b.lastUpdate);
+        let dateA = new Date(a.updateDate);
+        let dateB = new Date(b.updateDate);
         if (isAsc) {
           const returnValue = dateB - dateA;
           setIsAsc(false);
@@ -134,18 +117,18 @@ export const FavoriteCourses = ({ courses }) => {
         }
       });
     }
-    setfilteredCourses(newItems);
+    setfilteredBlogs(newItems);
   };
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * 6) % filteredCourses?.length;
+    const newOffset = (event.selected * 6) % filteredBlogs?.length;
     setItemOffset(newOffset);
     scrollToTop(0);
   };
 
   return (
     <div className="relative w-full sm:rounded-lg">
-      {filteredCourses?.length === 0 ? (
+      {filteredBlogs?.length === 0 ? (
         <div>
           <p className="text-xl text-gray-600 dark:text-gray-300 text-center">
             علاقه مندی وجود ندارد
@@ -157,7 +140,6 @@ export const FavoriteCourses = ({ courses }) => {
             <table className="w-full text-sm text-right text-gray-500 dark:text-gray-400 shadow-md">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" className="px-6 py-3"></th>
                   <th scope="col" className="px-6 py-3">
                     <div
                       onClick={handleFilter}
@@ -171,37 +153,19 @@ export const FavoriteCourses = ({ courses }) => {
                       )}
                     </div>
                   </th>
+
                   <th scope="col" className="px-6 py-3">
                     <div
                       onClick={handleFilter}
                       className="flex items-center justify-start gap-x-1 cursor-pointer"
                     >
-                      <p>نام استاد</p>
+                      <p>آخرین بروزرسانی</p>
                       {isAsc ? (
                         <ChevronDown className="h-4 w-4 text-gray-400" />
                       ) : (
                         <ChevronUp className="h-4 w-4 text-gray-400" />
                       )}
                     </div>
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    <div
-                      onClick={handleFilter}
-                      className="flex items-center justify-start gap-x-1 cursor-pointer"
-                    >
-                      <p>اخرین بروزرسانی</p>
-                      {isAsc ? (
-                        <ChevronDown className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <ChevronUp className="h-4 w-4 text-gray-400" />
-                      )}
-                    </div>
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    سطح
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    نوع
                   </th>
                   <th scope="col" className="px-6 py-3">
                     عملیات
@@ -209,46 +173,34 @@ export const FavoriteCourses = ({ courses }) => {
                 </tr>
               </thead>
               <tbody>
-                {currentItems?.map((course) => (
+                {currentItems.map((blog) => (
                   <tr
-                    key={course.courseId}
+                    key={blog.newsId}
                     className="bg-white border-b dark:bg-gray-900/60 dark:border-gray-800/60"
                   >
-                    <th
-                      scope="row"
-                      className="max-w-[300px] px-0 py-2 flex items-center justify-center"
-                    >
-                      <img
-                        src={course.tumbImageAddress}
-                        alt="courseImage"
-                        className="object-fill w-10 h-10 rounded-full"
-                      />
-                    </th>
                     <th
                       scope="row"
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       <Link
-                        to={`/courses/${course.courseId}`}
-                        className="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300 transition"
+                        to={`/blogs/${blog.newsId}`}
+                        className="text-gray-500 hover:text-gray-800 transition"
                       >
-                        {course.courseTitle}
+                        {blog.title}
                       </Link>
                     </th>
-                    <td className="px-6 py-4">{course.teacheName}</td>
                     <td className="px-6 py-4">{`${getPersianNumbers(
-                      updateDate(course)?.[2],
+                      updateDate(blog)?.[2],
                       true
-                    )} ${
-                      months[updateDate(course)?.[1] - 1]
-                    } ${getPersianNumbers(updateDate(course)?.[0], true)}`}</td>
-                    <td className="px-6 py-4">{course?.levelName}</td>
-                    <td className="px-6 py-4">{course.typeName}</td>
-                    <td className="relative px-6 py-4 text-right">
+                    )} ${months[updateDate(blog)?.[1] - 1]} ${getPersianNumbers(
+                      updateDate(blog)?.[0],
+                      true
+                    )}`}</td>
+                    <td className="max-w-[80px] flex items-center justify-center gap-x-5 px-6 py-4">
                       <button
-                        onClick={() => handleDelete(course)}
+                        onClick={() => handleDelete(blog)}
                         disabled={isLoading}
-                        className="bg-destructive hover:bg-destructive/80 disabled:bg-destructive/70 text-white hover:text-white/80 disabled:text-white/80 disabled:cursor-not-allowed px-4 py-2 rounded-xl"
+                        className="bg-destructive hover:bg-destructive/80 dark:bg-dark-destructive dark:hover:bg-dark-destructive/80 disabled:bg-destructive/70 text-white hover:text-white/80 disabled:text-white/80 disabled:cursor-not-allowed px-5 py-2 rounded-xl"
                       >
                         حذف
                       </button>

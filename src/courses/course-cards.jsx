@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ReactPaginate from "react-paginate";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useQuery } from "react-query";
 
 import { getPersianNumbers } from "../../libs/get-persian-numbers";
 
@@ -11,6 +12,7 @@ import { HorizontalCard } from "./horizontal-card";
 import { cn } from "../../libs/utils";
 import { persianPagination } from "../../libs/get-persian-numbers";
 import { scrollToTop } from "../../libs/scroll-to-top";
+import { getUserReservedCourses } from "../core/services/api/user";
 
 const filters = [
   { id: 1, label: 6, value: 6 },
@@ -29,6 +31,11 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
     setItemOffset(newOffset);
     scrollToTop(0);
   };
+  const { data: reservedCourses } = useQuery({
+    queryKey: ["reserved_courses"],
+    queryFn: () => getUserReservedCourses(),
+    staleTime: 5000,
+  });
 
   return (
     <>
@@ -39,7 +46,11 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
         )}
       >
         {currentItems?.map((course) => (
-          <VerticalCard key={course.id} course={course} />
+          <VerticalCard
+            key={course.id}
+            course={course}
+            reservedCourses={reservedCourses}
+          />
         ))}
       </div>
       <div
@@ -49,7 +60,11 @@ export const CourseCards = ({ courses, itemsPerPage, isVertical }) => {
         )}
       >
         {currentItems?.map((course) => (
-          <HorizontalCard key={course.id} course={course} />
+          <HorizontalCard
+            key={course.id}
+            course={course}
+            reservedCourses={reservedCourses}
+          />
         ))}
       </div>
       <div className="flex flex-col lg:flex-row items-center justify-between gap-y-5 mt-10">

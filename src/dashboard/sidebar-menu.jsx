@@ -1,8 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { LogOut, UserCog } from "lucide-react";
 
-import { useUser } from "../hooks/use-user";
-
 import { PageCard } from "./page-card";
 import { pages } from "./pages";
 
@@ -10,19 +8,20 @@ import { cn } from "../../libs/utils";
 
 import defaultProfile from "../assets/my-profile.jpg";
 
-export const SidebarMenu = () => {
-  const { userData } = useUser();
-
+export const SidebarMenu = ({ user }) => {
   const { pathname } = useLocation();
+
+  const fullName = `${user?.fName} ${user?.lName}`;
+
   return (
-    <div className="w-[250px] h-full bg-white dark:bg-gray-700 border-l-2 border-l-gray-100 dark:border-l-gray-700 dark:shadow-gray-400 dark:shadow-md shadow-lg py-10">
+    <div className="w-[250px] fixed right-0 h-full bg-white dark:bg-gray-700 border-l-2 border-l-gray-100 dark:border-l-gray-700 dark:shadow-gray-400 dark:shadow-md shadow-lg py-10">
       <div className="flex flex-col justify-center items-center gap-y-10 my-5">
         <h1 className="text-xl text-gray-700 dark:text-gray-200 text-center">
-          PendingCoding
+          {fullName}
         </h1>
         <img
           className="w-20 h-20 rounded-full m-auto"
-          src={userData?.user?.image || defaultProfile}
+          src={user?.currentPictureAddress || defaultProfile}
           alt="UserProfile"
         />
       </div>

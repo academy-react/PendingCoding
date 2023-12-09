@@ -6,8 +6,6 @@ import { rateCourse } from "../core/services/api/get-courses";
 
 import { getPersianNumbers } from "../../libs/get-persian-numbers";
 
-import { useUser } from "../hooks/use-user";
-
 import { StarRate } from "../components/starRate";
 import { ToolTip } from "../components/tool-tip";
 
@@ -17,14 +15,10 @@ const status = {
   "درحال برگذاری": <BookOpen className="text-gray-600 dark:text-gray-300" />,
 };
 
-export const VerticalCard = ({ course }) => {
-  const { userData } = useUser();
-
+export const VerticalCard = ({ course, reservedCourses }) => {
   const isPurchased = useMemo(
-    () =>
-      userData?.cart?.some((c) => c.courseId === course.courseId) ||
-      userData?.myCourses.some((c) => c.courseId === course.courseId),
-    [userData, course.courseId]
+    () => reservedCourses?.find((c) => c.courseId === course?.courseId),
+    [reservedCourses, course?.courseId]
   );
 
   const lastUpdate = new Date(course?.lastUpdate)

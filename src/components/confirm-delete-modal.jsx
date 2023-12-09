@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 
 import { useModal } from "../hooks/use-modal-store";
 import { useUser } from "../hooks/use-user";
+import { useState } from "react";
 
 const backdrop = {
   hidden: {
@@ -26,14 +27,26 @@ const backdrop = {
 export const ConfirmDeleteModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const { removeFromCart } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
 
   const isModalOpen = isOpen && type === "confirmDeleteModal";
 
   const { course, reserveId } = data;
 
-  const handleDelete = () => {
-    removeFromCart(course?.courseId, reserveId);
-    onClose();
+  const { refetch } = useQuery({
+    queryKey: ["course_id", course?.courseId],
+  });
+
+  const handleDelete = async () => {
+    try {
+      setIsLoading(true);
+      await removeFromCart(course?.courseId, reserveId).then(() => refetch());
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+      onClose();
+    }
   };
 
   return (
@@ -65,14 +78,16 @@ export const ConfirmDeleteModal = () => {
               </h1>
               <div className="w-full flex items-center justify-start gap-x-3 px-5 py-2">
                 <button
+                  disabled={isLoading}
                   onClick={handleDelete}
-                  className="px-5 py-2 text-lg bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/90 rounded-xl"
+                  className="px-5 py-2 text-lg bg-primary hover:bg-primary/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-primary/90 disabled:cursor-not-allowed rounded-xl"
                 >
                   تائید
                 </button>
                 <button
+                  disabled={isLoading}
                   onClick={onClose}
-                  className="px-5 py-2 text-lg bg-destructive hover:bg-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/90 rounded-xl"
+                  className="px-5 py-2 text-lg bg-destructive hover:bg-destructive/80 text-white hover:text-white/90 disabled:text-white/90 disabled:bg-destructive/90 disabled:cursor-not-allowed rounded-xl"
                 >
                   لغو
                 </button>

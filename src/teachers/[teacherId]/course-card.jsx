@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Clock, Eye, Tags, User2 } from "lucide-react";
+import { Clock, Eye, Tags, User2, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
@@ -7,6 +7,10 @@ import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import { StarRate } from "../../components/starRate";
 import { useUser } from "../../hooks/use-user";
 import { ToolTip } from "../../components/tool-tip";
+
+const status = {
+  "درحال برگذاری": <BookOpen className="text-gray-600 dark:text-gray-300" />,
+};
 
 export const CourseCard = ({ course }) => {
   const { userData } = useUser();
@@ -37,12 +41,12 @@ export const CourseCard = ({ course }) => {
   ];
 
   return (
-    <div className="w-[320px] flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg overflow-hidden self-center justify-self-center">
+    <div className="w-[320px] flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg self-center justify-self-center">
       <img
         loading="lazy"
         src={course.tumbImageAddress}
         alt="CourseImage"
-        className="w-full"
+        className="object-cover rounded-t-xl"
       />
       <div className="self-start">
         <h1 className="text-lg text-gray-600 dark:text-gray-200 mr-5">
@@ -67,12 +71,9 @@ export const CourseCard = ({ course }) => {
         </span>
       </div>
       <div className="flex justify-start w-full items-center px-3 py-2">
-        <img
-          loading="lazy"
-          src={course.teacherAvatar}
-          className="w-14 h-14 rounded-full"
-          alt="TeacherProfile"
-        />
+        <ToolTip name={course?.statusName}>
+          {status[course?.statusName]}
+        </ToolTip>
         <span className="flex flex-col justify-center items-start gap-y-1 px-3 py-1">
           <h2 className="text-gray-600 dark:text-gray-200/80 text-base">
             {course.teacherName}

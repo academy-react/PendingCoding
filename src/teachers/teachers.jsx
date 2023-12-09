@@ -75,7 +75,7 @@ export const Teachers = () => {
   if (teacherFilterBy) {
     const newArray = [...filteredData];
     if (teacherFilterBy === "moreBlogs")
-      newArray.sort((a, b) => a.newsCount - b.newsCount);
+      newArray.sort((a, b) => b.newsCount - a.newsCount);
     if (teacherFilterBy === "moreCourse")
       newArray.sort((a, b) => b.courseCounts - a.courseCounts);
 
