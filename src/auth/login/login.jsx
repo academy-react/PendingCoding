@@ -137,10 +137,10 @@ const Login = ({ login, dataLogin }) => {
           </div>
 
           <div
-            className="flex gap-[10px] m-[0_0_35px] items-center justify-between text-[#969696]
+            className="flex gap-[10px] m-[0_0_25px] items-center justify-between text-[#969696]
             dark:text-gray-200
           
-          max-[700px]:m-[20px_0_25px]"
+          max-[700px]:m-[0_0_20px]"
           >
             <div className="flex gap-[10px] items-center justify-center">
               <input

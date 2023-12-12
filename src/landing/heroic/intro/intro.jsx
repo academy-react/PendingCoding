@@ -40,7 +40,7 @@ export const Intro = () => {
           src={mirror}
           alt="Mirror"
           loading="lazy"
-          className="w-full h-full"
+          className="w-full h-full dark:filter dark:invert dark:opacity-[0.26] dark:brightness-0"
         />
       </div>
     </div>

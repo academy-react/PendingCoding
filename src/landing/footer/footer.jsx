@@ -33,16 +33,19 @@ export const Footer = () => {
   return (
     <div className="w-full overflow-hidden relative flex flex-col items-center justify-center p-10 gap-y-10">
       {/* Circles divs */}
-      <div className="absolute top-16 xl:-right-9 xl:-top-9 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-[#4D4D4D] to-[#676767] opacity-80">
-        <div className="absolute right-28 top-32 w-[250px] h-[250px] rounded-full bg-[#5F5F5F]" />
+      <div className="absolute top-16 xl:-right-9 xl:-top-9 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-[#4D4D4D] to-[#676767] opacity-80
+      dark:bg-gradient-to-tr dark:from-gray-600 dark:to-gray-500">
+        <div className="absolute right-28 top-32 w-[250px] h-[250px] rounded-full bg-[#5F5F5F]
+        dark:bg-gray-500" />
       </div>
 
       {/* map and comment div */}
-      <div className="flex items-center justify-center p-10">
+      <div className="flex items-center justify-center p-10 relative">
         <div className="flex items-center justify-center">
           <div className="relative flex items-center justify-center">
-            <img src={map} alt="MapPic" className="hidden xl:block" />
-            <div className="xl:absolute xl:left-32 bg-white dark:bg-gray-300 flex flex-col justify-center items-center px-4 py-5 rounded-t-[250px] rounded-b-lg">
+            <img src={map} alt="MapPic" className="hidden xl:block dark:filter dark:brightness-[1.1]" />
+            <div className="absolute top-0 right-0  w-full h-full rounded-[15px] dark:bg-gray-700 opacity-[0.37]" > </div>
+            <div className="xl:absolute xl:left-32 bg-white dark:bg-gray-300 flex flex-col justify-center items-center px-4 py-5 rounded-t-[250px] relative z-999 rounded-b-lg">
               <div className="relative bg-[#808BF2] dark:bg-dark-primary/80 w-[96px] h-[96px] rounded-full flex items-center justify-center">
                 <img src={mail} alt="MailPic" />
                 <div className="w-6 h-6 rounded-full absolute right-3 top-[52px]">

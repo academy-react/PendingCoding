@@ -86,14 +86,19 @@ const ResetPassword = () => {
          max-[700px]:w-[275px]"
       >
         <h1
-          className="text-[#505050] text-[28px] mb-[40px]
+          className="text-[#505050] text-[28px] mb-[30px]
           dark:text-gray-300
              
           max-[700px]:mb-[20px] max-[700px]:text-[26px]"
         >
           {" "}
-          بازنشانی رمز عبور{" "}
+           ایجاد رمز جدید{" "}
         </h1>
+
+        <h2 className="text-[17px] text-center text-[#454545] mb-[25px]
+        dark:text-gray-300"> 
+          رمز عبور جدید را وارد کنید و آنرا تایید کنید 
+        </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="w-[100%]">
           <input
@@ -154,7 +159,7 @@ const ResetPassword = () => {
             type="submit"
           >
             {" "}
-            ثبت{" "}
+            ثبت اطلاعات{" "}
           </button>
         </form>
       </div>

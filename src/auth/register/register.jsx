@@ -26,12 +26,12 @@ const Register = ({ signIn, dataRegister }) => {
       >
         <motion.div
           animate={dataRegister}
-          className="w-[350px] h-[460px] flex justify-center items-center flex-col      flex-nowrap
-         
+          className="w-[350px] h-[460px] flex justify-center items-center flex-col flex-nowrap pt-[55px]       
+          
          max-[700px]:w-[275px]"
         >
           <h1
-            className="text-[#505050] text-[28px] mb-[40px]
+            className="text-[#505050] text-[28px] mb-[30px]
               dark:text-gray-300
               
               max-[700px]:mb-[10px] max-[700px]:text-[26px]"

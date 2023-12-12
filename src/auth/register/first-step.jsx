@@ -82,7 +82,7 @@ const FirstStep = ({ setStep, setSaveUser, saveUser, step }) => {
   };
 
   return (
-    <div className={cn(`block`, step === 2 && `hidden`)}>
+    <div className={cn(`block mt-[10px]`, step === 2 && `hidden`)}>
       <form
         className="w-[100%] flex flex-col relative"
         onSubmit={handleSubmit(onSubmit)}
