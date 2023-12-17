@@ -188,6 +188,21 @@ const Login = ({ login, dataLogin }) => {
             {" "}
             ورود{" "}
           </button>
+
+          <div className="flex justify-center items-center w-full">
+
+          </div>
+          <a
+            className="cursor-pointer rounded-[50px] text-[18px] text-[#505050] p-[10px] m-[15px_auto] w-full flex justify-center items-center
+                dark:text-gray-300
+              
+              max-[700px]:p-[7px_0]"
+            href="http://localhost:3000/login"
+            target="blank"
+          >
+            {" "}
+            ورود کارکنان{" "}
+          </a>
         </form>
       </motion.div>
     </motion.div>

@@ -1,8 +1,11 @@
 import { SearchInput } from "../../../components/search";
-
+import { cn } from "../../../../libs/utils";
 import wavy from "../../../assets/wavy.svg";
-import mirror from "../../../assets/mirror.svg";
+// import mirror from "../../../assets/mirror.svg";
 import { SearchResult } from "./search-result";
+import style from "../../../components/style/rotate.module.css";
+import logo from "../../../assets/PC-logo/logo.svg";
+import pcTitle from "../../../assets/PC-logo/pcTitle.png"
 
 export const Intro = () => {
   return (
@@ -35,13 +38,17 @@ export const Intro = () => {
         </div>
       </div>
       {/* Image div */}
-      <div>
+      <div className="flex flex-col items-center justify-center border border-red-500 min-w-[30px] max-w-[400px] w-[27%]">
         <img
-          src={mirror}
+          src={logo}
           alt="Mirror"
           loading="lazy"
-          className="w-full h-full dark:filter dark:invert dark:opacity-[0.26] dark:brightness-0"
+          className={cn(
+            `w-[70%] h-[70%] dark:filter dark:invert dark:opacity-[0.26] dark:brightness-0`,
+            style.rotate
+          )}
         />
+        <img src={pcTitle} className="w-full h-full mt-[10px]" />
       </div>
     </div>
   );
