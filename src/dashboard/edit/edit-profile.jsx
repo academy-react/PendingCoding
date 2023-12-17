@@ -175,9 +175,10 @@ export const EditProfile = () => {
 
   const handleUpload = async () => {
     try {
-      const url = file.name || file[0].name;
+      const url = file[0] || file;
       setIsUploading(true);
       setIsPending(true);
+      console.log(url);
       await addProfileImage(url).then((res) => {
         if (res.success) {
           refetch();
@@ -200,13 +201,13 @@ export const EditProfile = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full border-2 border-gray-200 dark:border-gray-500 rounded-xl shadow-sm py-4"
         >
-          <div className="grid grid-cols-3 w-full h-full">
+          <div className="grid grid-cols-2 w-full h-full">
             <div className="w-full flex flex-col justify-start items-center gap-y-4">
               <div className="w-full flex flex-col justify-center items-center">
                 <div className="w-full flex flex-col justify-center items-center gap-y-2">
                   <label
                     htmlFor="firstName"
-                    className="mr-12 text-lg dark:text-gray-400 self-start"
+                    className="mr-32 text-lg dark:text-gray-400 self-start"
                   >
                     نام
                   </label>
@@ -233,52 +234,8 @@ export const EditProfile = () => {
               <div className="w-full flex flex-col justify-center items-center">
                 <div className="w-full flex flex-col justify-center items-center gap-y-2">
                   <label
-                    htmlFor="nationalId"
-                    className="mr-12 text-lg dark:text-gray-400 self-start"
-                  >
-                    کدملی
-                  </label>
-                  <input
-                    id="nationalId"
-                    name="nationalId"
-                    type="text"
-                    placeholder="نام خود را وارد کنید"
-                    className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                    {...form.register("nationalId")}
-                  />
-                </div>
-                <p
-                  className={cn(
-                    "opacity-0 text-destructive dark:text-dark-destructive",
-                    form.formState.errors?.nationalId && "opacity-100"
-                  )}
-                >
-                  {form.formState.errors?.nationalId
-                    ? form.formState.errors.nationalId.message
-                    : "ss"}
-                </p>
-              </div>
-              <div className="w-full flex flex-col justify-center items-center">
-                <div className="w-full flex flex-col justify-center items-center gap-y-2">
-                  <label
-                    htmlFor="phoneNumber"
-                    className="mr-12 text-lg dark:text-gray-400 self-start"
-                  >
-                    شماره تلفن
-                  </label>
-                  <input
-                    value={user?.phoneNumber}
-                    disabled={true}
-                    placeholder="شماره همراه خود را وارد کنید"
-                    className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400 disabled:bg-gray-200 disabled:border-gray-200 dark:disabled:bg-gray-400 dark:disabled:border-gray-400"
-                  />
-                </div>
-              </div>
-              <div className="w-full flex flex-col justify-center items-center">
-                <div className="w-full flex flex-col justify-center items-center gap-y-2">
-                  <label
                     htmlFor="homeAddress"
-                    className="mr-12 text-lg dark:text-gray-400 self-start"
+                    className="mr-32 text-lg dark:text-gray-400 self-start"
                   >
                     آدرس
                   </label>
@@ -308,7 +265,7 @@ export const EditProfile = () => {
                 <div className="w-full flex flex-col justify-center items-center gap-y-2">
                   <label
                     htmlFor="lastName"
-                    className="mr-12 text-lg dark:text-gray-400 self-start"
+                    className="mr-32 text-lg dark:text-gray-400 self-start"
                   >
                     فامیلی
                   </label>
@@ -332,67 +289,11 @@ export const EditProfile = () => {
                     : "ss"}
                 </p>
               </div>
-              <div className="w-full flex flex-col justify-center items-center">
-                <div className="w-full flex flex-col justify-center items-center gap-y-2">
-                  <label
-                    htmlFor="longitude"
-                    className="mr-12 text-lg dark:text-gray-400 self-start"
-                  >
-                    طول جغرافیایی
-                  </label>
-                  <input
-                    id="longitude"
-                    name="longitude"
-                    type="text"
-                    placeholder="نام خود را وارد کنید"
-                    className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                    {...form.register("longitude")}
-                  />
-                </div>
-                <p
-                  className={cn(
-                    "opacity-0 text-destructive dark:text-dark-destructive",
-                    form.formState.errors?.longitude && "opacity-100"
-                  )}
-                >
-                  {form.formState.errors?.longitude
-                    ? form.formState.errors.longitude.message
-                    : "ss"}
-                </p>
-              </div>
-              <div className="w-full flex flex-col justify-center items-center">
-                <div className="w-full flex flex-col justify-center items-center gap-y-2">
-                  <label
-                    htmlFor="latitude"
-                    className="mr-12 text-lg dark:text-gray-400 self-start"
-                  >
-                    عرض جغرافیایی
-                  </label>
-                  <input
-                    id="latitude"
-                    name="latitude"
-                    type="text"
-                    placeholder="نام خود را وارد کنید"
-                    className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                    {...form.register("latitude")}
-                  />
-                </div>
-                <p
-                  className={cn(
-                    "opacity-0 text-destructive dark:text-dark-destructive",
-                    form.formState.errors?.latitude && "opacity-100"
-                  )}
-                >
-                  {form.formState.errors?.latitude
-                    ? form.formState.errors.latitude.message
-                    : "ss"}
-                </p>
-              </div>
               <div className="w-full flex justify-center items-center">
                 <div className="w-full flex flex-col justify-center items-center gap-y-2">
                   <label
                     htmlFor="recieveMessage"
-                    className="mr-12 text-lg dark:text-gray-400 self-start"
+                    className="mr-32 text-lg dark:text-gray-400 self-start"
                   >
                     تاریخ تولد
                   </label>
@@ -409,101 +310,8 @@ export const EditProfile = () => {
                 </div>
               </div>
             </div>
-            <div className="w-full flex flex-col justify-start items-center gap-y-4 mx-4">
-              <div className="w-full flex flex-col justify-center items-center">
-                <div className="w-full flex flex-col justify-center items-center gap-y-2">
-                  <label
-                    htmlFor="linkdinProfile"
-                    className="mr-12 text-lg dark:text-gray-400 self-start"
-                  >
-                    آدرس لنکداین
-                  </label>
-                  <input
-                    id="linkdinProfile"
-                    name="linkdinProfile"
-                    type="text"
-                    placeholder="نام خود را وارد کنید"
-                    className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                    {...form.register("linkdinProfile")}
-                  />
-                </div>
-                <p
-                  className={cn(
-                    "opacity-0 text-destructive dark:text-dark-destructive",
-                    form.formState.errors?.linkdinProfile && "opacity-100"
-                  )}
-                >
-                  {form.formState.errors?.linkdinProfile
-                    ? form.formState.errors.linkdinProfile.message
-                    : "ss"}
-                </p>
-              </div>
-              <div className="w-full flex flex-col justify-center items-center">
-                <div className="w-full flex flex-col justify-center items-center gap-y-2">
-                  <label
-                    htmlFor="telegramLink"
-                    className="mr-12 text-lg dark:text-gray-400 self-start"
-                  >
-                    آدرس تلگرام
-                  </label>
-                  <input
-                    id="telegramLink"
-                    name="telegramLink"
-                    type="text"
-                    placeholder="نام خود را وارد کنید"
-                    className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                    {...form.register("telegramLink")}
-                  />
-                </div>
-                <p
-                  className={cn(
-                    "opacity-0 text-destructive dark:text-dark-destructive",
-                    form.formState.errors?.telegramLink && "opacity-100"
-                  )}
-                >
-                  {form.formState.errors?.telegramLink
-                    ? form.formState.errors.telegramLink.message
-                    : "ss"}
-                </p>
-              </div>
-              <SelectInput
-                presSelected={user?.gender}
-                name="gender"
-                label="جنسیت"
-                errors={form.formState.errors}
-                options={genderOptions}
-              />
-              <div className="flex justify-start items-start mt-14 ml-auto">
-                <div className="flex justify-center items-center gap-x-5 ml-auto">
-                  <label
-                    htmlFor="recieveMessage"
-                    className="mr-12 text-xl dark:text-gray-400"
-                  >
-                    اعلان
-                  </label>
-                  <input
-                    id="recieveMessage"
-                    name="recieveMessage"
-                    type="checkbox"
-                    placeholder="نام خود را وارد کنید"
-                    className="w-4 h-4 bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 duration-200 border-gray-300 focus:border-gray-400"
-                    {...form.register("recieveMessage")}
-                  />
-                </div>
-                <p
-                  className={cn(
-                    "opacity-0 text-destructive dark:text-dark-destructive",
-                    form.formState.errors?.recieveMessage && "opacity-100"
-                  )}
-                >
-                  {form.formState.errors?.recieveMessage
-                    ? form.formState.errors.recieveMessage.message
-                    : "ss"}
-                </p>
-              </div>
-            </div>
           </div>
-          <div className="flex justify-between items-center w-full px-5 pl-20">
+          <div className="flex justify-between items-center w-full px-20 ">
             <div className="w-1/2 flex flex-col justify-center items-center">
               <div className="w-full flex flex-col justify-center items-center gap-y-2">
                 <label

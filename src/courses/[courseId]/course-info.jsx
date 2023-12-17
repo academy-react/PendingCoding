@@ -41,7 +41,7 @@ import { Header } from "./header";
 import { Description } from "./description";
 import { Slider } from "./slider";
 
-import defaultCourseThumbnail from "../../assets/default-course-thumbnail.png";
+import defaultCourseThumbnail from "../../assets/typescript.jpeg";
 
 export const CourseInfo = () => {
   const { id } = useParams();
@@ -74,7 +74,6 @@ export const CourseInfo = () => {
       setIsBookMarked;
     }
   }, [isSuccess, course?.teacherId, course?.likeCount, course?.dissLikeCount]);
-
   const details = course && [
     {
       id: 1,
@@ -404,7 +403,7 @@ export const CourseInfo = () => {
           <div className="relative w-full h-[475px]">
             <img
               className="rounded-xl w-full h-full object-fill"
-              src={course?.imageAddress || defaultCourseThumbnail}
+              src={defaultCourseThumbnail || course?.imageAddress}
               alt="courseImage"
             />
           </div>

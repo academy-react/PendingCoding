@@ -41,15 +41,16 @@ const Login = ({ login, dataLogin }) => {
   };
 
   const onSubmit = async (values) => {
+    let toaster;
     // login API
     const obj = {
       phoneOrGmail: values.email,
       password: values.password,
       rememberMe: isCheck,
     };
-    const toastId = toast.loading("در حال پردازش لطفاٌ صبر کنید");
-    await loginAPI(obj).then(async (res) => {
-      toast.remove(toastId);
+    toaster = toast.loading("در حال پردازش لطفاٌ صبر کنید");
+    const loginResult = await loginAPI(obj).then(async (res) => {
+      toast.remove(toaster);
       if (res.success) {
         setItem("token", res.token);
         await getUserCourses().then(async (response) => {
@@ -71,9 +72,33 @@ const Login = ({ login, dataLogin }) => {
             }, 500);
           });
         });
-      } else toast.error(res.message);
+        setItem("user", JSON.stringify(newObj));
+        toast.success("با موافقیت وارد شدید");
+        setTimeout(() => {
+          navigate("/");
+          setUserData(newObj);
+        }, 500);
+      }
     });
+
+    console.log(loginResult, obj);
   };
+  // const onSubmit = async (values) => {
+  //   // login API
+  //   const obj = {
+  //     phoneOrGmail: values.email,
+  //     password: values.password,
+  //     rememberMe: isCheck,
+  //   };
+  //   const toastId = toast.loading("در حال پردازش لطفاٌ صبر کنید");
+  //   await loginAPI(obj).then(async (res) => {
+  //     toast.remove(toastId);
+  //     if (res.success) {
+  //       setItem("token", res.token);
+
+  //     } else toast.error(res.message);
+  //   });
+  // };
 
   return (
     <motion.div
@@ -104,59 +129,54 @@ const Login = ({ login, dataLogin }) => {
             type="text"
             placeholder="پست الکترونیکی"
             className={cn(
-              `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
-              dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50 dark:text-white
-                 
-              max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
+              `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px]
+                  dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50 dark:text-white
+                  
+                max-[700px]:max-[700px]:h-[50px] max-[700px]:text-[18px]`,
               errors.email &&
                 `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
                 dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
             )}
             {...register("email")}
           />
-          {/* width to 100% */}
 
-          {errors.email && (
-            <div
-              className="relative bottom-[25px] text-[#ff1f1f] right-[10px]
-              dark:text-red-500
-            
-              max-[700px]:text-[13px] max-[700px]:bottom-[12px]"
-            >
-              {errors.email?.message}
-            </div>
-          )}
+          <div
+            className="text-[#ff1f1f] p-[2.5px_13px_0_0]
+                  dark:text-red-500 h-[33px] 
+                  
+              max-[700px]:text-[13px]"
+          >
+            {errors.email?.message}
+          </div>
 
           <input
             type="password"
             placeholder="رمز عبور"
             className={cn(
-              `focus:outline-none focus:border-[#989898]  block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
-              dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50 dark:text-gray-50
-                 
-              max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
+              `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px]
+                  dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50 dark:text-white
+                  
+                max-[700px]:max-[700px]:h-[50px] max-[700px]:text-[18px]`,
               errors.password &&
                 `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
                 dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
             )}
             {...register("password")}
           />
-          {errors.password && (
-            <div
-              className="relative bottom-[25px] text-[#ff1f1f] right-[10px]
-              dark:text-red-500
-            
-            max-[700px]:text-[13px] max-[700px]:bottom-[12px]"
-            >
-              {errors.password?.message}
-            </div>
-          )}
+          <div
+            className="text-[#ff1f1f] p-[2.5px_13px_0_0]
+                  dark:text-red-500 h-[33px] 
+                  
+              max-[700px]:text-[13px]"
+          >
+            {errors.password?.message}
+          </div>
 
           <div
-            className="flex gap-[10px] m-[40px_0] items-center justify-between text-[#969696]
+            className="flex gap-[10px] m-[0_0_25px] items-center justify-between text-[#969696]
             dark:text-gray-200
           
-          max-[700px]:m-[20px_0_25px]"
+          max-[700px]:m-[0_0_20px]"
           >
             <div className="flex gap-[10px] items-center justify-center">
               <input
@@ -182,7 +202,10 @@ const Login = ({ login, dataLogin }) => {
               </label>
             </div>
 
-            <Link className="text-[12px] cursor-pointer text-center">
+            <Link
+              to="/forgetPassword"
+              className="text-[12px] cursor-pointer text-center"
+            >
               {" "}
               رمز عبور را فراموش کرده ام{" "}
             </Link>

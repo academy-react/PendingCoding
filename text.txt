@@ -1,274 +1,210 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { toast } from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "../../../libs/utils";
 
-import { useModal } from "../../hooks/use-modal-store";
+import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "../../hooks/use-user";
+import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { loginAPI } from "../../core/services/api/auth";
+import { setItem } from "../../core/services/common/storage.services";
+import { getUserCourses, getUserProfile } from "../../core/services/api/user";
 
-const UserContext = createContext(null);
+const Login = ({ login, dataLogin }) => {
+  const formSchema = z.object({
+    email: z
+      .string()
+      .email({ message: "ایمیل نامعتبر" })
+      .min(1, { message: "ایمیل خود را وارد کنید" }),
+    password: z
+      .string()
+      .min(4, { message: "رمز عبور حداقل 4 کاراکتر دارد" })
+      .max(15, { message: "رمز عبور حداکثر 15 کاراکتر دارد" }),
+  });
 
-function useUser() {
-  return useContext(UserContext);
-}
+  const { userData, setUserData } = useUser();
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(formSchema),
+  });
 
-function UserProvider({ children }) {
-  const { onClose } = useModal();
+  const [isCheck, setIsCheck] = useState(false);
 
-  const currentUser = useMemo(() => );
-  let userInfo = useMemo(() => currentUser, [currentUser]);
-
-  const addToCart = (course) => {
-    const newObj = {
-      ...userInfo,
-      cart: userInfo.cart.find((cartItem) => cartItem.id === course.id)
-        ? [...userInfo.cart]
-        : [...userInfo.cart, { ...course }],
-    };
-    userInfo = newObj;
-    localStorage.setItem("user", JSON.stringify(newObj));
-    toast.success("دوره به سبدتون اضافه شد");
-    onClose();
+  const handleCheckBox = () => {
+    setIsCheck(!isCheck);
   };
 
-  const removeFromCart = (id) => {
-    const newObj = {
-      ...userInfo,
-      cart: userInfo.cart.filter((cartItem) => cartItem.id !== id),
+  const onSubmit = async (values) => {
+    // login API
+    const obj = {
+      phoneOrGmail: values.email,
+      password: values.password,
+      rememberMe: isCheck,
     };
-    userInfo = newObj;
-    userInfo.cart.length === 1 && onClose();
-    localStorage.setItem("user", JSON.stringify(newObj));
-  };
-
-  const checkout = (course) => {
-    const newObj = {
-      ...userInfo,
-      cart: userInfo.cart.filter((c) => c.id !== course.id),
-      myCourses: userInfo.myCourses.find((mc) => mc.id === course.id)
-        ? [...userInfo.myCourses]
-        : [...userInfo.myCourses, { ...course }],
-    };
-    userInfo = newObj;
-    localStorage.setItem("user", JSON.stringify(newObj));
-  };
-
-  // const increase = (id) => {
-  //   const newObj = {
-  //     ...userInfo,
-  //     cart: userInfo.cart.map((cartItem) =>
-  //       cartItem.id === id
-  //         ? { ...cartItem, count: cartItem.count + 1 }
-  //         : cartItem
-  //     ),
-  //   };
-  //   userInfo=(newObj);
-  //   localStorage.setItem("user", JSON.stringify(newObj));
-  // };
-
-  // const decrease = (id) => {
-  //   const newObj = {
-  //     ...userInfo,
-  //     cart: userInfo.cart.map((cartItem) =>
-  //       cartItem.id === id
-  //         ? { ...cartItem, count: cartItem.count > 1 ? cartItem.count - 1 : 1 }
-  //         : cartItem
-  //     ),
-  //   };
-  //   userInfo=(newObj);
-  //   localStorage.setItem("user", JSON.stringify(newObj));
-  // };
-
-  const addToFavorites = (course) => {
-    const newObj = {
-      ...userInfo,
-      favorites: [...userInfo.favorites, { ...course }],
-    };
-    localStorage.setItem("user", JSON.stringify(newObj));
-    toast.success("به علاقه مندی اضافه شد");
-  };
-
-  const removeFromFavorites = (course) => {
-    const favorites = userInfo?.favorites.filter((f) => f.id !== course.id);
-
-    const newObj = {
-      ...userInfo,
-      favorites,
-    };
-    localStorage.setItem("user", JSON.stringify(newObj));
-    toast.success("از لیست علاقه مندی ها حذف شد");
+    const toastId = toast.loading("در حال پردازش لطفاٌ صبر کنید");
+    await loginAPI(obj).then(async (res) => {
+      toast.remove(toastId);
+      if (res.success) {
+        setItem("token", res.token);
+        await getUserCourses().then(async (response) => {
+          await getUserProfile().then((uInfo) => {
+            const newObj = {
+              ...userData,
+              user: {
+                email: values.email,
+                password: values.password,
+                ...uInfo,
+              },
+              myCourses: response.listOfMyCourses,
+            };
+            setItem("user", newObj);
+            setUserData(newObj);
+            toast.success("با موافقیت وارد شدید");
+            setTimeout(() => {
+              navigate("/");
+            }, 500);
+          });
+        });
+      } else toast.error(res.message);
+    });
   };
 
   return (
-    <UserContext.Provider
-      value={{
-        userData: userInfo,
-        addToCart,
-        removeFromCart,
-        checkout,
-        addToFavorites,
-        removeFromFavorites,
-      }}
+    <motion.div
+      animate={login}
+      className="bg-[#EEEEEE] w-[700px] h-[700px] rounded-[100%] border-[15px] border-solid border-[#505050] flex justify-center items-center relative transition
+      dark:bg-gray-800 dark:border-gray-600
+       
+      max-[700px]:w-[500px] max-[700px]:h-[500px]"
     >
-      {children}
-    </UserContext.Provider>
-  );
-}
+      <motion.div
+        animate={dataLogin}
+        className="w-[350px] h-[460px] flex justify-center items-center flex-col      flex-nowrap
+         
+         max-[700px]:w-[275px]"
+      >
+        <h1
+          className="text-[#505050] text-[28px] mb-[40px]
+          dark:text-gray-300
+             
+          max-[700px]:mb-[20px] max-[700px]:text-[26px]"
+        >
+          {" "}
+          ورود به حساب کاربری{" "}
+        </h1>
 
-export { UserProvider, useUser };
+        <form onSubmit={handleSubmit(onSubmit)} className="w-[100%]">
+          <input
+            type="text"
+            placeholder="پست الکترونیکی"
+            className={cn(
+              `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
+              dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50 dark:text-white
+                 
+              max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
+              errors.email &&
+                `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
+                dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
+            )}
+            {...register("email")}
+          />
+          {/* width to 100% */}
 
+          {errors.email && (
+            <div
+              className="relative bottom-[25px] text-[#ff1f1f] right-[10px]
+              dark:text-red-500
+            
+              max-[700px]:text-[13px] max-[700px]:bottom-[12px]"
+            >
+              {errors.email?.message}
+            </div>
+          )}
 
-            <div className="flex flex-col justify-start items-center gap-y-10">
+          <input
+            type="password"
+            placeholder="رمز عبور"
+            className={cn(
+              `focus:outline-none focus:border-[#989898]  block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
+              dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50 dark:text-gray-50
+                 
+              max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
+              errors.password &&
+                `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
+                dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
+            )}
+            {...register("password")}
+          />
+          {errors.password && (
+            <div
+              className="relative bottom-[25px] text-[#ff1f1f] right-[10px]
+              dark:text-red-500
+            
+            max-[700px]:text-[13px] max-[700px]:bottom-[12px]"
+            >
+              {errors.password?.message}
+            </div>
+          )}
+
+          <div
+            className="flex gap-[10px] m-[40px_0] items-center justify-between text-[#969696]
+            dark:text-gray-200
+          
+          max-[700px]:m-[20px_0_25px]"
+          >
+            <div className="flex gap-[10px] items-center justify-center">
               <input
-                id="lastName"
-                name="lastName"
-                type="text"
-                placeholder="فامیلی خود را وارد کنید"
-                className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                {...form.register("lastName")}
+                type="checkbox"
+                name="remember"
+                id="remember"
+                className="absolute invisible peer"
+                checked={isCheck}
+                onChange={handleCheckBox}
               />
-              {form.formState.errors?.lastName && (
-                <p className="text-destructive">
-                  {form.formState.errors.lastName.message}
-                </p>
-              )}
-              <div className="w-full flex items-center justify-start">
-                <label htmlFor="recieveMessage">اعلان</label>
-                <input
-                  id="recieveMessage"
-                  name="recieveMessage"
-                  type="checkbox"
-                  className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                  {...form.register("recieveMessage")}
-                />
-              </div>
-              {form.formState.errors?.recieveMessage && (
-                <p className="text-destructive">
-                  {form.formState.errors.recieveMessage.message}
-                </p>
-              )}
-              <input
-                id="longitude"
-                name="longitude"
-                type="text"
-                placeholder="فامیلی خود را وارد کنید"
-                className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                {...form.register("longitude")}
-              />
-              {form.formState.errors?.longitude && (
-                <p className="text-destructive">
-                  {form.formState.errors.longitude.message}
-                </p>
-              )}
-              <textarea
-                className={cn(
-                  "resize-none w-full h-40 disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400",
-                  form.formState.errors?.biography &&
-                    "border-destructive dark:border-dark-destructive focus:border-destructive dark:focus:border-dark-destructive"
-                )}
-                placeholder="درباره من"
-                {...form.register("biography")}
-              />
-              <p
-                className={cn(
-                  "opacity-0 text-destructive dark:text-dark-destructive",
-                  form.formState.errors?.biography && "opacity-100"
-                )}
+
+              <label
+                htmlFor="remember"
+                className="w-[24px] h-[24px] bg-white shadow-[0_1px_10px_rgba(0,0,0,0.25)] rounded-[7px] peer-checked:shadow-[0_1px_10px_rgba(92,85,201,0.25)] peer-checked:bg-[url('../../public/img/check.svg')] bg-no-repeat bg-[length:75%] bg-[50%] cursor-pointer
+              
+              max-[700px]:w-[20px] max-[700px]:h-[20px]"
               >
-                {form.formState.errors?.biography
-                  ? form.formState.errors.biography.message
-                  : "ss"}
-              </p>
-            </div>
-            <div className="flex flex-col justify-start items-center gap-y-10">
-              <DatePicker
-                value={date}
-                onChange={setSelectedDay}
-                inputPlaceholder="روز تولد..."
-                maximumDate={maximumDate}
-                colorPrimary="#5c55c9"
-                inputClassName="w-[300px] text-start disabled:cursor-not-allowed outline-none text-[15px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                shouldHighlightWeekends
-                locale="fa"
-              />
-              {form.formState.errors?.birthDate && (
-                <p className="text-destructive">
-                  {form.formState.errors.birthDate.message}
-                </p>
-              )}
+                {" "}
+              </label>
 
-              <input
-                id="linkdinProfile"
-                name="linkdinProfile"
-                type="text"
-                placeholder="فامیلی خود را وارد کنید"
-                className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                {...form.register("linkdinProfile")}
-              />
-              {form.formState.errors?.linkdinProfile && (
-                <p className="text-destructive">
-                  {form.formState.errors.linkdinProfile.message}
-                </p>
-              )}
-              <input
-                id="latitude"
-                name="latitude"
-                type="text"
-                placeholder="فامیلی خود را وارد کنید"
-                className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                {...form.register("latitude")}
-              />
-              {form.formState.errors?.latitude && (
-                <p className="text-destructive">
-                  {form.formState.errors.latitude.message}
-                </p>
-              )}
-              <input
-                id="telegramLink"
-                name="telegramLink"
-                type="text"
-                placeholder="فامیلی خود را وارد کنید"
-                className="disabled:cursor-not-allowed outline-none w-full max-w-[300px] bg-gray-100 dark:bg-gray-300 text-gray-500 dark:text-gray-800 border-2 rounded-full px-5 py-3 duration-200 border-gray-300 focus:border-gray-400"
-                {...form.register("telegramLink")}
-              />
-              {form.formState.errors?.telegramLink && (
-                <p className="text-destructive">
-                  {form.formState.errors.telegramLink.message}
-                </p>
-              )}
-
-              <SelectInput
-                presSelected={user?.gender}
-                name="gender"
-                label="جنسیت"
-                errors={form.formState.errors}
-                options={genderOptions}
-              />
+              <label htmlFor="remember" className="text-[12px] cursor-pointer">
+                مرا به خاطر بسپار
+              </label>
             </div>
 
-<div className="w-full flex flex-col justify-center items-center">
-  <div className="w-full flex flex-col justify-center items-center gap-y-2">
-    <label
-      htmlFor="biography"
-      className="mr-8 text-lg dark:text-gray-400 self-start"
-    >
-      آدرس
-    </label>
-    <textarea
-      className={cn(
-        "resize-none w-full h-40 disabled:cursor-not-allowed outline-none bg-gray-100 dark:bg-gray-300 text-gray-500 dark:placeholder:text-gray-600 dark:text-gray-800 border-2 rounded-xl px-6 pl-12 py-3 duration-200 border-gray-300 focus:border-gray-400",
-        form.formState.errors?.biography &&
-          "border-destructive dark:border-dark-destructive focus:border-destructive dark:focus:border-dark-destructive"
-      )}
-      placeholder="درباره من"
-      {...form.register("biography")}
-    />
-  </div>
-  <p
-    className={cn(
-      "opacity-0 text-destructive dark:text-dark-destructive",
-      form.formState.errors?.biography && "opacity-100"
-    )}
-  >
-    {form.formState.errors?.biography
-      ? form.formState.errors.biography.message
-      : "ss"}
-  </p>
-</div>
+            <Link className="text-[12px] cursor-pointer text-center">
+              {" "}
+              رمز عبور را فراموش کرده ام{" "}
+            </Link>
+          </div>
+
+          <button
+            className="
+            bg-[#505050] cursor-pointer rounded-[50px] text-[18px] text-white w-[100%] p-[10px_0] transition hover:bg-[#626262]
+            disabled:bg-[#5e5e5e] disabled:cursor-no-drop
+            dark:bg-gray-600 dark:hover:bg-[rgb(87,98,115)]
+            dark:disabled:bg-[rgb(67,76,91)]
+                 
+            max-[700px]:p-[7px_0]"
+            type="submit"
+          >
+            {" "}
+            ورود{" "}
+          </button>
+        </form>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+export { Login };

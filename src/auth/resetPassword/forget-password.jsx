@@ -48,14 +48,19 @@ const ForgetPassword = () => {
          max-[700px]:w-[275px]"
       >
         <h1
-          className="text-[#505050] text-[28px] mb-[40px]
+          className="text-[#505050] text-[28px] mb-[30px]
           dark:text-gray-300
              
           max-[700px]:mb-[20px] max-[700px]:text-[26px]"
         >
           {" "}
-          فراموشی رمز عبور{" "}
+          ارسال ایمیل تایید{" "}
         </h1>
+
+        <h2 className="text-[17px] text-center text-[#454545] mb-[25px]
+        dark:text-gray-300"> 
+          پست الکترونیکی حساب کاربری خود را وارد کنید تا لینک بازیابی برای آن ارسال شود
+        </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="w-[100%]">
           <input

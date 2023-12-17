@@ -1,7 +1,7 @@
 import { SearchInput } from "../../../components/search";
 
 import wavy from "../../../assets/wavy.svg";
-import mirror from "../../../assets/mirror.svg";
+import logo from "../../../assets/pcLogo.svg";
 import { SearchResult } from "./search-result";
 
 export const Intro = () => {
@@ -28,9 +28,7 @@ export const Intro = () => {
           یاد بگیرید، می‌تواند در بهبود مهارت‌های فنی شما تأثیر فراوانی داشته
           باشد. همچنین، با بازدید از سایت ما، به جامعه‌ای از علاقه‌مندان به
           برنامه‌نویسی و تکنولوژی بپیوندید و از تبادل تجربیات و چالش‌های مختلفی
-          استفاده کنید. آماده‌اید تا به ما بپیوندید و در تلاش برای تبدیل شدن به
-          قهرمانی آنلاین، همراهی کنید؟ بیایید دنیای پرماجرای PendingCoding را
-          کاوش کنیم و با هم به این داستان پرانرژی پایان دهیم!
+          استفاده کنید.
         </h4>
         <div className="w-80 relative order-2 md:order-1">
           <SearchInput
@@ -44,10 +42,10 @@ export const Intro = () => {
       {/* Image div */}
       <div>
         <img
-          src={mirror}
+          src={logo}
           alt="Mirror"
           loading="lazy"
-          className="w-full h-full"
+          className="w-3/4 h-3/4 dark:filter dark:invert dark:oapcity-[0.26] dark:brightness-0"
         />
       </div>
     </div>

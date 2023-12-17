@@ -90,7 +90,7 @@ export const CourseCard = ({ course, index, updateFn }) => {
         <img
           src={course?.tumbImageAddress || defaultCourseImage}
           alt="CourseImage"
-          className="object-cover rounded-t-xl"
+          className="object-cover rounded-t-xl w-full h-72"
         />
         <div className="self-start">
           <h1 className="text-lg text-gray-600 dark:text-gray-200 mr-5">

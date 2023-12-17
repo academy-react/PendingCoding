@@ -17,7 +17,10 @@ import { routes } from "../../components/routes/routes";
 import { useTheme } from "../../components/providers/theme-provider";
 
 import defaultImage from "../../assets/my-profile.jpg";
-import { setItem } from "../../core/services/common/storage.services";
+import {
+  removeItem,
+  setItem,
+} from "../../core/services/common/storage.services";
 
 const backdrop = {
   hidden: {
@@ -62,6 +65,7 @@ const Navbar = () => {
     };
     setUserData(newObj);
     setItem("user", newObj);
+    removeItem("token");
     toast.success("با موفقیت خارج شدید");
   };
 

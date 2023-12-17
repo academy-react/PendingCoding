@@ -15,6 +15,7 @@ import { getLandingReport } from "../../core/services/api/get-landing-report";
 
 import fun from "../../assets/fun.svg";
 import defaultImage from "../../assets/my-profile.jpg";
+import logo from "../../assets/logo.svg";
 
 export const Info = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -92,7 +93,11 @@ export const Info = () => {
       {/* bottom div */}
       <div className="w-full flex flex-col xl:flex-row items-center justify-between gap-y-10">
         <div className="flex flex-col xl:flex-row gap-y-10 items-center justify-center gap-x-5">
-          <span className="w-28 h-28 rounded-full bg-gray-700 dark:bg-gray-400" />
+          <img
+            src={logo}
+            alt="logo"
+            className="w-24 h-24 dark:filter dark:invert dark:oapcity-[0.26] dark:brightness-0"
+          />
           <div className="flex flex-col items-center xl:items-start justify-center gap-y-1">
             <h1 className="text-3xl text-gray-600 dark:text-gray-300/80">
               {getPersianNumbers(results?.[1].data?.studentCount)}

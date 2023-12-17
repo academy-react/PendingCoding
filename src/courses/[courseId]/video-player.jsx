@@ -4,6 +4,7 @@ import YouTube from "react-youtube";
 import { Loading } from "../../components/loading";
 import { SeasonsAccordion } from "./seasons-accordion";
 import { getCourseById } from "../../core/services/api/get-courses";
+import { getTeacherById } from "../../core/services/api/get-teacher";
 
 export const VideoPlayer = () => {
   const { id, url } = useParams();
@@ -21,6 +22,10 @@ export const VideoPlayer = () => {
     staleTime: 5000,
     enabled: false,
   });
+  const { data: teacher } = useQuery({
+    queryKey: ["teacher_id"],
+    queryFn: () => getTeacherById(data?.teacherId),
+  });
   if (isLoading) return <Loading />;
 
   return (
@@ -36,8 +41,19 @@ export const VideoPlayer = () => {
               />
             ))}
           </div>
-          <div className="">
+          <div className="flex flex-col items-start justify-center gap-2 px-10">
             <YouTube videoId={url} opts={opts} />
+            <h1 className="">مقدمه و راه اندازی</h1>
+            <div className="flex items-center justify-center gap-3">
+              <img
+                className="object-cover w-14 h-14 rounded-full"
+                src={teacher?.pictureAddress}
+                alt=""
+              />
+              <div className="flex flex-col justify-center items-center gap-2">
+                <h1>{teacher?.fullName}</h1>
+              </div>
+            </div>
           </div>
         </div>
       </div>

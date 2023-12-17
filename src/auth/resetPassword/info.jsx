@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const InfoComponent = ({ buttonTitle, link }) => {
+const InfoComponent = ({ buttonTitle, link ,headerTitle}) => {
   return (
     <div
       className="w-[700px] h-[700px] rounded-[100%] bg-[#505050] flex float-left mt-[-700px] justify-end items-center  text-white text-center transition
@@ -19,7 +19,7 @@ const InfoComponent = ({ buttonTitle, link }) => {
         
         max-[700px]:m-[0]"
         >
-          هنوز ثبت نام نکرده ایید؟
+          {headerTitle}
         </h1>
 
         <p className="text-[14px]">
@@ -28,14 +28,8 @@ const InfoComponent = ({ buttonTitle, link }) => {
         </p>
 
         <p className="text-[14px] w-[320px]">
-          لطفا برای ثبت نام ابتدا
-          <Link
-            to="/terms-and-conditions"
-            className="cursor-pointer text-[#00FFF6]"
-          >
-            قوانین و مقررات
-          </Link>
-          آکادمی پندینگ کدینگ را مطالعه وسپس برای ثبت نام اقدام فرمایید
+        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و .با
+          استفاده از طراحان گرافیک است
         </p>
 
         <Link

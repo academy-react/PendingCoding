@@ -231,13 +231,6 @@ export const InCartCourses = ({ courses }) => {
                       )}`}</td>
                       <td className="max-w-[80px] flex items-center justify-center gap-x-5 px-6 py-4">
                         <button
-                          onClick={() => handleCheckout(course?.reserveId)}
-                          disabled={isLoading}
-                          className="bg-primary hover:bg-primary/80 dark:bg-dark-primary dark:hover:bg-dark-primary/80 disabled:bg-primary/70 text-white hover:text-white/80 disabled:text-white/80 disabled:cursor-not-allowed px-5 py-2 rounded-xl"
-                        >
-                          تسویه
-                        </button>
-                        <button
                           onClick={() => handleDelete(course)}
                           disabled={isLoading}
                           className="bg-destructive hover:bg-destructive/80 dark:bg-dark-destructive dark:hover:bg-dark-destructive/80 disabled:bg-destructive/70 text-white hover:text-white/80 disabled:text-white/80 disabled:cursor-not-allowed px-5 py-2 rounded-xl"

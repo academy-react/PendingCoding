@@ -11,7 +11,11 @@ const ForgetHolder = () => {
      max-[700px]:w-[500px] max-[700px]:h-[850px]"
       >
         <ForgetPassword />
-        <InfoComponent link="/auth" buttonTitle="بازگشت" />
+        <InfoComponent 
+        link="/auth" 
+        buttonTitle="بازگشت"
+        headerTitle="فراموشی رمز عبور" 
+        />
       </div>
     </div>
   );

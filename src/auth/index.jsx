@@ -6,7 +6,7 @@ import { useAnimationControls } from "framer-motion";
 import { useState } from "react";
 
 const Auth = () => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
 
   const signIn = useAnimationControls();
   const log = useAnimationControls();
@@ -20,14 +20,14 @@ const Auth = () => {
   
 
   const handleAnimate = () => {
+    log.start({
+      x: "-400px",
+      transition: { duration: 0.92 },
+    });
     signIn.start({
       x: "400px",
       transition: { duration: 1.7 },
       zIndex: "999",
-    });
-    log.start({
-      x: "-400px",
-      transition: { duration: 0.95 },
     });
 
     dataRegister.start({
@@ -66,7 +66,7 @@ const Auth = () => {
   };
 
   return (
-    <div className="flex items-center justify-center w-full h-full p-[50px_0_100px] select-none">
+    <div className="flex items-center justify-center w-full h-full p-[70px_0_70px] select-none">
       <div
         className="w-[1110px] h-[700px] m-auto
        
@@ -75,8 +75,8 @@ const Auth = () => {
       >
         {!show ? (
           <>
-            <Register signIn={signIn} dataRegister={dataRegister} />
             <Log log={log} handleAnimate={handleAnimate} dataLog={dataLog} />
+            <Register signIn={signIn} dataRegister={dataRegister} />
           </>
         ) : (
           <>

@@ -51,7 +51,7 @@ export const HorizontalCard = ({ course, reservedCourses }) => {
         loading="lazy"
         src={course.tumbImageAddress || defaultCourseImage}
         alt="CourseImage"
-        className="w-full h-full xl:w-1/3 xl:h-1/3 rounded-xl"
+        className="w-full h-full object-fill xl:w-[500px] xl:h-48 rounded-xl"
       />
       <div className="flex flex-col justify-start items-center gap-y-5 w-full px-10">
         <div className="self-center xl:self-start mt-5 xl:mt-0">

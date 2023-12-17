@@ -32,13 +32,18 @@ const VerifyCode = ({ setStep, saveUser }) => {
     };
 
     const verifyMessageAPI = await verifyMessage(obj);
-    setStep((cs) => cs + 1);
 
     console.log(verifyMessageAPI);
 
-    if(verifyMessageAPI.success === false){
-      toast.error(verifyMessageAPI.message)
-    } else {toast.success(verifyMessageAPI.message)}
+    if (verifyMessageAPI.success === false) {
+      toast.error(verifyMessageAPI.message);
+    } else {
+      toast.success(verifyMessageAPI.message);
+    }
+
+    // if (verifyMessageAPI.success === true) {
+      setStep((cs) => cs + 1);
+    // }
   };
 
   return (
@@ -73,7 +78,8 @@ const VerifyCode = ({ setStep, saveUser }) => {
         </div>
 
         <button
-          disabled={isValid === false}
+          // disabled={isValid === false}
+          onClick={() =>  setStep((cs) => cs + 1)}
           className="
                 bg-[#505050] cursor-pointer rounded-[50px] text-[18px] text-white w-[100%] p-[10px_0] transition hover:bg-[#626262] mt-[80px]
                 disabled:bg-[#5e5e5e] disabled:cursor-no-drop

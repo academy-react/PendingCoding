@@ -7,9 +7,9 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { loginAPI, registerAPI } from "../../core/services/api/auth";
 import { useState } from "react";
-import { useUser } from "../../hooks/use-user";
+// import { useUser } from "../../hooks/use-user";
 
-const SecondStep = ({ setStep, saveUser }) => {
+const SecondStep = ({ setStep, saveUser , step }) => {
   const formSchema = z
     .object({
       email: z
@@ -43,7 +43,7 @@ const SecondStep = ({ setStep, saveUser }) => {
     resolver: zodResolver(formSchema),
   });
 
-  const { userData, setUserData } = useUser();
+  // const { userData, setUserData } = useUser();
   const navigate = useNavigate();
 
   //   const onSubmit = (values) => {
@@ -71,30 +71,26 @@ const SecondStep = ({ setStep, saveUser }) => {
       password: values.password,
       gmail: values.email,
     };
-    await registerAPI(newObj).then(async () => {
-      const obj = {
-        password: values.password,
-        phoneOrGmail: values.email,
-        rememberMe: true,
-      };
-      await loginAPI(obj).then((res) => {
-        if (res.success) {
-          const newObj = {
-            ...userData,
-            user: {
-              email: values.email,
-              password: values.password,
-            },
-          };
-          localStorage.setItem("user", JSON.stringify(newObj));
-          toast.success("با موافقیت وارد شدید");
-          setTimeout(() => {
-            navigate("/");
-            setUserData(newObj);
-          }, 500);
-        }
-      });
-    });
+
+    localStorage.setItem("user", JSON.stringify(newObj));
+
+    const lastStepRegisterAPI = await registerAPI(newObj);
+
+    // call login api
+    const obj = {
+      password: values.password,
+      phoneOrGmail: values.email,
+      rememberMe: true,
+    };
+    const loginApi = await loginAPI(obj);
+
+    toast.success("با موافقیت وارد شدید");
+
+    setTimeout(() => {
+      navigate("/");
+    }, 700);
+
+    console.log(lastStepRegisterAPI, loginApi);
   };
 
   const handleBack = () => {
@@ -104,88 +100,83 @@ const SecondStep = ({ setStep, saveUser }) => {
   return (
     <>
       <form
-        className="w-[100%] flex flex-col"
+        className={cn(`hidden` , 
+        step === 2 && `w-[100%] flex flex-col`)}
         onSubmit={handleSubmit(onSubmit)}
       >
         <input
           type="text"
           placeholder="پست الکترونیکی"
           className={cn(
-            `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
+            `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px]
                   dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50 dark:text-white
                   
-                max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
+                max-[700px]:max-[700px]:h-[50px] max-[700px]:text-[18px]`,
             errors.email &&
-              `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
-                  dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
+            `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
+            dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
           )}
           {...register("email")}
         />
 
-        {errors.email && (
-          <div
-            className="relative bottom-[25px] text-[#ff1f1f] right-[10px]
-                  dark:text-red-500
-              
-              max-[700px]:text-[13px] max-[700px]:bottom-[12px]"
-          >
-            {errors.email?.message}
-          </div>
-        )}
+        <div
+          className="text-[#ff1f1f] right-[10px] p-[2.5px_13px_0_0]
+                  dark:text-red-500 h-[33px] 
+                  
+              max-[700px]:text-[13px]"
+        >
+          {errors.email?.message}
+        </div>
 
         <input
           type="password"
           placeholder="رمز عبور"
           className={cn(
-            `focus:outline-none focus:border-[#989898]  block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
+            `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px]
                   dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50 dark:text-white
                   
-                max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
+                max-[700px]:max-[700px]:h-[50px] max-[700px]:text-[18px]`,
             errors.password &&
               `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
                   dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
           )}
           {...register("password")}
         />
-        {errors.password && (
-          <div
-            className="relative bottom-[25px] text-[#ff1f1f] right-[10px]
-                  dark:text-red-500
-              
-              max-[700px]:text-[13px] max-[700px]:bottom-[12px]"
-          >
-            {errors.password?.message}
-          </div>
-        )}
+        <div
+          className="text-[#ff1f1f] right-[10px] p-[2.5px_13px_0_0]
+                  dark:text-red-500 h-[33px] 
+                  
+              max-[700px]:text-[13px]"
+        >
+          {errors.password?.message}
+        </div>
 
         <input
           type="password"
           placeholder="تکرار رمز عبور"
           className={cn(
-            `focus:outline-none focus:border-[#989898]  block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px] mb-[30px]
+            `focus:outline-none focus:border-[#989898] block pr-[14px] bg-transparent w-[100%] h-[55px] border-[1px] border-solid border-[#C8C8C8] text-[#666] rounded-[50px] text-[20px]
                   dark:border-[rgb(181,188,200)] dark:placeholder-[rgb(181,188,200)] dark:focus:border-gray-50 dark:text-white
-                    
-                max-[700px]:mb-[15px] max-[700px]:h-[50px] max-[700px]:text-[18px]`,
+                  
+                max-[700px]:max-[700px]:h-[50px] max-[700px]:text-[18px]`,
             errors.confirmPassword &&
               `border-[#ff3b3b] text-[#ff3b3b] placeholder-[#ff3434] focus:border-[#ff3b3b]
                   dark:border-red-500 dark:placeholder-red-500 dark:text-red-500 dark:focus:border-red-500`
           )}
           {...register("confirmPassword")}
         />
-        {errors.confirmPassword && (
-          <div
-            className="relative bottom-[25px] text-[#ff1f1f] right-[10px]
-                  dark:text-red-500
-              
-              max-[700px]:text-[13px] max-[700px]:bottom-[12px]"
-          >
-            {errors.confirmPassword?.message}
-          </div>
-        )}
+        <div
+          className="text-[#ff1f1f] right-[10px] p-[2.5px_13px_0_0]
+                  dark:text-red-500 h-[33px] 
+                  
+              max-[700px]:text-[13px]"
+        >
+          {errors.confirmPassword?.message}
+        </div>
 
         <div
           className="flex gap-[10px] m-[0_0_20px] items-center text-[#969696]
-                dark:text-gray-200
+                dark:text-gray-200 mt-[5px]
                       
                       max-[700px]:m-[0_0_13px]"
         >

@@ -32,7 +32,6 @@ const TestCaptcha = () => {
     const timeOut = setTimeout(() => {
       const data = e.target.value;
       const len = data.length;
-      console.log(data);
       if (captcha === data && len === 4) {
         setCheck(true);
         setIsValid(true);
@@ -46,7 +45,7 @@ const TestCaptcha = () => {
         setImg(null);
         setIsValid(false);
       }
-    }, 1000);
+    }, 700);
 
     ref.current = timeOut;
   };
@@ -83,13 +82,16 @@ const TestCaptcha = () => {
         )}
       </form>
 
-      <div className="min-w-[135px] h-[55px] flex justify-start items-center text-[23px] tracking-[3px] line-through font-bold italic border-[#505050] border-[3px] rounded-[50px] px-[10px] text-[#3d3d3d] flex-row-reverse relative font-serif decoration-double">
+      <div className="min-w-[135px] h-[55px] flex justify-start items-center text-[23px] tracking-[3px] line-through font-bold italic border-[#505050] border-[3px] rounded-[50px] px-[10px] text-[#3d3d3d] flex-row-reverse relative font-serif decoration-double
+      
+      dark:border-gray-500 dark:text-gray-400">
         {captcha}
         <button
           onClick={refreshCaptcha}
           className="h-full w-[25px] flex justify-center items-center absolute right-[7px]"
         >
-          <img className="w-full h-[54%]" src={refIMG} />
+          <img className="w-full h-[54%] rounded-full 
+         dark:filter dark:invert dark:opacity-[0.6]" src={refIMG} />
         </button>
       </div>
     </div>

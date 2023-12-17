@@ -31,7 +31,7 @@ export const BoughtCourses = ({ courses }) => {
   useMemo(() => {
     if (product_name) {
       const newData = courses?.filter((c) =>
-        c?.courseName
+        c?.courseTitle
           .replace(/ /g, "")
           .replace("آ", "ا")
           .toLowerCase()
@@ -47,9 +47,8 @@ export const BoughtCourses = ({ courses }) => {
     () => filteredCart?.slice(itemOffset, endOffset),
     [filteredCart, itemOffset, endOffset]
   );
-
   const startDate = (course) =>
-    new Date(course.reserverDate)
+    new Date(course.lastUpdate)
       .toLocaleDateString("fa-IR-u-nu-latn")
       .split("/");
 
@@ -68,43 +67,14 @@ export const BoughtCourses = ({ courses }) => {
     "اسفند",
   ];
 
-  const handleDelete = async (course) => {
-    try {
-      setIsLoading(true);
-      await removeFromCart(course?.courseId, course?.reserveId).then(() => {
-        let newArray = [...filteredCart];
-        newArray = newArray.filter((c) => c.courseId !== course?.courseId);
-        setFilteredCart(newArray);
-      });
-    } catch (error) {
-      toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
-      console.log(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCheckout = (course) => {
-    try {
-      setIsLoading(true);
-      checkout(course);
-      toast.success("دوره تسویه شد");
-    } catch (error) {
-      toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
-      console.log(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleFilter = (event) => {
     let newItems = [...filteredCart];
     const input = event.target.innerHTML;
 
     if (input === "نام") {
       newItems = newItems.sort((a, b) => {
-        const nameA = a.courseName.toLowerCase();
-        const nameB = b.courseName.toLowerCase();
+        const nameA = a.courseTitle.toLowerCase();
+        const nameB = b.courseTitle.toLowerCase();
         if (nameA < nameB) {
           const returnValue = isAsc ? 1 : -1;
           setIsAsc(!isAsc);
@@ -119,8 +89,8 @@ export const BoughtCourses = ({ courses }) => {
       });
     } else if (input === "تاریخ رزرو") {
       newItems = newItems.sort((a, b) => {
-        let dateA = new Date(a.reserverDate);
-        let dateB = new Date(b.reserverDate);
+        let dateA = new Date(a.lastUpdate);
+        let dateB = new Date(b.lastUpdate);
         if (isAsc) {
           const returnValue = dateB - dateA;
           setIsAsc(false);
@@ -214,7 +184,7 @@ export const BoughtCourses = ({ courses }) => {
                           to={`/courses/${course.courseId}`}
                           className="text-gray-500 hover:text-gray-800 transition"
                         >
-                          {course.courseName}
+                          {course.courseTitle}
                         </Link>
                       </th>
                       <td className="px-6 py-4">{`${getPersianNumbers(

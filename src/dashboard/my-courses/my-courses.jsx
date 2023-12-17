@@ -16,7 +16,7 @@ export const MyCourses = () => {
 
   if (isLoading) return <Loading />;
   if (isError) return <Error />;
-
+console.log(data)
   return (
     <div className=" py-10 px-10">
       {/* Disconted Courses

@@ -28,6 +28,7 @@ import { Loading } from "../../components/loading";
 import { Error } from "../../components/error";
 
 import defaultProfileImage from "../../assets/my-profile.jpg";
+import { useUser } from "../../hooks/use-user";
 
 const backdrop = {
   hidden: {
@@ -69,6 +70,7 @@ export const Description = ({ teacher, details, selected }) => {
   const { id: courseId } = useParams();
   const { onOpen } = useModal();
   const [count, setCount] = useState(4);
+  const { userData } = useUser();
 
   let Info;
 
@@ -84,6 +86,7 @@ export const Description = ({ teacher, details, selected }) => {
 
   const onSubmit = async (values) => {
     try {
+      if (!userData.user) return onOpen("unauthorizedModal");
       const Obj = {
         CourseId: courseId,
         Title: values.subject,

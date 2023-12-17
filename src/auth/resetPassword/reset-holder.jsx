@@ -11,7 +11,7 @@ const ResetHolder = () => {
      max-[700px]:w-[500px] max-[700px]:h-[850px]"
       >
         <ResetPassword />
-        <InfoComponent link="/auth" buttonTitle="بازگشت" />
+        <InfoComponent link="/auth" buttonTitle="بازگشت" headerTitle="باز نشانی رمز عبور" />
       </div>
     </div>
   );
