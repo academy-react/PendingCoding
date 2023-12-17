@@ -75,41 +75,16 @@ export const CourseInfo = () => {
     }
   }, [isSuccess, course?.teacherId, course?.likeCount, course?.dissLikeCount]);
 
-  const details = [
+  const details = course && [
     {
       id: 1,
       label: "توضیحات",
-      value: course?.describe,
+      value: course?.miniDescribe,
     },
     {
       id: 2,
-      label: "نقشه راه",
-      seasons: [
-        {
-          id: 1,
-          value: "فصل یکم : لورم ایپسوم",
-        },
-        {
-          id: 2,
-          value: "فصل دوم : لورم ایپسوم",
-        },
-        {
-          id: 3,
-          value: "فصل سوم : لورم ایپسوم",
-        },
-        {
-          id: 4,
-          value: "فصل چهارم : لورم ایپسوم",
-        },
-        {
-          id: 5,
-          value: "فصل پنجم : لورم ایپسوم",
-        },
-        {
-          id: 6,
-          value: "فصل ششم : لورم ایپسوم",
-        },
-      ],
+      label: "سرفصل‌ ها",
+      seasons: JSON.parse(course?.describe),
     },
     {
       id: 3,
@@ -167,7 +142,7 @@ export const CourseInfo = () => {
       ],
     },
   ];
-  const [selected, setSelected] = useState(details[0].label);
+  const [selected, setSelected] = useState("توضیحات");
 
   const isInCart = useMemo(
     () => course?.courseReseveId !== "00000000-0000-0000-0000-000000000000",
@@ -428,7 +403,7 @@ export const CourseInfo = () => {
         <div className="w-full flex flex-col items-start justify-center gap-y-5">
           <div className="relative w-full h-[475px]">
             <img
-              className="rounded-xl w-full h-full"
+              className="rounded-xl w-full h-full object-fill"
               src={course?.imageAddress || defaultCourseThumbnail}
               alt="courseImage"
             />

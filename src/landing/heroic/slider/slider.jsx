@@ -51,7 +51,7 @@ export const Slider = () => {
             <SwiperSlide key={blog.id}>
               <Link
                 to={`/blogs/${blog.id}`}
-                className="border-2 border-white dark:border-gray-300 rounded-2xl bg-gray-100 dark:bg-gray-500 flex flex-col items-start justify-center gap-y-5 p-4"
+                className="h-56 border-2 border-white dark:border-gray-300 rounded-2xl bg-gray-100 dark:bg-gray-500 flex flex-col items-start justify-start gap-y-5 p-4 overflow-hidden"
               >
                 <span
                   className={cn(
@@ -64,7 +64,7 @@ export const Slider = () => {
                 <h3 className="text-lg text-gray-600 dark:text-gray-200">
                   {blog.title}
                 </h3>
-                <h5 className="text-sm text-gray-400 dark:text-gray-300/80 line-clamp-2 break-normal">
+                <h5 className="text-sm text-gray-400 dark:text-gray-300/80 line-clamp-2  text-ellipsis break-normal">
                   {blog.miniDescribe}
                 </h5>
               </Link>

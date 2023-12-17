@@ -24,6 +24,7 @@ import { cn } from "../../../libs/utils";
 
 import { useModal } from "../../hooks/use-modal-store";
 import { useUser } from "../../hooks/use-user";
+import { CommentResponds } from "./comment-responds";
 
 const backdrop = {
   hidden: {
@@ -343,7 +344,7 @@ export const CommentRespondCard = ({ respond, updateFn }) => {
                       : respond.acceptReplysCount === 1 && "پنهان کردن پاسخ‌"}
                     <ChevronUp className="h-4 w-4 mt-[2px]" />
                   </button>
-                  <CommentRespond commentId={respond.id} />
+                  <CommentResponds commentId={respond.id} />
                 </>
               ) : (
                 <button

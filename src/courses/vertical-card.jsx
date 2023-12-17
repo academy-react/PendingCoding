@@ -40,12 +40,12 @@ export const VerticalCard = ({ course, reservedCourses }) => {
   ];
 
   return (
-    <div className="w-[320px] flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg self-center justify-self-center">
+    <div className="w-[320px] flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg self-center justify-self-center overflow-hidden">
       <img
         loading="lazy"
         src={course.tumbImageAddress || defaultCourseImage}
         alt="CourseImage"
-        className="object-cover rounded-t-xl"
+        className="object-cover rounded-t-xl w-full h-56"
       />
       <div className="self-start">
         <h1 className="text-lg text-gray-600 dark:text-gray-200 mr-5">

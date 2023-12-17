@@ -16,6 +16,7 @@ import { ContactUs } from "../../contact_us/contact_us";
 import { About } from "../../about/about";
 import { Terms } from "../../auth/terms_and_conditions";
 import { Auth } from "../../auth";
+import { VideoPlayer } from "../../courses/[courseId]/video-player";
 
 const routes = [
   {
@@ -98,6 +99,10 @@ const routers = [
       {
         path: "/terms-and-conditions",
         element: <Terms />,
+      },
+      {
+        path: "/courses/:id/:url?",
+        element: <VideoPlayer />,
       },
     ],
   },

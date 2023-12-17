@@ -6,12 +6,12 @@ import { CategoryItem } from "./category-item";
 
 const capacities = [
   {
-    id: "finished",
-    label: "تکمیل شده",
+    id: "on_air",
+    label: "درحال برگذاری",
   },
   {
-    id: "not-finished",
-    label: "تکمیل نشده",
+    id: "regestring",
+    label: "درحال ثبت نام",
   },
 ];
 

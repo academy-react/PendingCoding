@@ -30,16 +30,6 @@ function UserProvider({ children }) {
     }
   );
 
-  // const addToCart = async (course) => {
-  //   try {
-  //     await reserveCourse(course?.courseId);
-  //     onClose();
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
-  //   }
-  // };
-
   const removeFromCart = async (courseId, reserveId) => {
     try {
       await deleteReservedCourse(reserveId).then(() => {
@@ -71,54 +61,6 @@ function UserProvider({ children }) {
     setUserData(newObj);
     localStorage.setItem("user", JSON.stringify(newObj));
   };
-
-  // const increase = (id) => {
-  //   const newObj = {
-  //     ...userData,
-  //     cart: userData.cart.map((cartItem) =>
-  //       cartItem.id === id
-  //         ? { ...cartItem, count: cartItem.count + 1 }
-  //         : cartItem
-  //     ),
-  //   };
-  //   setUserData(newObj);
-  //   localStorage.setItem("user", JSON.stringify(newObj));
-  // };
-
-  // const decrease = (id) => {
-  //   const newObj = {
-  //     ...userData,
-  //     cart: userData.cart.map((cartItem) =>
-  //       cartItem.id === id
-  //         ? { ...cartItem, count: cartItem.count > 1 ? cartItem.count - 1 : 1 }
-  //         : cartItem
-  //     ),
-  //   };
-  //   setUserData(newObj);
-  //   localStorage.setItem("user", JSON.stringify(newObj));
-  // };
-
-  // const removeFromFavorites = async (id, user_favorite_id) => {
-  //   try {
-  //     await deleteCourseFavorite(user_favorite_id).then((res) => {
-  //       if (res.success) {
-  //         const newObj = {
-  //           ...userData,
-  //           favoriteCourse: userInfo?.favoriteCourse.filter(
-  //             (f) => f.courseId !== id
-  //           ),
-  //         };
-  //         setUserData(newObj);
-  //         setItem("user", newObj);
-  //         toast.success("از لیست علاقه مندی ها حذف شد");
-  //       } else toast.error(res.message);
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
-  //   }
-  // };
-
   return (
     <UserContext.Provider
       value={{

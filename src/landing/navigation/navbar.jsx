@@ -17,6 +17,7 @@ import { routes } from "../../components/routes/routes";
 import { useTheme } from "../../components/providers/theme-provider";
 
 import defaultImage from "../../assets/my-profile.jpg";
+import { setItem } from "../../core/services/common/storage.services";
 
 const backdrop = {
   hidden: {
@@ -60,7 +61,7 @@ const Navbar = () => {
       user: null,
     };
     setUserData(newObj);
-    localStorage.setItem("user", JSON.stringify(newObj));
+    setItem("user", newObj);
     toast.success("با موفقیت خارج شدید");
   };
 
@@ -71,13 +72,12 @@ const Navbar = () => {
   return (
     <nav
       className={cn(
-        "w-full fixed top-0 bg-[#EEEEEE] dark:bg-gray-800 flex items-center justify-between px-5 md:px-4 lg:px-16 xl:px-28 2xl:px-32 py-6 md:py-2",
+        "max-w-[1900px] w-full fixed top-0 bg-[#EEEEEE] dark:bg-gray-800 flex items-center justify-between px-5 md:px-4 lg:px-16 xl:px-28 2xl:px-32 2xl:pr-52 py-6 md:py-2",
         scrolled && "border-b border-gray-200 dark:border-gray-600 shadow-md"
       )}
     >
       <div className="flex w-full items-center justify-between mx-auto ">
         <div className="flex justify-center items-center gap-x-2 lg:gap-x-6">
-          <ThemeToggle />
           {routes.map((route) => (
             <div key={route.id} className="hidden md:block">
               <NavLink
@@ -115,8 +115,8 @@ const Navbar = () => {
             >
               <img
                 className="object-contain rounded-full"
-                src={defaultImage}
-                alt="defaultProfile"
+                src={userData.user.currentPictureAddress}
+                alt={defaultImage}
               />
               {dropdown && (
                 <motion.div
@@ -159,6 +159,7 @@ const Navbar = () => {
               <Dot className="h-14 w-14 absolute -inset-6 z-10 text-primary group-hover:text-primary/60 dark:text-dark-primary dark:group-hover:text-dark-primary/60 transition" />
             )}
           </div>
+          <ThemeToggle />
         </div>
         <div className="md:hidden">
           <Menu

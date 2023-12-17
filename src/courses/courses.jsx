@@ -43,7 +43,7 @@ const orderBy = [
 ];
 
 export const Courses = () => {
-  const [values, setValues] = useState([20, 2500000]);
+  const [values, setValues] = useState([20, 15000000]);
   const [isVertical, setIsVertical] = useState(true);
   const { onOpen } = useModal();
 
@@ -52,13 +52,19 @@ export const Courses = () => {
   const course_name = searchParams.get("course_name");
   const course_filter_by = searchParams.get("course_filter_by");
   const categoryId = searchParams.get("categoryId");
-  const isFinished = searchParams.get("isFinished");
+  const status = searchParams.get("status");
   const teacher_name = searchParams.get("teacher_name");
   const items_per_page = parseInt(searchParams.get("items_per_page"));
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["courses"],
-    queryFn: () => getAllCourses(),
+    queryFn: () =>
+      getAllCourses({
+        PageNumber: 1,
+        RowsOfPage: 60,
+        SortingCol: "LastUpdate",
+        SortType: "DESC",
+      }),
     staleTime: 5000,
   });
   const {
@@ -72,7 +78,7 @@ export const Courses = () => {
   });
 
   let filteredData = data?.courseFilterDtos?.filter((course) => {
-    if (!course_name && !categoryId && !isFinished && !teacher_name) {
+    if (!course_name && !categoryId && !status && !teacher_name) {
       if (course.cost >= values[0] && course.cost <= values[1]) return course;
     } else if (
       course?.title
@@ -102,7 +108,14 @@ export const Courses = () => {
         .includes(categoryId?.replace(/ /g, "").replace("آ", "ا").toLowerCase())
     ) {
       if (course.cost >= values[0] && course.cost <= values[1]) return course;
-    }
+    } else if (
+      course?.statusName
+        .replace(/ /g, "")
+        .replace("آ", "ا")
+        .toLowerCase()
+        .includes(status?.replace(/ /g, "").replace("آ", "ا").toLowerCase())
+    )
+      if (course.cost >= values[0] && course.cost <= values[1]) return course;
   });
 
   if (course_filter_by) {

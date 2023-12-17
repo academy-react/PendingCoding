@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { motion, useAnimationControls } from "framer-motion";
-
+import { Sun, Moon } from "lucide-react";
 import { useTheme } from "./providers/theme-provider";
 
 import { cn } from "../../libs/utils";
@@ -13,24 +13,24 @@ export const ThemeToggle = () => {
   useEffect(() => {
     if (isDarkTheme) {
       whiteCircle.start({
-        x: "23px",
+        x: "20px",
         transition: { duration: 0.3 },
       });
       blackCircle.start({
-        x: "-23px",
+        x: "-20px",
         transition: { duration: 0.3 },
       });
     } else {
       whiteCircle.start({
-        x: "5px",
+        x: "40px",
         transition: { duration: 0.3 },
       });
       blackCircle.start({
-        x: "5px",
+        x: "0px",
         transition: { duration: 0.3 },
       });
     }
-  }, [isDarkTheme]);
+  }, [isDarkTheme, blackCircle, whiteCircle]);
 
   const handleTheme = () => {
     toggleThemeHandler();
@@ -63,17 +63,21 @@ export const ThemeToggle = () => {
       <motion.div
         animate={whiteCircle}
         className={cn(
-          "absolute right-8 w-10 h-10 rounded-full bg-gray-200 group-hover:bg-gray-50 border-2 border-gray-400 group-hover:border-gray-500 transition",
-          !isDarkTheme && "z-10"
+          "absolute right-8 opacity-0 text-gray-200 dark:group-hover:text-gray-300 dark:group-hover:text-gray-300/80 transition",
+          isDarkTheme && "z-10 opacity-100"
         )}
-      />
+      >
+        <Moon className="w-9 h-9" />
+      </motion.div>
       <motion.div
         animate={blackCircle}
         className={cn(
-          "absolute left-8 w-10 h-10 rounded-full bg-gray-600 group-hover:bg-gray-700 transition",
-          isDarkTheme && "z-10"
+          "absolute left-8 opacity-0 text-yellow-400 group-hover:text-yellow-500/80 transition",
+          !isDarkTheme && "z-10 opacity-100"
         )}
-      />
+      >
+        <Sun className="w-9 h-9" />
+      </motion.div>
     </div>
   );
 };

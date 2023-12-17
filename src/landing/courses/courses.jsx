@@ -20,7 +20,7 @@ export const Courses = () => {
   return (
     <div>
       <Heading
-        title="آخرین دوره های مجموعه"
+        title="برترین دوره های مجموعه"
         description="برترین دوره های آموزشی با بروز ترین و مدرن ترین روش آموزش"
         to="/courses"
       />

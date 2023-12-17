@@ -29,7 +29,7 @@ export const CapacityItems = ({ value, label }) => {
       {
         url: pathname,
         query: {
-          isFinished: newChecked[0],
+          status: newChecked[0],
           categoryId,
           course_name,
           teacher_name,
@@ -42,7 +42,7 @@ export const CapacityItems = ({ value, label }) => {
     setTimeout(() => onClose(), 100);
   };
 
-  const isSelected = searchParams.get("isFinished") === value;
+  const isSelected = searchParams.get("status") === value;
 
   return (
     <label htmlFor="checkbox" className="flex gap-x-2 text-sm text-gray-500 dark:text-gray-300">

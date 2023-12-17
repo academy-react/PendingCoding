@@ -27,7 +27,7 @@ export const VerticalCard = ({ blog }) => {
   ];
 
   return (
-    <div className="max-w-[380px] flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg mx-auto 2xl:mx-0 ">
+    <div className="max-w-[380px] flex flex-col items-center justify-center gap-y-5 bg-gray-100 dark:bg-gray-600 rounded-t-3xl rounded-b-lg mx-auto ">
       <div className="w-[380px] rounded-lg overflow-hidden">
         <img
           loading="lazy"

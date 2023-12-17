@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Bookmark, Heart, User } from "lucide-react";
+import toast from "react-hot-toast";
 
 import {
   addBlogToFavorite,
@@ -21,16 +22,14 @@ import { NewCourseCard } from "../../components/new-course-card";
 import { NewBlogCard } from "../../components/new-blog-card";
 import { Slider } from "./slider";
 import { getPersianNumbers } from "../../../libs/get-persian-numbers";
-import toast from "react-hot-toast";
 import { cn } from "../../../libs/utils";
-import { setItem } from "../../core/services/common/storage.services";
 
 export const BlogInfo = () => {
   const { id } = useParams();
 
   const { isOpen, onOpen } = useModal();
 
-  const { userData, setUserData, removeFromFavorites } = useUser();
+  const { userData} = useUser();
   const [isBookMarked, setIsBookMarked] = useState(false);
   const [isPending, setIsPending] = useState(false);
   // const [likeCount, setLikeCount] = useState(0);
@@ -112,8 +111,11 @@ export const BlogInfo = () => {
       setIsPending(true);
       if (isBookMarked) return;
       else {
-        await addBlogToFavorite(blog?.detailsNewsDto.id).then(() => {
-          refetch(() => toast.success("به علاقه مندی اضافه شد"));
+        await addBlogToFavorite(blog?.detailsNewsDto.id).then((res) => {
+          if (res.success) {
+            refetch();
+            toast.success("به علاقه مندی اضافه شد");
+          }
         });
       }
     } catch (error) {
@@ -130,7 +132,7 @@ export const BlogInfo = () => {
       setIsPending(true);
       await likeBlog(blog?.detailsNewsDto.id).then((res) => {
         if (res.success) {
-          toast.success("نظر پسندیده شد");
+          toast.success("بلاگ پسندیده شد");
           refetch();
         } else toast.error(res.message);
       });

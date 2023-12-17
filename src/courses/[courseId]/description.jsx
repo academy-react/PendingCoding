@@ -14,6 +14,8 @@ import { getPersianNumbers } from "../../../libs/get-persian-numbers";
 import { cn } from "../../../libs/utils";
 import { scrollToTop } from "../../../libs/scroll-to-top";
 
+import { SeasonsAccordion } from "./seasons-accordion";
+
 import {
   addComment,
   getCourseComments,
@@ -139,19 +141,19 @@ export const Description = ({ teacher, details, selected }) => {
         {details.value}
       </motion.p>
     );
-  } else if (selected === details.label && details.label === "نقشه راه") {
+  } else if (selected === details.label && details.label === "سرفصل‌ ها") {
     Info = (
       <motion.ul className="border-2 border-gray-300 dark:border-gray-500 px-12 py-4 rounded-xl flex flex-col items-start justify-center gap-y-5">
         {details?.seasons?.map((season) => (
           <motion.li
-            key={season.id}
+            key={season.name}
             variants={backdrop}
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="text-gray-500 dark:text-gray-300 leading-5 text-justify list-disc"
+            className="text-gray-500 dark:text-gray-300 leading-5 text-justify w-full"
           >
-            {season.value}
+            <SeasonsAccordion season={season} courseId={courseId} />
           </motion.li>
         ))}
       </motion.ul>
@@ -240,24 +242,26 @@ export const Description = ({ teacher, details, selected }) => {
                       updateFn={refetch}
                     />
                   ))}
-                  <div className="w-full flex items-center justify-center mt-2">
-                    <button
-                      onClick={handleMore}
-                      className="flex items-center justify-center gap-x-2 text-gray-500 hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-900 transition bg-gray-300/40 hover:bg-gray-300/60 dark:bg-gray-300 dark:hover:bg-gray-300/80 hover:shadow-md px-4 py-3 rounded-xl"
-                    >
-                      {count >= comments?.length ? (
-                        <>
-                          نمایش کمتر
-                          <ChevronUp className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-                        </>
-                      ) : (
-                        <>
-                          نمایش بیشتر
-                          <ChevronDown className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-                        </>
-                      )}
-                    </button>
-                  </div>
+                  {comments.length > 4 && (
+                    <div className="w-full flex items-center justify-center mt-2">
+                      <button
+                        onClick={handleMore}
+                        className="flex items-center justify-center gap-x-2 text-gray-500 hover:text-gray-700 dark:text-gray-600 dark:hover:text-gray-900 transition bg-gray-300/40 hover:bg-gray-300/60 dark:bg-gray-300 dark:hover:bg-gray-300/80 hover:shadow-md px-4 py-3 rounded-xl"
+                      >
+                        {count >= comments?.length ? (
+                          <>
+                            نمایش کمتر
+                            <ChevronUp className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                          </>
+                        ) : (
+                          <>
+                            نمایش بیشتر
+                            <ChevronDown className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  )}
                 </>
               ) : (
                 <p className="text-lg text-gray-500 dark:text-gray-300">

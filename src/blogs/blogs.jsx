@@ -69,9 +69,11 @@ export const Blogs = () => {
   if (blogFilterBy) {
     const newArray = [...filteredData];
     if (blogFilterBy === "longest")
-      newArray.sort((a, b) => a.description.length - b.description.length);
-    if (blogFilterBy === "oldest") newArray.sort((a, b) => a.age - b.age);
-    if (blogFilterBy === "popular") newArray.sort((a, b) => b.likes - a.likes);
+      newArray.sort((a, b) => a.describe?.length - b.describe?.length);
+    if (blogFilterBy === "oldest")
+      newArray.sort((a, b) => new Date(a.insertDate) - new Date(b.insertDate));
+    if (blogFilterBy === "popular")
+      newArray.sort((a, b) => b.currentLikeCount - a.currentLikeCount);
 
     filteredData = newArray;
   }

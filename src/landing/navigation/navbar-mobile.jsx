@@ -6,6 +6,7 @@ import { useModal } from "../../hooks/use-modal-store";
 
 import { routes } from "../../components/routes/routes";
 import { useUser } from "../../hooks/use-user";
+import { ThemeToggle } from "../../components/theme-toggle";
 
 const backdrop = {
   hidden: {
@@ -52,6 +53,12 @@ export const NavbarMobile = () => {
               className="self-start justify-self-start text-rose-700 cursor-pointer"
               onClick={onClose}
             />
+            <button
+              onClick={() => onClose()}
+              className="flex items-center justify-center my-5 mr-5"
+            >
+              <ThemeToggle />
+            </button>
             {routes.map((route) => (
               <div key={route.id}>
                 <NavLink
@@ -83,7 +90,7 @@ export const NavbarMobile = () => {
                   ورود
                 </Link>
                 <Link
-                  className="border-[3px] border-primary px-10 py-1 rounded-full bg-primary hover:bg-primary/90 text-white hover:text-white/90 transition font-semibold text-[16px]"
+                  className="border-[3px] border-primary px-8 py-1 rounded-full bg-primary hover:bg-primary/90 text-white hover:text-white/90 transition font-semibold text-[16px]"
                   to="/sign-up"
                 >
                   ثبت نام

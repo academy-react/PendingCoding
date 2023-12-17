@@ -19,7 +19,7 @@ export const StarRate = ({ id, data, queryKey, rateFn }) => {
     queryKey: [queryKey],
   });
 
-  const isAllowed = isLoading || !userData.user;
+  const isAllowed = isLoading || !userData;
 
   const onClick = async (currentRate) => {
     try {

@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { loginAPI } from "../../core/services/api/auth";
 import { setItem } from "../../core/services/common/storage.services";
+import { getUserCourses, getUserProfile } from "../../core/services/api/user";
 
 const Login = ({ login, dataLogin }) => {
   const formSchema = z.object({
@@ -47,20 +48,29 @@ const Login = ({ login, dataLogin }) => {
       rememberMe: isCheck,
     };
     const toastId = toast.loading("در حال پردازش لطفاٌ صبر کنید");
-    await loginAPI(obj).then((res) => {
+    await loginAPI(obj).then(async (res) => {
       toast.remove(toastId);
       if (res.success) {
-        const newObj = {
-          ...userData,
-          user: { email: values.email, password: values.password },
-        };
-        setItem("user", newObj);
         setItem("token", res.token);
-        toast.success("با موافقیت وارد شدید");
-        setTimeout(() => {
-          navigate("/");
-          setUserData(newObj);
-        }, 500);
+        await getUserCourses().then(async (response) => {
+          await getUserProfile().then((uInfo) => {
+            const newObj = {
+              ...userData,
+              user: {
+                email: values.email,
+                password: values.password,
+                ...uInfo,
+              },
+              myCourses: response.listOfMyCourses,
+            };
+            setItem("user", newObj);
+            setUserData(newObj);
+            toast.success("با موافقیت وارد شدید");
+            setTimeout(() => {
+              navigate("/");
+            }, 500);
+          });
+        });
       } else toast.error(res.message);
     });
   };
