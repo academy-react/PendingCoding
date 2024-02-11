@@ -18,7 +18,7 @@ const backdrop = {
     transition: { duration: 0.5 },
   },
   exit: {
-    y: "100px",
+    y: "-200px",
     opacity: 0,
     transition: { duration: 0.5 },
   },
@@ -31,10 +31,10 @@ export const CartModal = () => {
   const isModalOpen = isOpen && type === "cartModal";
 
   return (
-    isModalOpen && (
-      <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait">
+      {isModalOpen && (
         <motion.div
-          className="fixed inset-0 w-full h-full bg-gray-300/50 z-40"
+          className="fixed inset-0 w-full h-full bg-gray-300/70 dark:bg-gray-700/70 z-40"
           variants={backdrop}
           animate="visible"
           initial="hidden"
@@ -48,7 +48,7 @@ export const CartModal = () => {
             exit="exit"
             onClick={(e) => e.stopPropagation()}
             className={cn(
-              "overflow-hidden fixed inset-0 w-fit h-[450px] m-auto bg-gray-50 rounded-xl px-2 pb-10 pt-1 z-10",
+              "overflow-hidden fixed inset-0 w-fit h-[450px] m-auto bg-gray-50 dark:bg-gray-200 rounded-xl px-2 pb-10 pt-1 z-10",
               cart.length === 0 && "h-fit"
             )}
           >
@@ -85,7 +85,7 @@ export const CartModal = () => {
             </div>
           </motion.div>
         </motion.div>
-      </AnimatePresence>
-    )
+      )}
+    </AnimatePresence>
   );
 };

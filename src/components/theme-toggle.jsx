@@ -6,78 +6,78 @@ import { useTheme } from "./providers/theme-provider";
 import { cn } from "../../libs/utils";
 
 export const ThemeToggle = () => {
-  const whiteCircle = useAnimationControls();
-  const blackCircle = useAnimationControls();
+  const darkMode = useAnimationControls();
+  const lighMode = useAnimationControls();
   const { isDarkTheme, toggleThemeHandler } = useTheme();
 
   useEffect(() => {
     if (isDarkTheme) {
-      whiteCircle.start({
-        x: "20px",
+      darkMode.start({
+        opacity: 1,
         transition: { duration: 0.3 },
       });
-      blackCircle.start({
-        x: "-20px",
+      lighMode.start({
+        opacity: 0,
         transition: { duration: 0.3 },
       });
     } else {
-      whiteCircle.start({
-        x: "40px",
+      darkMode.start({
+        opacity: 0,
         transition: { duration: 0.3 },
       });
-      blackCircle.start({
-        x: "0px",
+      lighMode.start({
+        opacity: 1,
         transition: { duration: 0.3 },
       });
     }
-  }, [isDarkTheme, blackCircle, whiteCircle]);
+  }, [isDarkTheme, lighMode, darkMode]);
 
   const handleTheme = () => {
     toggleThemeHandler();
     if (isDarkTheme) {
-      whiteCircle.start({
-        x: "23px",
+      darkMode.start({
+        opacity: 1,
         transition: { duration: 0.3 },
       });
-      blackCircle.start({
-        x: "-23px",
+      lighMode.start({
+        opacity: 0,
         transition: { duration: 0.3 },
       });
     } else {
-      whiteCircle.start({
-        x: "5px",
+      darkMode.start({
+        opacity: 1,
         transition: { duration: 0.3 },
       });
-      blackCircle.start({
-        x: "5px",
+      lighMode.start({
+        opacity: 0,
         transition: { duration: 0.3 },
       });
     }
   };
 
   return (
-    <div
+    <button
       onClick={handleTheme}
-      className="group px-10 relative flex items-center justify-center cursor-pointer"
+      className="group relative flex items-center justify-center cursor-pointer"
     >
       <motion.div
-        animate={whiteCircle}
+        animate={darkMode}
         className={cn(
-          "absolute right-8 opacity-0 text-gray-200 dark:group-hover:text-gray-300 dark:group-hover:text-gray-300/80 transition",
-          isDarkTheme && "z-10 opacity-100"
+          "text-gray-200 dark:group-hover:text-gray-300/80 transition",
+          !isDarkTheme && "hidden"
         )}
       >
-        <Moon className="w-9 h-9" />
+        <Moon className="w-8 h-8" />
       </motion.div>
       <motion.div
-        animate={blackCircle}
+        animate={lighMode}
         className={cn(
-          "absolute left-8 opacity-0 text-yellow-400 group-hover:text-yellow-500/80 transition",
-          !isDarkTheme && "z-10 opacity-100"
+          "text-yellow-400 group-hover:text-yellow-500/80 transition",
+          isDarkTheme && "hidden"
         )}
       >
-        <Sun className="w-9 h-9" />
+        <Sun className="w-8 h-8" />
       </motion.div>
-    </div>
+    </button>
   );
 };

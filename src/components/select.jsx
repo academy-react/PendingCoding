@@ -4,6 +4,7 @@ import qs from "query-string";
 
 import { cn } from "../../libs/utils";
 import { getPersianNumbers } from "../../libs/get-persian-numbers";
+import { scrollToTop } from "../../libs/scroll-to-top";
 
 export const Select = ({ queryName, filters, className, placeholder }) => {
   const [value, setValue] = useState("");
@@ -13,6 +14,7 @@ export const Select = ({ queryName, filters, className, placeholder }) => {
 
   const handleSelection = (event) => {
     setValue(event.target.value);
+    scrollToTop(0);
   };
 
   const categoryId = searchParams.get("categoryId");

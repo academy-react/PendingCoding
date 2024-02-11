@@ -1,23 +1,22 @@
 // import location from '../assets/location.svg'
-import { Banner } from '../components/banner'
-import { ContactItems } from './contact_items'
+import { Banner } from "../components/banner";
+import { ContactItems } from "./contact_items";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import loc from "../assets/contact_us_items/loc.svg";
+import phone from "../assets/contact_us_items/phone.svg";
+import email from "../assets/contact_us_items/email.svg";
+import instagram from "../assets/contact_us_items/instagram.svg";
+import telegram from "../assets/contact_us_items/telegram.svg";
+import face from "../assets/contact_us_items/face.svg";
+import x from "../assets/contact_us_items/x.svg";
 
-import loc from '../assets/contact_us_items/loc.svg'
-import phone from '../assets/contact_us_items/phone.svg'
-import email from '../assets/contact_us_items/email.svg'
-import instagram from '../assets/contact_us_items/instagram.svg'
-import telegram from '../assets/contact_us_items/telegram.svg'
-import face from '../assets/contact_us_items/face.svg'
-import x from '../assets/contact_us_items/x.svg'
-
-import member from '../assets/contact_us_items/member.svg'
-import { getPersianNumbers } from '../../libs/get-persian-numbers';
-import { Map } from './map';
-
+import Amir from "../assets/amir.jpg";
+import Arman from "../assets/arman.jpg";
+import { getPersianNumbers } from "../../libs/get-persian-numbers";
+import { Map } from "./map";
 
 const formSchema = z.object({
   email: z
@@ -28,7 +27,6 @@ const formSchema = z.object({
 });
 
 const ContactUs = () => {
-
   const form = useForm({
     defaultValues: {
       email: "",
@@ -43,67 +41,96 @@ const ContactUs = () => {
     console.log(values);
   };
 
-  return ( 
+  return (
     <div className="w-[clamp(100px,100%,1596px)] m-[0_auto] flex flex-col p-[0_50px_150px] pt-20">
-
       <Banner title="ارتباط با ما" />
 
-      <div className="flex m-[80px_0] gap-[20px]
+      <div
+        className="flex m-[80px_0] gap-[20px]
       
-      max-[1500px]:flex-col max-[1500px]:items-center max-[1500px]:gap-[60px]">
-
+      max-[1500px]:flex-col max-[1500px]:items-center max-[1500px]:gap-[60px]"
+      >
         <div className="w-[clamp(100px,100%,550px)] h-[426px]">
-
-          <div className="h-[44px] flex mb-[80px]
+          <div
+            className="h-[44px] flex mb-[80px]
           
-          max-[1500px]:justify-center max-[1500px]:pl-[60px]">
+          max-[1500px]:justify-center max-[1500px]:pl-[60px]"
+          >
             <img src={loc} />
             <div className="flex flex-col m-[0_10px_0_0]">
-              <p className="text-[#505050] text-[15px]  transition
-            dark:text-gray-400"> آدرس پزوهشگاه : </p>
-              <p className="text-[#A4A4A4] text-[14px]  transition
-            dark:text-gray-200">میدان خزر،نرسیده به دانشگاه روزبهان،جنب دنیای آرزو</p>
+              <p
+                className="text-[#505050] text-[15px]  transition
+            dark:text-gray-400"
+              >
+                {" "}
+                آدرس پزوهشگاه :{" "}
+              </p>
+              <p
+                className="text-[#A4A4A4] text-[14px]  transition
+            dark:text-gray-200"
+              >
+                میدان خزر،نرسیده به دانشگاه روزبهان،جنب دنیای آرزو
+              </p>
             </div>
           </div>
 
-          <div className="flex flex-row
+          <div
+            className="flex flex-row
           
-          max-[1500px]:justify-center">
+          max-[1500px]:justify-center"
+          >
             <div className="w-[clamp(50px,100%,285px)]">
-              <ContactItems src={phone} title="شماره تلفن :" desc={`${getPersianNumbers(989117828923 , true)}+`} />
-              <ContactItems src={instagram} title="اینستاگرام :" desc="__arman__rv" />
-              <ContactItems src={face} title="فیس بوک :" desc="نتیجه ای یافت نشد!" />
+              <ContactItems
+                src={phone}
+                title="شماره تلفن :"
+                desc={`${getPersianNumbers(989117828923, true)}+`}
+              />
+              <ContactItems
+                src={instagram}
+                title="اینستاگرام :"
+                desc="__arman__rv"
+              />
+              <ContactItems
+                src={face}
+                title="فیس بوک :"
+                desc="نتیجه ای یافت نشد!"
+              />
             </div>
-            <div className="w-[clamp(50px,100%,255px)]"> 
-              <ContactItems src={email} title="پست الکترونیکی :" desc="pendingcoding@gmail.com" />
+            <div className="w-[clamp(50px,100%,255px)]">
+              <ContactItems
+                src={email}
+                title="پست الکترونیکی :"
+                desc="pendingcoding@gmail.com"
+              />
               <ContactItems src={telegram} title="تلگرام :" desc="arman_rv@" />
               <ContactItems src={x} title="توییتر" desc="نتیجه ای یافت نشد!" />
             </div>
           </div>
-
         </div>
 
-        <div className="w-[clamp(100px,100%,1000px)] border-[13px] border-transparent rounded-[20px] overflow-hidden shadow-[0_0_0_4px_#5c55c9] h-[460px]
-        max-[1500px]:h-[360px] max-[1500px]:w-[clamp(100px,100%,940px)]">
+        <div
+          className="w-[clamp(100px,100%,1000px)] border-[13px] border-transparent rounded-[20px] overflow-hidden shadow-[0_0_0_4px_#5c55c9] h-[460px]
+        max-[1500px]:h-[360px] max-[1500px]:w-[clamp(100px,100%,940px)]"
+        >
           {/* <img src={location} className="w-full" /> */}
-          <div className='w-full h-full rounded-[13px] overflow-hidden'>          
+          <div className="w-full h-full rounded-[13px] overflow-hidden">
             <Map />
           </div>
         </div>
-
       </div>
 
-
-      <div className="flex gap-[150px]
+      <div
+        className="flex gap-[150px]
       
       max-[1100px]:gap-[10px]
-      max-[960px]:flex-col max-[960px]:gap-[30px] max-[960px]:items-center max-[960px]:px-[50px]">
-
-        <div className="w-[clamp(100px,90%,704px)] flex flex-col
+      max-[960px]:flex-col max-[960px]:gap-[30px] max-[960px]:items-center max-[960px]:px-[50px]"
+      >
+        <div
+          className="w-[clamp(100px,90%,704px)] flex flex-col
         
-        max-[960px]:w-[100%]">
-
-          <Banner title="با ما در تماس باشید "/>
+        max-[960px]:w-[100%]"
+        >
+          <Banner title="با ما در تماس باشید " />
 
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -142,44 +169,58 @@ const ContactUs = () => {
               ارسال پیام
             </button>
           </form>
-
         </div>
 
-        <div className="flex flex-col gap-[45px]
+        <div
+          className="flex flex-col gap-[45px]
         
-        max-[960px]:w-[100%]">
-          <Banner title="مخاطب شما " />
+        max-[960px]:w-[100%]"
+        >
+          <Banner title="اعضای تیم" />
 
           <div className="flex flex-col gap-[80px]">
-            
             <div className="flex gap-[20px]">
-              <img src={member} />
-              <div className="flex flex-col gap-[10px]">
-                <p className="text-[18px] text-[#505050] dark:text-gray-400 transition">آرمان رضوانی</p>
-                <p className="text-[14px] text-[#A4A4A4] dark:text-gray-200 transition"> کارشناس پشتیبانی فنی </p>
-                <p className="text-[14px] text-[#A4A4A4] dark:text-gray-200 transition"> شماره موبایل: 90203693966 </p>
-                <p className="text-[14px] text-[#A4A4A4] dark:text-gray-200 transition"> پست الکترونیکی :   pendingcoding@gmail.com </p>
+              <img
+                className="w-32 h-32 rounded-full object-cover"
+                src={Amir}
+                alt="AmirPic"
+              />
+
+              <div className="flex flex-col gap-[10px] text-[#505050] dark:text-gray-400">
+                <p className="text-[18px] text-[#A4A4A4] dark:text-gray-200 transition">
+                  امیرعباس بابایی
+                </p>
+                <p className="text-[14px]  transition">کارشناس پشتیبانی فنی</p>
+                <p className="text-[14px]  transition">
+                  شماره موبایل: 90203693966
+                </p>
+                <p className="text-[14px]  transition">
+                  پست الکترونیکی : pendingcoding@gmail.com
+                </p>
               </div>
             </div>
-
             <div className="flex gap-[20px]">
-              <img src={member} />
-              <div className="flex flex-col gap-[10px]">
-                <p className="text-[18px] text-[#505050] dark:text-gray-400 transition"> امیر عباس بابایی </p>
-                <p className="text-[14px] text-[#A4A4A4] dark:text-gray-200 transition"> کارشناس پشتیبانی فنی </p>
-                <p className="text-[14px] text-[#A4A4A4] dark:text-gray-200 transition"> شماره موبایل: 90203693966 </p>
-                <p className="text-[14px] text-[#A4A4A4] dark:text-gray-200 transition"> پست الکترونیکی :   pendingcoding@gmail.com </p>
+              <img
+                className="w-32 h-32 rounded-full object-cover"
+                src={Arman}
+                alt="ArmanPic"
+              />
+              <div className="flex flex-col gap-[10px] text-[#505050] dark:text-gray-400 ">
+                <p className="text-[18px] text-[#A4A4A4] dark:text-gray-200">
+                  آرمان رضوانی
+                </p>
+                <p className="text-[14px]">کارشناس پشتیبانی فنی</p>
+                <p className="text-[14px]">شماره موبایل: 90203693966</p>
+                <p className="text-[14px]">
+                  پست الکترونیکی : pendingcoding@gmail.com
+                </p>
               </div>
             </div>
-
-          </div>     
-
-        </div> 
-
+          </div>
+        </div>
       </div>
-
     </div>
-  )
-}
+  );
+};
 
-export { ContactUs }
+export { ContactUs };

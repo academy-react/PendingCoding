@@ -19,7 +19,7 @@ const backdrop = {
     transition: { duration: 0.5 },
   },
   exit: {
-    x: "100px",
+    x: "-100px",
     opacity: 0,
     transition: { duration: 0.5 },
   },
@@ -31,10 +31,10 @@ export const NavbarMobile = () => {
   const isDialogOpen = isOpen && type === "navDialog";
 
   return (
-    isDialogOpen && (
-      <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait">
+      {isDialogOpen && (
         <motion.div
-          className="fixed inset-0 bg-gray-200 z-10"
+          className="fixed inset-0 bg-gray-200/60 dark:bg-gray-700/70 z-10"
           variants={backdrop}
           animate="visible"
           initial="hidden"
@@ -47,7 +47,7 @@ export const NavbarMobile = () => {
             initial="hidden"
             exit="exit"
             onClick={(e) => e.stopPropagation()}
-            className="h-full fixed top-0 left-0 z-20 flex flex-col items-center justify-start gap-y-5 bg-gray-50 border-r border-gray-200 shadow-md p-5"
+            className="h-full fixed top-0 left-0 z-20 flex flex-col items-center justify-start gap-y-5 bg-gray-50 dark:bg-gray-800 border-r-2 border-gray-200 dark:border-gray-600 shadow-md p-5"
           >
             <X
               className="self-start justify-self-start text-rose-700 cursor-pointer"
@@ -55,7 +55,7 @@ export const NavbarMobile = () => {
             />
             <button
               onClick={() => onClose()}
-              className="flex items-center justify-center my-5 mr-5"
+              className="flex items-center justify-center my-5"
             >
               <ThemeToggle />
             </button>
@@ -99,7 +99,7 @@ export const NavbarMobile = () => {
             )}
           </motion.div>
         </motion.div>
-      </AnimatePresence>
-    )
+      )}
+    </AnimatePresence>
   );
 };
